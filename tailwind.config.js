@@ -2,7 +2,7 @@
 module.exports = {
   // NOTE: Update this to include the paths to all files that contain Nativewind classes.
   content: [    
-    './app/**/*.{js,ts,jsx,tsx}',
+    './app/*.{js,ts,jsx,tsx}',
     './components/**/*.{js,ts,jsx,tsx}',
   ],
   presets: [require("nativewind/preset")],
@@ -21,6 +21,10 @@ module.exports = {
         background: {
           primary: '#FFFFFF'
         }
+      },
+      fontFamily: {
+        dunggeunmiso: ['Dunggeunmiso'],
+        dunggeunmisoB: ['DunggeunmisoB'],
       },
     },
   },
