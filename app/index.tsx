@@ -1,15 +1,16 @@
-import { Text, View } from "react-native";
+import { Link } from "expo-router";
+import { Pressable, Text, View } from "react-native";
 
 export default function Index() {
   return (
-    <View
-      style={{
-        flex: 1,
-        justifyContent: "center",
-        alignItems: "center",
-      }}
-    >
-      <Text className="text-primary">Edit app/index.tsx to edit this screen.</Text>
+    <View className="items-center justify-center flex-1">
+      <Link href="/test" asChild>
+        <Pressable>
+          <Text className="font-dunggeunmiso text-secondary-dark text-3xl">
+            로컬 디비 세팅 보러가기
+          </Text>
+        </Pressable>
+      </Link>
     </View>
   );
 }

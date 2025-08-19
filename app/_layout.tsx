@@ -14,5 +14,10 @@ export default function RootLayout() {
     return null;
   }
 
-  return <Stack screenOptions={{ headerShown: false }}></Stack>;
+  return (
+    <Stack>
+      <Stack.Screen name="index" options={{ title: "HOME" }} />
+      <Stack.Screen name="test" options={{ title: "LOCAL DB TEST" }} />
+    </Stack>
+  );
 }
