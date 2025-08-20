@@ -2,7 +2,7 @@ import * as FileSystem from "expo-file-system";
 import * as ImagePicker from "expo-image-picker";
 import { ImageManipulator, SaveFormat } from "expo-image-manipulator";
 
-import images from "@/services/table/images";
+import images from "@table/images";
 
 // 앨범 접근 권한
 const grantedMediaLibraryPermission = async () => {
@@ -16,7 +16,7 @@ const grantedMediaLibraryPermission = async () => {
   return true;
 };
 
-const uploadImage = async () => {
+const saveImage = async () => {
   const isGranted = await grantedMediaLibraryPermission();
   if (!isGranted) return console.error("Canntot access to mediaLibray");
 
@@ -43,12 +43,12 @@ const uploadImage = async () => {
       });
 
       // 로컬 디비 저장
-      const uploadImg = await images.create(newPath);
-      return uploadImg;
+      const saveImg = await images.create(newPath);
+      return saveImg;
     } catch (e) {
       console.error("err", e);
     }
   }
 };
 
-export default uploadImage;
+export default saveImage;
