@@ -1,11 +1,16 @@
-import Typography from "@components/Typography";
-import { View } from "react-native";
+import { ScrollView, View } from "react-native";
+import { Typography, Button } from "@/components";
 
 export default function StyleGuide() {
   return (
-    <View className="flex h-full p-4">
+    <ScrollView className="p-4">
+      <View className=" flex h-full gap-6">
       <View className="flex gap-4">
-        <Typography variant="Header2" color="primary">
+          <Typography
+            variant="Header2"
+            color="primary"
+            className="bg-primary-light border-primary-light p-1 border"
+          >
           Typography
         </Typography>
         <View className="flex flex-row gap-5">
@@ -68,5 +73,6 @@ export default function StyleGuide() {
         </View>
       </View>
     </View>
+    </ScrollView>
   );
 }
