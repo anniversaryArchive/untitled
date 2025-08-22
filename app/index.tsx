@@ -1,3 +1,4 @@
+import 'react-native-reanimated';  // 반드시 최상단에 위치
 import { Link } from "expo-router";
 import { Pressable, Text, View } from "react-native";
 
@@ -8,6 +9,13 @@ export default function Index() {
         <Pressable>
           <Text className="font-dunggeunmiso text-secondary-dark text-3xl">
             로컬 디비 세팅 보러가기
+          </Text>
+        </Pressable>
+      </Link>
+      <Link href="/swiper-test" asChild>
+        <Pressable>
+          <Text className="font-dunggeunmiso text-secondary-dark text-3xl">
+            기본 슬라이드
           </Text>
         </Pressable>
       </Link>
