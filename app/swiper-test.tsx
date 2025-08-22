@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet } from 'react-native';
-import BasicSwiper from '../components/BasicSwiper';
+import BasicSwiper from '@components/BasicSwiper';
 import FeaturedSwiper from '@components/FeaturedSwiper';
 
 const sampleData = [
@@ -17,7 +17,7 @@ const sampleData = [
   },
 ];
 
-export default function TestScreen() {
+export default function SwiperTest() {
   return (
     <View style={styles.container}>
       <BasicSwiper />

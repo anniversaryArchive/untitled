@@ -19,6 +19,13 @@ export default function Index() {
           </Text>
         </Pressable>
       </Link>
+      <Link href="/drop-test" asChild>
+        <Pressable>
+          <Text className="font-dunggeunmiso text-secondary-dark text-3xl">
+            드롭박스
+          </Text>
+        </Pressable>
+      </Link>
     </View>
   );
 }
