@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from "react";
-import { View, StyleSheet, LayoutChangeEvent, DimensionValue } from "react-native";
+import { View, LayoutChangeEvent, DimensionValue } from "react-native";
 import Svg, { Path } from "react-native-svg";
 import { colors } from "@/utils/tailwind-colors";
 
@@ -236,7 +236,7 @@ const WiggleBorder: React.FC<WiggleBorderProps> = ({
         <Svg
           width="100%"
           height="100%"
-          style={StyleSheet.absoluteFill}
+          className="absolute"
           viewBox={`0 0 ${actualWidth + margin * 2} ${actualHeight + margin * 2}`}
           preserveAspectRatio="none"
         >
