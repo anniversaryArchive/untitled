@@ -3,7 +3,7 @@ import { View, LayoutChangeEvent, DimensionValue } from "react-native";
 import Svg, { Path } from "react-native-svg";
 import { colors } from "@/utils/tailwind-colors";
 
-type WiggleBorderProps = {
+interface IWiggleBorderProps {
   width?: number | string; // default. 100%
   height?: number; // default. children min-height
   children?: React.ReactNode;
@@ -16,9 +16,9 @@ type WiggleBorderProps = {
   frequency?: number; // 얼마나 자주 흔들릴지 (0-100, default 90)
   wiggle?: number; // 진폭 (0-100, default 30)
   smoothen?: number; // 보간 부드러움 정도 (0-100, default 50)
-};
+}
 
-const WiggleBorder: React.FC<WiggleBorderProps> = ({
+const WiggleBorder: React.FC<IWiggleBorderProps> = ({
   width,
   height,
   children,
