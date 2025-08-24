@@ -7,8 +7,8 @@ export interface ITextBoxProps {
   className?: string;
   onSubmit?: (value: string) => void;
   color?: keyof typeof inputTheme.color;
-  value?: string;
   bold?: boolean;
+  readOnly?: boolean;
   [options: string]: any;
 }
 
@@ -17,13 +17,14 @@ const TextBox = (props: ITextBoxProps) => {
     placeholder,
     onSubmit,
     className,
-    value,
     color = "secondary-dark",
     bold = false,
+    readOnly,
     ...options
   } = props;
 
-  const defaultProps = `${bold ? "font-DunggeunmisoB" : "font-Dunggeunmiso"} border p-2 rounded-[4px] text-[15px] text-secondary-dark ${inputTheme.color[color]} min-h-[60px]`;
+  const defaultProps = `${bold ? "font-DunggeunmisoB" : "font-Dunggeunmiso"} border p-2 rounded text-[15px] text-secondary-dark ${inputTheme.color[color]} min-h-[60px] ${className}`;
+  const readOnlyProps = `bg-gray-200`;
 
   return (
     <TextInput
@@ -36,7 +37,7 @@ const TextBox = (props: ITextBoxProps) => {
       clearButtonMode="while-editing"
       placeholder={placeholder}
       placeholderTextColor={colors.secondary["dark-80"]}
-      className={`${defaultProps}`}
+      className={`${defaultProps} ${readOnly && readOnlyProps}`}
       {...options}
     />
   );

@@ -175,7 +175,7 @@ export default function StyleGuide() {
               size
             </Typography>
             <View className="grow flex gap-2">
-              <InputBox size="sm" placeholder="sm" />
+              <InputBox size="sm" placeholder="sm (default)" />
               <InputBox size="md" placeholder="md" />
               <InputBox size="lg" placeholder="lg" />
             </View>
@@ -187,7 +187,15 @@ export default function StyleGuide() {
             <View className="grow flex gap-2">
               <InputBox color="primary" placeholder="primary" />
               <InputBox color="secondary" placeholder="secondary" />
-              <InputBox color="secondary-dark" placeholder="secondary-dark (default)" />
+              <InputBox color="secondary-dark" placeholder="secondary-dark (default) " />
+            </View>
+          </View>
+          <View className="flex flex-row gap-5">
+            <Typography variant="Header3" color="secondary" className="w-[100px]">
+              optional
+            </Typography>
+            <View className="grow flex gap-2">
+              <InputBox placeholder="readOnly" readOnly />
             </View>
           </View>
         </View>
