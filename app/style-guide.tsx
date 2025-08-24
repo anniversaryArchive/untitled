@@ -1,5 +1,5 @@
 import { ScrollView, View } from "react-native";
-import { Typography, Button } from "@/components";
+import { Typography, Button, InputBox, TextBox } from "@/components";
 
 export default function StyleGuide() {
   return (
@@ -159,6 +159,70 @@ export default function StyleGuide() {
                   full
                 </Button>
               </View>
+            </View>
+          </View>
+        </View>
+        <View className="flex gap-4">
+          <Typography
+            variant="Header2"
+            color="primary"
+            className="bg-primary-light border-primary-light p-1 border"
+          >
+            InputBox
+          </Typography>
+          <View className="flex flex-row gap-5">
+            <Typography variant="Header3" color="secondary" className="w-[100px]">
+              size
+            </Typography>
+            <View className="grow flex gap-2">
+              <InputBox size="sm" placeholder="sm (default)" />
+              <InputBox size="md" placeholder="md" />
+              <InputBox size="lg" placeholder="lg" />
+            </View>
+          </View>
+          <View className="flex flex-row gap-5">
+            <Typography variant="Header3" color="secondary" className="w-[100px]">
+              variant
+            </Typography>
+            <View className="grow flex gap-2">
+              <InputBox color="primary" placeholder="primary" />
+              <InputBox color="secondary" placeholder="secondary" />
+              <InputBox color="secondary-dark" placeholder="secondary-dark (default) " />
+            </View>
+          </View>
+          <View className="flex flex-row gap-5">
+            <Typography variant="Header3" color="secondary" className="w-[100px]">
+              optional
+            </Typography>
+            <View className="grow flex gap-2">
+              <InputBox placeholder="readOnly" readOnly />
+            </View>
+          </View>
+        </View>
+        <View className="flex gap-4">
+          <Typography
+            variant="Header2"
+            color="primary"
+            className="bg-primary-light border-primary-light p-1 border"
+          >
+            TextBox
+          </Typography>
+          <View className="flex flex-row gap-5">
+            <Typography variant="Header3" color="secondary" className="w-[100px]">
+              variant
+            </Typography>
+            <View className="grow flex gap-2">
+              <TextBox color="primary" placeholder="primary" />
+              <TextBox color="secondary" placeholder="secondary" />
+              <TextBox color="secondary-dark" placeholder="secondary-dark (default)" />
+            </View>
+          </View>
+          <View className="flex flex-row gap-5">
+            <Typography variant="Header3" color="secondary" className="w-[100px]">
+              optional
+            </Typography>
+            <View className="grow flex gap-2">
+              <TextBox bold placeholder="bold=true" />
             </View>
           </View>
         </View>
