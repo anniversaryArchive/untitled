@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Dimensions, View, Text, Image, StyleSheet, Platform } from 'react-native';
+import { Dimensions, View, Text, Image, StyleSheet, Platform, TouchableOpacity } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 import Carousel from 'react-native-reanimated-carousel';
 
@@ -11,9 +11,10 @@ interface SlideItem {
 interface FeaturedSwiperProps {
   data: SlideItem[];
   title: string;
+  onSlidePress?: (item: SlideItem, index: number) => void;
 }
 
-export default function FeaturedSwiper({ data, title }: FeaturedSwiperProps) {
+export default function FeaturedSwiper({ data, title, onSlidePress }: FeaturedSwiperProps) {
   const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
 
   useEffect(() => {
@@ -41,14 +42,22 @@ export default function FeaturedSwiper({ data, title }: FeaturedSwiperProps) {
   const slideHeight = 200;
   const progress = useSharedValue<number>(0);
 
-  const renderItem = ({ item }: { item: SlideItem }) => (
-    <View style={[styles.slide, { width: slideWidth, height: slideHeight }]}>
+  const renderItem = ({ item, index }: { item: SlideItem; index: number }) => (
+    <TouchableOpacity
+      activeOpacity={0.8}
+      onPress={() => {
+        if (onSlidePress) {
+          onSlidePress(item, index);
+        }
+      }}
+      style={[styles.slide, { width: slideWidth, height: slideHeight }]}
+    >
       {item.imageUrl ? (
         <Image source={{ uri: item.imageUrl }} style={styles.image} resizeMode="cover" />
       ) : (
         <View style={styles.empty} />
       )}
-    </View>
+    </TouchableOpacity>
   );
 
   return (
@@ -60,7 +69,7 @@ export default function FeaturedSwiper({ data, title }: FeaturedSwiperProps) {
         height={slideHeight}
         autoPlay={false}
         data={data}
-        scrollAnimationDuration={500}
+        scrollAnimationDuration={2000}
         renderItem={renderItem}
         mode="parallax"
         modeConfig={{
