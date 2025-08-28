@@ -1,4 +1,4 @@
-import { ScrollView, View } from "react-native";
+import { Image, ScrollView, View } from "react-native";
 import { Typography, WiggleBorder } from "@/components";
 
 export default function StyleGuide() {
@@ -88,7 +88,7 @@ export default function StyleGuide() {
             </Typography>
             <View className="flex-1">
               <WiggleBorder>
-                <View>
+                <View className="p-2">
                   <Typography variant="Body2" className="text-center">
                     Default Wiggle Border
                   </Typography>
@@ -103,7 +103,7 @@ export default function StyleGuide() {
             </Typography>
             <View className="flex-1">
               <WiggleBorder strokeColor="secondary">
-                <View>
+                <View className="p-2">
                   <Typography variant="Body2" className="text-center">
                     Secondary Wiggle Border
                   </Typography>
@@ -111,7 +111,7 @@ export default function StyleGuide() {
               </WiggleBorder>
 
               <WiggleBorder strokeColor="secondary.dark">
-                <View>
+                <View className="p-2">
                   <Typography variant="Body2" className="text-center">
                     Secondary Dark Wiggle Border
                   </Typography>
@@ -122,7 +122,7 @@ export default function StyleGuide() {
               </WiggleBorder>
 
               <WiggleBorder strokeColor="#ccaaaa">
-                <View>
+                <View className="p-2">
                   <Typography variant="Body2" className="text-center">
                     Hex 컬러도 당연히 가능함둥
                   </Typography>
@@ -136,16 +136,8 @@ export default function StyleGuide() {
               Wiggle
             </Typography>
             <View className="flex-1">
-              <WiggleBorder frequency={100}>
-                <View>
-                  <Typography variant="Body2" className="text-center">
-                    Frequency 100
-                  </Typography>
-                </View>
-              </WiggleBorder>
-
               <WiggleBorder wiggle={100}>
-                <View>
+                <View className="p-2">
                   <Typography variant="Body2" className="text-center">
                     Wiggle 100
                   </Typography>
@@ -156,12 +148,23 @@ export default function StyleGuide() {
               </WiggleBorder>
 
               <WiggleBorder smoothen={100}>
-                <View>
+                <View className="p-2">
                   <Typography variant="Body2" className="text-center">
                     smoothen 100
                   </Typography>
                 </View>
               </WiggleBorder>
+
+              <View className="w-52 h-52">
+                <WiggleBorder frequency={100} backgroundColor="primary">
+                  <Image
+                    className="w-48 h-48"
+                    source={{
+                      uri: "https://bandai-a.akamaihd.net/bc/img/model/b/1000234207_1.jpg",
+                    }}
+                  />
+                </WiggleBorder>
+              </View>
             </View>
           </View>
         </View>

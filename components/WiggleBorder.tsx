@@ -9,11 +9,11 @@ interface IWiggleBorderProps {
   children?: React.ReactNode;
 
   margin?: number; // border 바깥쪽 여백 (default. 4)
-  padding?: number; // default. 10
 
+  backgroundColor?: string; // tailwind color key (e.g. "primary", "primary.light") 또는 hex color
   strokeColor?: string; // tailwind color key (e.g. "primary", "primary.light") 또는 hex color
   strokeWidth?: number; // default. 2
-  frequency?: number; // 얼마나 자주 흔들릴지 (0-100, default 90)
+  frequency?: number; // 얼마나 자주 흔들릴지 (0-100, default 100)
   wiggle?: number; // 진폭 (0-100, default 30)
   smoothen?: number; // 보간 부드러움 정도 (0-100, default 50)
 }
@@ -24,18 +24,17 @@ const WiggleBorder: React.FC<IWiggleBorderProps> = ({
   children,
   strokeColor = "primary",
   strokeWidth = 2,
-  frequency = 90,
+  frequency = 100,
   wiggle = 30,
   smoothen = 50,
-  padding = 10,
   margin = 4,
+  backgroundColor,
 }) => {
   const [path, setPath] = useState<string>("");
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
   const [childrenSize, setChildrenSize] = useState({ width: 0, height: 0 });
 
-  // strokeColor
-  const getStrokeColor = (color: string): string => {
+  const getColor = (color: string): string => {
     // hex color인 경우
     if (color.startsWith("#")) return color;
 
@@ -75,7 +74,7 @@ const WiggleBorder: React.FC<IWiggleBorderProps> = ({
       wiggleAmount: number,
       smoothenAmount: number
     ) => {
-      const points: Array<{ x: number; y: number }> = [];
+      const points: { x: number; y: number }[] = [];
       let seedCounter = 0;
 
       // frequency가 높은수록 점이 많다. = 더 많이 흔들린다.
@@ -166,13 +165,13 @@ const WiggleBorder: React.FC<IWiggleBorderProps> = ({
       height !== undefined
         ? height - margin * 2
         : childrenSize.height > 0
-          ? childrenSize.height + padding * 2
+          ? childrenSize.height
           : children
             ? 50 // children이 있지만 아직 측정되지 않은 경우 임시 높이
             : 10; // children이 없는 경우 최소 높이
 
     return generatePath(actualWidth, actualHeight, frequency, wiggle, smoothen);
-  }, [width, height, frequency, wiggle, smoothen, containerSize, childrenSize, children]);
+  }, [width, height, frequency, wiggle, smoothen, containerSize, childrenSize, children, margin]);
 
   useEffect(() => {
     setPath(memoizedPath);
@@ -204,11 +203,7 @@ const WiggleBorder: React.FC<IWiggleBorderProps> = ({
         : 300 - margin * 2; // 기본 최소값
 
   const actualHeight =
-    height !== undefined
-      ? height - margin * 2
-      : childrenSize.height > 0
-        ? childrenSize.height + padding * 2
-        : 30; // 기본 최소값
+    height !== undefined ? height - margin * 2 : childrenSize.height > 0 ? childrenSize.height : 30; // 기본 최소값
 
   // 컨테이너 스타일 계산
   const containerStyle: {
@@ -225,12 +220,27 @@ const WiggleBorder: React.FC<IWiggleBorderProps> = ({
       height !== undefined
         ? height
         : childrenSize.height > 0
-          ? childrenSize.height + padding * 2 + margin * 2
-          : 10 + padding * 2 + margin * 2, // 기본 최소값
+          ? childrenSize.height + margin * 2
+          : 10 + margin * 2, // 기본 최소값
   };
 
   return (
     <View style={containerStyle} onLayout={handleContainerLayout}>
+      <View
+        style={{
+          width: typeof width === "number" ? width - margin * 2 : "auto",
+          height: height ? height - margin * 2 : "auto",
+          margin: margin,
+          justifyContent: "center",
+          alignItems: "center",
+          flex: width === undefined ? 1 : undefined,
+          backgroundColor: backgroundColor ? getColor(backgroundColor) : "transparent",
+        }}
+      >
+        {/* height가 고정되지 않은 경우, children 변화 감지를 위한 래퍼로 감싸줌 */}
+        {height === undefined ? <View onLayout={handleChildrenLayout}>{children}</View> : children}
+      </View>
+
       {/* Wiggle border */}
       {actualWidth > 0 && actualHeight > 0 && (
         <Svg
@@ -242,7 +252,7 @@ const WiggleBorder: React.FC<IWiggleBorderProps> = ({
         >
           <Path
             d={path}
-            stroke={getStrokeColor(strokeColor)}
+            stroke={getColor(strokeColor)}
             strokeWidth={strokeWidth}
             fill="none"
             strokeLinecap="round"
@@ -251,20 +261,6 @@ const WiggleBorder: React.FC<IWiggleBorderProps> = ({
           />
         </Svg>
       )}
-
-      <View
-        style={{
-          width: typeof width === "number" ? width - padding * 2 - margin * 2 : "auto",
-          height: height ? height - padding * 2 - margin * 2 : "auto",
-          margin: padding + margin,
-          justifyContent: "center",
-          alignItems: "center",
-          flex: width === undefined ? 1 : undefined,
-        }}
-      >
-        {/* height가 고정되지 않은 경우, children 변화 감지를 위한 래퍼로 감싸줌 */}
-        {height === undefined ? <View onLayout={handleChildrenLayout}>{children}</View> : children}
-      </View>
     </View>
   );
 };
