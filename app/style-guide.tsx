@@ -1,5 +1,5 @@
 import { Image, ScrollView, View } from "react-native";
-import { Typography, WiggleBorder } from "@/components";
+import { Typography, Button, InputBox, TextBox, WiggleBorder } from "@/components";
 
 export default function StyleGuide() {
   return (
@@ -72,65 +72,159 @@ export default function StyleGuide() {
             </View>
           </View>
         </View>
-
-        <View className="flex gap-4 rounded">
+        <View className="flex gap-4">
           <Typography
             variant="Header2"
             color="primary"
             className="bg-primary-light border-primary-light p-1 border"
           >
-            WiggleBorder
+            Button
           </Typography>
-
-          <View className="flex gap-5 flex-row">
-            <Typography variant="Header3" color="secondary" className="w-[100px]">
-              Default
-            </Typography>
-            <View className="flex-1">
-              <WiggleBorder>
-                <View className="p-2">
-                  <Typography variant="Body2" className="text-center">
-                    Default Wiggle Border
-                  </Typography>
+          <View className="flex w-full gap-4">
+            <View className="flex flex-row gap-5">
+              <Typography variant="Header3" color="secondary" className="w-[100px]">
+                size
+              </Typography>
+              <View className=" flex flex-row gap-2">
+                <Button onPress={() => {}}>sm</Button>
+                <Button size="md" onPress={() => {}}>
+                  md
+                </Button>
+                <Button size="lg" onPress={() => {}}>
+                  lg
+                </Button>
+              </View>
+            </View>
+            <View className="flex flex-row gap-5">
+              <Typography variant="Header3" color="secondary" className="w-[100px]">
+                variant / disabled
+              </Typography>
+              <View className="flex gap-2">
+                <View className=" flex gap-2">
+                  <Button onPress={() => {}}>primary</Button>
+                  <Button variant="outlined" onPress={() => {}}>
+                    primary outlined
+                  </Button>
+                  <Button variant="text" onPress={() => {}}>
+                    primary text
+                  </Button>
+                  <Button onPress={() => {}} disabled>
+                    primary disabled
+                  </Button>
+                  <Button color="secondary" onPress={() => {}}>
+                    secondary
+                  </Button>
+                  <Button variant="outlined" color="secondary" onPress={() => {}}>
+                    secondary outlined
+                  </Button>
+                  <Button variant="text" color="secondary" onPress={() => {}}>
+                    secondary text
+                  </Button>
+                  <Button color="secondary" onPress={() => {}} disabled>
+                    secondary disabled
+                  </Button>
+                  <Button color="secondary-dark" onPress={() => {}}>
+                    secondary-dark
+                  </Button>
+                  <Button variant="outlined" color="secondary-dark" onPress={() => {}}>
+                    secondary-dark outlined
+                  </Button>
+                  <Button variant="text" color="secondary-dark" onPress={() => {}}>
+                    secondary-dark text
+                  </Button>
+                  <Button color="secondary-dark" onPress={() => {}} disabled>
+                    secondary-dark disabled
+                  </Button>
                 </View>
-              </WiggleBorder>
+              </View>
+            </View>
+            <View className="flex flex-row gap-5">
+              <Typography variant="Header3" color="secondary" className="w-[100px]">
+                rounded
+              </Typography>
+              <View className=" flex flex-row gap-2">
+                <Button onPress={() => {}}>default</Button>
+                <Button rounded onPress={() => {}}>
+                  rounded
+                </Button>
+              </View>
+            </View>
+            <View className="flex flex-row gap-5">
+              <Typography variant="Header3" color="secondary" className="w-[100px]">
+                width
+              </Typography>
+              <View className="grow flex flex-row gap-2">
+                <Button onPress={() => {}}>fit(default)</Button>
+                <Button width="full" onPress={() => {}}>
+                  full
+                </Button>
+              </View>
             </View>
           </View>
-
-          <View className="flex gap-5 flex-row">
+        </View>
+        <View className="flex gap-4">
+          <Typography
+            variant="Header2"
+            color="primary"
+            className="bg-primary-light border-primary-light p-1 border"
+          >
+            InputBox
+          </Typography>
+          <View className="flex flex-row gap-5">
             <Typography variant="Header3" color="secondary" className="w-[100px]">
-              Colors
+              size
             </Typography>
-            <View className="flex-1">
-              <WiggleBorder strokeColor="secondary">
-                <View className="p-2">
-                  <Typography variant="Body2" className="text-center">
-                    Secondary Wiggle Border
-                  </Typography>
-                </View>
-              </WiggleBorder>
-
-              <WiggleBorder strokeColor="secondary.dark">
-                <View className="p-2">
-                  <Typography variant="Body2" className="text-center">
-                    Secondary Dark Wiggle Border
-                  </Typography>
-                  <Typography variant="Body2" className="text-center">
-                    Tailwind 에 명시한 컬러 모두 가능 ~
-                  </Typography>
-                </View>
-              </WiggleBorder>
-
-              <WiggleBorder strokeColor="#ccaaaa">
-                <View className="p-2">
-                  <Typography variant="Body2" className="text-center">
-                    Hex 컬러도 당연히 가능함둥
-                  </Typography>
-                </View>
-              </WiggleBorder>
+            <View className="grow flex gap-2">
+              <InputBox size="sm" placeholder="sm (default)" />
+              <InputBox size="md" placeholder="md" />
+              <InputBox size="lg" placeholder="lg" />
             </View>
           </View>
-
+          <View className="flex flex-row gap-5">
+            <Typography variant="Header3" color="secondary" className="w-[100px]">
+              variant
+            </Typography>
+            <View className="grow flex gap-2">
+              <InputBox color="primary" placeholder="primary" />
+              <InputBox color="secondary" placeholder="secondary" />
+              <InputBox color="secondary-dark" placeholder="secondary-dark (default) " />
+            </View>
+          </View>
+          <View className="flex flex-row gap-5">
+            <Typography variant="Header3" color="secondary" className="w-[100px]">
+              optional
+            </Typography>
+            <View className="grow flex gap-2">
+              <InputBox placeholder="readOnly" readOnly />
+            </View>
+          </View>
+        </View>
+        <View className="flex gap-4">
+          <Typography
+            variant="Header2"
+            color="primary"
+            className="bg-primary-light border-primary-light p-1 border"
+          >
+            TextBox
+          </Typography>
+          <View className="flex flex-row gap-5">
+            <Typography variant="Header3" color="secondary" className="w-[100px]">
+              variant
+            </Typography>
+            <View className="grow flex gap-2">
+              <TextBox color="primary" placeholder="primary" />
+              <TextBox color="secondary" placeholder="secondary" />
+              <TextBox color="secondary-dark" placeholder="secondary-dark (default)" />
+            </View>
+          </View>
+          <View className="flex flex-row gap-5">
+            <Typography variant="Header3" color="secondary" className="w-[100px]">
+              optional
+            </Typography>
+            <View className="grow flex gap-2">
+              <TextBox bold placeholder="bold=true" />
+            </View>
+          </View>
           <View className="flex gap-5 flex-row">
             <Typography variant="Header3" color="secondary" className="w-[100px]">
               Wiggle
