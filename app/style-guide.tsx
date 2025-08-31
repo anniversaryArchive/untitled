@@ -1,5 +1,5 @@
 import { Image, ScrollView, View } from "react-native";
-import { Typography, Button, InputBox, TextBox, WiggleBorder } from "@/components";
+import { Typography, Button, InputBox, TextBox, WiggleBorder, Chip } from "@/components";
 
 export default function StyleGuide() {
   return (
@@ -315,6 +315,57 @@ export default function StyleGuide() {
                   </WiggleBorder>
                 </View>
               </View>
+            </View>
+          </View>
+        </View>
+        <View className="flex gap-4">
+          <Typography
+            variant="Header2"
+            color="primary"
+            className="bg-primary-light border-primary-light p-1 border"
+          >
+            Chip
+          </Typography>
+          <View className="flex flex-row gap-5">
+            <Typography variant="Header3" color="secondary" className="w-[100px]">
+              color
+            </Typography>
+            <View className="flex flex-row items-start gap-2">
+              <Chip label="primary" color="primary" />
+              <Chip label="secondary-light(default)" />
+            </View>
+          </View>
+          <View className="flex flex-row gap-5">
+            <Typography variant="Header3" color="secondary" className="w-[100px]">
+              size
+            </Typography>
+            <View className=" flex flex-row gap-2">
+              <Chip label="sm" size="sm" />
+              <Chip label="md(default)" size="md" />
+              <Chip label="lg" size="lg" />
+            </View>
+          </View>
+          <View className="flex flex-row gap-5">
+            <Typography variant="Header3" color="secondary" className="w-[100px]">
+              optional
+            </Typography>
+            <View className="flex items-start gap-2">
+              <Chip
+                value="click"
+                label="onClick(log 확인)"
+                onClick={(value) => {
+                  console.log("onClick", value);
+                }}
+              />
+              <Chip
+                size="lg"
+                value="delete"
+                label="onDelete(log 확인)"
+                onDelete={(value) => {
+                  console.log("onDelete", value);
+                }}
+              />
+              <Typography variant="Footnote">* onClick&onDelete 동시 사용 가능</Typography>
             </View>
           </View>
         </View>
