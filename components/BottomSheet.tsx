@@ -1,12 +1,9 @@
-import React, { useEffect } from "react";
-import { Dimensions, View, Pressable } from "react-native";
+import React, { useEffect, useState } from "react";
+import { Dimensions, View, Pressable, Text } from "react-native";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withTiming,
-} from "react-native-reanimated";
+import Animated, { useSharedValue, useAnimatedStyle, withSpring, withTiming } from "react-native-reanimated";
+
+import Segment from "./Segment"; // 분리된 세그먼트 컴포넌트 import
 
 // 화면 높이 가져오기
 const { height: SCREEN_HEIGHT } = Dimensions.get("window");
@@ -16,11 +13,20 @@ type BottomSheetProps = {
   onClose: () => void;
 };
 
+// 세그먼트 항목 데이터
+const segmentItems = [
+  { key: "WISH", label: "WISH" },
+  { key: "GET", label: "GET" },
+];
+
 export default function BottomSheet({ open, onClose }: BottomSheetProps) {
   // 바텀시트 수직 이동 위치 값 (translateY)
   const translateY = useSharedValue(SCREEN_HEIGHT);
   // 배경 오버레이 투명도 값
   const overlayOpacity = useSharedValue(0);
+
+  // 세그먼트 상태 (WISH, GET)
+  const [selectedKey, setSelectedKey] = useState("WISH");
 
   // open 상태 변화 감지
   useEffect(() => {
@@ -89,15 +95,24 @@ export default function BottomSheet({ open, onClose }: BottomSheetProps) {
           className="absolute bottom-0 w-full bg-white rounded-t-2xl z-20"
         >
           {/* 헤더 : 가운데 그립 바 */}
-          <View className="h-10 w-full items-center justify-center border-b border-gray-200">
+          <View className="h-10 w-full items-center justify-center">
             <Pressable onPress={onClose} hitSlop={10}>
               <View className="w-[60px] h-[3px] rounded-full bg-[#595959]" />
             </Pressable>
           </View>
 
-          {/* 콘텐츠 영역 */}
+          {/* 콘텐츠 영역: 세그먼트 포함 */}
           <View className="flex-1 p-4">
+            <Segment segments={segmentItems} selectedKey={selectedKey} onSelect={setSelectedKey} />
 
+            <View className="mt-4">
+              {selectedKey === "WISH" && (
+                <Text className="text-gray-700">WISH 내용</Text>
+              )}
+              {selectedKey === "GET" && (
+                <Text className="text-gray-700">GET 내용</Text>
+              )}
+            </View>
           </View>
         </Animated.View>
       </GestureDetector>

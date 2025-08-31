@@ -7,7 +7,7 @@ export default function BottomTest() {
 
   return (
     <View className="flex-1 items-center justify-center">
-      <Button title="Open BottomSheet" onPress={() => setOpen(true)} />
+      <Button className="font-dunggeunmiso text-secondary-dark text-3xl" title="Open BottomSheet" onPress={() => setOpen(true)} />
       <BottomSheet open={open} onClose={() => setOpen(false)} />
     </View>
   );
