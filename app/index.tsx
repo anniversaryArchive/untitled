@@ -16,6 +16,14 @@ export default function Index() {
           <Text className="font-dunggeunmiso text-secondary-dark text-3xl">스타일 가이드</Text>
         </Pressable>
       </Link>
+
+      <Link href="/(tabs)/Home" asChild>
+        <Pressable>
+          <Text className="font-dunggeunmiso text-secondary-dark text-3xl">
+            BOTTOM NAVIGATION BAR (TABS) TEST
+          </Text>
+        </Pressable>
+      </Link>
     </View>
   );
 }
