@@ -155,26 +155,21 @@ const WiggleBorder: React.FC<IWiggleBorderProps> = ({
   // container 크기 계산
   const handleContainerLayout = (event: LayoutChangeEvent) => {
     const { width: layoutWidth, height: layoutHeight } = event.nativeEvent.layout;
-    setContainerSize({ width: layoutWidth, height: layoutHeight });
+    setContainerSize({ width: layoutWidth, height: containerSize.height || layoutHeight });
   };
 
   // children 크기 계산
   const handleChildrenLayout = (event: LayoutChangeEvent) => {
     const { width: layoutWidth, height: layoutHeight } = event.nativeEvent.layout;
-    // children 크기가 변경된 경우에만, 사이즈를 업데이트 해줌
-    if (
-      Math.abs(childrenSize.width - layoutWidth) > 0.5 ||
-      Math.abs(childrenSize.height - layoutHeight) > 0.5
-    ) {
-      setChildrenSize({ width: layoutWidth, height: layoutHeight });
-    }
+    updateChildrenSize(layoutWidth, layoutHeight);
   };
 
-  // children 내용이 변경될 때마다 레이아웃 재계산을 위한 effect
-  useEffect(() => {
-    // children이 변경되면 childrenSize를 초기화하여 다시 측정하도록 함
-    setChildrenSize({ width: 0, height: 0 });
-  }, [children]);
+  // children 크기 업데이트
+  const updateChildrenSize = (width: number, height: number) => {
+    // children 크기가 변경된 경우에만, 사이즈를 업데이트 해줌
+    if (Math.abs(childrenSize.width - width) > 0.5 || Math.abs(childrenSize.height - height) > 0.5)
+      setChildrenSize({ width: width, height: height });
+  };
 
   // 실제 렌더링에 사용할 크기 계산 (여백을 뺀 실제 border 영역)
   const actualWidth =
@@ -210,34 +205,10 @@ const WiggleBorder: React.FC<IWiggleBorderProps> = ({
           : 20 + margin * 2, // 기본 최소값 (children이 없을 때만)
   };
 
+  const paddingHorizontal = 4; // 좌우 여백
+
   return (
     <View style={containerStyle} onLayout={handleContainerLayout}>
-      <View
-        style={{
-          width: typeof width === "number" ? width - margin * 2 : "auto",
-          height: height ? height - margin * 2 : "auto",
-          margin: margin,
-          paddingVertical: 2, // 상하 여백 추가로 텍스트 잘림 방지
-          paddingHorizontal: 4, // 좌우 여백 추가
-          justifyContent: "center",
-          alignItems: "center",
-          flex: width === undefined ? 1 : undefined,
-          backgroundColor: backgroundColor ? getColor(backgroundColor) : "transparent",
-        }}
-      >
-        {/* height가 고정되지 않은 경우, children 변화 감지를 위한 래퍼로 감싸줌 */}
-        {height === undefined ? (
-          <View
-            key={String(children)} // children이 변경되면 컴포넌트 재마운트
-            onLayout={handleChildrenLayout}
-          >
-            {children}
-          </View>
-        ) : (
-          children
-        )}
-      </View>
-
       {/* Wiggle border */}
       {actualWidth > 0 && actualHeight > 0 && (
         <View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}>
@@ -259,6 +230,34 @@ const WiggleBorder: React.FC<IWiggleBorderProps> = ({
           </Svg>
         </View>
       )}
+
+      <View
+        style={{
+          width:
+            typeof width === "number"
+              ? width - margin * 2
+              : containerSize.width > 0
+                ? containerSize.width - paddingHorizontal * 2
+                : undefined,
+          height: height ? height - margin * 2 : "auto",
+          margin: margin,
+          paddingVertical: 2, // 상하 여백 추가로 텍스트 잘림 방지
+          paddingHorizontal, // 좌우 여백 추가
+          justifyContent: "center",
+          alignItems: "center",
+          flex: width === undefined ? 1 : undefined,
+          backgroundColor: backgroundColor ? getColor(backgroundColor) : "transparent",
+        }}
+      >
+        {/* height가 고정되지 않은 경우, children 변화 감지를 위한 래퍼로 감싸줌 */}
+        {height === undefined ? (
+          <View className="w-full" onLayout={handleChildrenLayout}>
+            {children}
+          </View>
+        ) : (
+          children
+        )}
+      </View>
     </View>
   );
 };
