@@ -1,5 +1,6 @@
 import { Tabs } from "expo-router";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { colors } from "@/utils/tailwind-colors";
 
@@ -12,12 +13,18 @@ const TABS = [
 ];
 
 export default function TabLayout() {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tabs
       screenOptions={{
         tabBarLabelStyle: { fontFamily: "DunggeunmisoB" },
         tabBarActiveTintColor: colors.primary.DEFAULT,
-        tabBarStyle: { height: 70, paddingTop: 5 },
+        tabBarStyle: {
+          height: 55 + insets.bottom,
+          paddingTop: 5,
+          paddingBottom: insets.bottom,
+        },
       }}
     >
       {TABS.map((tab) => (
