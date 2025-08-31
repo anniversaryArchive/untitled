@@ -2,13 +2,15 @@ import React, { useRef, useState, useEffect } from 'react';
 import { View, Text, Dimensions, StyleSheet, TouchableOpacity, ScaledSize } from 'react-native';
 import Carousel, { ICarouselInstance } from 'react-native-reanimated-carousel';
 
-interface BasicSwiperProps {
-  data: any[];
-  onSlidePress?: (index: number, item: any) => void;
+// 제네릭 타입 정의
+interface BasicSwiperProps<T> {
+  data: T[];
+  onSlidePress?: (index: number, item: T) => void;
+  renderItem?: (item: T, index: number) => React.ReactNode;
 }
 
-export default function BasicSwiper({ data, onSlidePress }: BasicSwiperProps) {
-  const carouselRef = useRef<ICarouselInstance>(null);
+export default function BasicSwiper<T>({ data, onSlidePress, renderItem }: BasicSwiperProps<T>) {
+  const carouselRef = useRef<ICarouselInstance | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [windowSize, setWindowSize] = useState<ScaledSize>(Dimensions.get('window'));
 
@@ -43,16 +45,12 @@ export default function BasicSwiper({ data, onSlidePress }: BasicSwiperProps) {
         renderItem={({ index }) => (
           <TouchableOpacity
             activeOpacity={0.8}
-            onPress={() => {
-              if (onSlidePress) {
-                onSlidePress(index, data[index]);
-              }
-            }}
+            onPress={() => onSlidePress?.(index, data[index])}
             style={[styles.card, { height: carouselHeight }]}
           >
-            <Text style={styles.slideText}>
-              {`Slide ${data[index]}`}
-            </Text>
+            {renderItem
+              ? renderItem(data[index], index)
+              : <Text style={styles.slideText}>{`Slide ${String(data[index])}`}</Text>}
           </TouchableOpacity>
         )}
       />
