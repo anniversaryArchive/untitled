@@ -1,6 +1,7 @@
 import { Tabs } from "expo-router";
-import Icon from "react-native-vector-icons/FontAwesome";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+
+import Icon from "@/components/Icon";
 
 import { colors } from "@/utils/tailwind-colors";
 
@@ -14,6 +15,8 @@ const TABS = [
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();
+  let paddingBottom = insets.bottom;
+  if (!paddingBottom) paddingBottom = 10;
 
   return (
     <Tabs
@@ -21,9 +24,9 @@ export default function TabLayout() {
         tabBarLabelStyle: { fontFamily: "DunggeunmisoB" },
         tabBarActiveTintColor: colors.primary.DEFAULT,
         tabBarStyle: {
-          height: 55 + insets.bottom,
+          height: 60 + paddingBottom,
           paddingTop: 5,
-          paddingBottom: insets.bottom,
+          paddingBottom: paddingBottom,
         },
       }}
     >
@@ -33,7 +36,9 @@ export default function TabLayout() {
           name={tab.name}
           options={{
             title: tab.title,
-            tabBarIcon: ({ color }) => <Icon name={tab.icon} color={color} size={20.0} />,
+            tabBarIcon: ({ color }) => (
+              <Icon name={tab.icon} size={20.0} fill={color} stroke={color} />
+            ),
             tabBarIconStyle: { marginBottom: 4 },
           }}
         />
