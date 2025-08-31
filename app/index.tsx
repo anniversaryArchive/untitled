@@ -11,6 +11,13 @@ export default function Index() {
           </Text>
         </Pressable>
       </Link>
+      <Link href="/bottom-test" asChild>
+        <Pressable>
+          <Text className="font-dunggeunmiso text-secondary-dark text-3xl">
+            BottomSheet
+          </Text>
+        </Pressable>
+      </Link>
     </View>
   );
 }
