@@ -1,5 +1,6 @@
 import React from "react";
 import { View, Pressable, Text } from "react-native";
+import Typography from "@components/Typography";
 
 type SegmentItem = {
   key: string;
@@ -36,16 +37,10 @@ export default function Segment({ segments, selectedKey, onSelect }: Props) {
               borderColor: isSelected ? "transparent" : "#FFBBC1",
             }}
           >
-            <Text className="font-dunggeunmiso"
-              style={{
-                fontWeight: "600",
-                fontSize: 24,
-                lineHeight: 25,
-                color: isSelected ? "#FFF2F4" : "#FFBBC1",
-              }}
-            >
+            <Typography variant="Header3" color={isSelected ? 'primary-light' : 'primary'}>
               {label}
-            </Text>
+            </Typography>
+
           </Pressable>
         );
       })}
