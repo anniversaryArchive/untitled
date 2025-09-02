@@ -51,6 +51,7 @@ const SearchBox = (props: ISearchBoxProps) => {
           value={value}
           onChangeText={setValue}
           onSubmit={handleSubmit}
+          placeholder={placeholder}
           className={`text-[16px] ${className}`}
           color={color}
           {...options}
