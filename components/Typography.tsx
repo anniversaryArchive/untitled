@@ -29,8 +29,10 @@ const typographyTheme = {
     Body1: "text-[16px] font-Dunggeunmiso",
     Body2: "text-[15px] font-Dunggeunmiso",
     Body3: "text-[14px] font-Dunggeunmiso",
+    Body4: "text-[14px] font-DunggeunmisoB",
     Footnote: "text-[13px] font-Dunggeunmiso",
     Caption: "text-[12px] font-Dunggeunmiso",
+    Caption2: "text-[12px] font-DunggeunmisoB",
   },
   color: {
     "primary": "text-primary",

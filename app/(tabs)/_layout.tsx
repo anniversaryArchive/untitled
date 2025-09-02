@@ -35,11 +35,13 @@ export default function TabLayout() {
           key={tab.name}
           name={tab.name}
           options={{
+            headerShown: false,
             title: tab.title,
             tabBarIcon: ({ color }) => (
               <Icon name={tab.icon} size={20.0} fill={color} stroke={color} />
             ),
             tabBarIconStyle: { marginBottom: 4 },
+            sceneStyle: { paddingHorizontal: 20, paddingTop: insets.top },
           }}
         />
       ))}
