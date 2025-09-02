@@ -15,7 +15,7 @@ type Props = {
 
 export default function Segment({ segments, selectedKey, onSelect }: Props) {
   return (
-    <View className="flex-row mt-2 h-12 rounded-l-[4px] rounded-r-[4px] border-2 border-[#FFBBC1]">
+    <View className="flex-row mt-2 h-12 rounded-l-[4px] rounded-r-[4px] border-2 border-primary overflow-hidden">
       {segments.map(({ key, label }, index) => {
         const isSelected = key === selectedKey;
         const isLast = index === segments.length - 1;
@@ -27,10 +27,13 @@ export default function Segment({ segments, selectedKey, onSelect }: Props) {
             className={`flex-1 items-center justify-center ${
               isSelected
                 ? "bg-primary"
-                : `bg-primary-light border-r-2 border-r-[#FFBBC1] ${isLast ? "border-r-0" : ""}`
-            }`}
+                : "bg-primary-light"
+            } ${!isLast ? "border-r-2 border-r-primary" : ""}`}
           >
-          <Typography variant="Header3" color={isSelected ? "primary-light" : "primary"}>
+            <Typography
+              variant="Header3"
+              color={isSelected ? "primary-light" : "primary"}
+            >
               {label}
             </Typography>
           </Pressable>
