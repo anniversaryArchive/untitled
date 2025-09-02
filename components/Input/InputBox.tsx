@@ -1,5 +1,7 @@
 import { TextInput } from "react-native";
+import { getColor } from "@utils/color";
 import { colors } from "@utils/tailwind-colors";
+import WiggleBorder from "@components/WiggleBorder";
 
 export interface IInputBoxProps {
   placeholder?: string;
@@ -9,6 +11,7 @@ export interface IInputBoxProps {
   size?: keyof typeof inputTheme.size;
   color?: keyof typeof inputTheme.color;
   readOnly?: boolean;
+  wiggleBorder?: boolean;
   [options: string]: any;
 }
 
@@ -25,6 +28,24 @@ export const inputTheme = {
   },
 };
 
+const BorderComponent = ({
+  wiggleBorder,
+  borderColor,
+  children,
+}: {
+  wiggleBorder: boolean;
+  borderColor: keyof typeof inputTheme.color;
+  children: React.ReactNode;
+}) => {
+  return wiggleBorder ? (
+    <WiggleBorder strokeWidth={1.5} strokeColor={getColor(borderColor)}>
+      {children}
+    </WiggleBorder>
+  ) : (
+    children
+  );
+};
+
 const InputBox = (props: IInputBoxProps) => {
   const {
     placeholder,
@@ -33,26 +54,30 @@ const InputBox = (props: IInputBoxProps) => {
     color = "secondary-dark",
     type = "text",
     size = "sm",
+    wiggleBorder = false,
     readOnly,
     ...options
   } = props;
 
-  const defaultProps = `border p-3 rounded text-secondary-dark ${inputTheme.color[color]} ${inputTheme.size[size]} ${className}`;
+  const defaultProps = `p-3 rounded text-secondary-dark ${!wiggleBorder && "border"} ${inputTheme.color[color]} ${inputTheme.size[size]}`;
   const readOnlyProps = `bg-gray-200`;
 
   return (
-    <TextInput
-      onSubmitEditing={(e) => {
-        const value = e.nativeEvent.text;
-        onSubmit && onSubmit(value);
-      }}
-      clearButtonMode="while-editing"
-      readOnly={readOnly}
-      placeholder={placeholder || "검색어를 입력하세요."}
-      placeholderTextColor={colors.secondary["dark-80"]}
-      className={`${defaultProps} ${readOnly && readOnlyProps}`}
-      {...options}
-    />
+    <BorderComponent wiggleBorder={wiggleBorder} borderColor={color}>
+      <TextInput
+        onSubmitEditing={(e) => {
+          const value = e.nativeEvent.text;
+          onSubmit && onSubmit(value);
+        }}
+        placeholder={placeholder || "검색어를 입력하세요."}
+        placeholderTextColor={colors.secondary["dark-80"]}
+        className={`${defaultProps} ${readOnly && readOnlyProps} ${className}`}
+        clearButtonMode="while-editing"
+        clearTextOnFocus
+        readOnly={readOnly}
+        {...options}
+      />
+    </BorderComponent>
   );
 };
 

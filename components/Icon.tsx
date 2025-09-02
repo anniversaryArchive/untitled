@@ -17,10 +17,12 @@ const iconMap: { [key: string]: React.FC<any> } = {
   star: Icons.Star,
   bell: Icons.Bell,
   user: Icons.User,
+  close: Icons.Close,
+  chevronLeft: Icons.ChevronLeft,
 };
 
 export default function Icon(props: IIconProps) {
-  const { name, size, fill = "currentColor", stroke = "none" } = props;
+  const { name, size, fill = "currentColor", stroke = "currentColor" } = props;
 
   const IconComponent = iconMap[name];
 
