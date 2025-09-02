@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { View, Text, Pressable } from "react-native";
 import Icon from "react-native-vector-icons/MaterialIcons";
 
@@ -25,24 +26,25 @@ const chipTheme = {
 const Chip = (props: IChip) => {
   const { label, size = "md", color = "secondary-light", value, onClick, onDelete } = props;
 
-  const Container = ({ children }: { children: React.ReactNode }) => {
-    if (onClick) {
-      return <Pressable onPress={() => onClick(value || label)}>{children}</Pressable>;
-    }
-    return <>{children}</>;
-  };
+  const handleClick = useCallback(() => {
+    if (onClick) onClick(value || label);
+  }, [onClick]);
+
+  const handleDelete = useCallback(() => {
+    if (onDelete) onDelete(value || label);
+  }, [onDelete]);
 
   return (
     <View
-      className={`w-fit ${chipTheme.color[color].bg} ${chipTheme.size[size].bg} flex justify-center items-center ${onDelete && "flex-row gap-2"}`}
+      className={`w-fit flex justify-center items-center ${chipTheme.color[color].bg} ${chipTheme.size[size].bg} ${onDelete && "flex-row gap-2"}`}
     >
-      <Container>
+      <Pressable onPress={handleClick} disabled={!onClick}>
         <Text className={`${chipTheme.size[size].text} ${chipTheme.color[color].text}`}>
           {label}
         </Text>
-      </Container>
+      </Pressable>
       {onDelete && (
-        <Pressable onPress={() => onDelete(value || label)}>
+        <Pressable onPress={handleDelete}>
           <Icon name="close" color={"#AAAAAA"} size={size === "sm" ? 10 : 14} />
         </Pressable>
       )}
