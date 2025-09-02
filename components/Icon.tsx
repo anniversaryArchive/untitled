@@ -22,7 +22,7 @@ const iconMap: { [key: string]: React.FC<any> } = {
 };
 
 export default function Icon(props: IIconProps) {
-  const { name, size, fill = "currentColor", stroke = "currentColor" } = props;
+  const { name, size, fill = "currentColor", stroke = "none" } = props;
 
   const IconComponent = iconMap[name];
 
