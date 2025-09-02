@@ -1,3 +1,4 @@
+import { Link } from "expo-router";
 import { Image, ScrollView, View } from "react-native";
 import { Typography, Button, InputBox, TextBox, WiggleBorder } from "@/components";
 
@@ -316,6 +317,34 @@ export default function StyleGuide() {
                 </View>
               </View>
             </View>
+          </View>
+        </View>
+        <View className="flex gap-4">
+          <Typography
+            variant="Header2"
+            color="primary"
+            className="bg-primary-light border-primary-light p-1 border"
+          >
+            슬라이드
+          </Typography>
+          <View className="flex flex-row gap-5">
+            <Link href="/swiper-test" asChild>
+              <Button size="lg">예제 확인</Button>
+            </Link>
+          </View>
+        </View>
+        <View className="flex gap-4">
+          <Typography
+            variant="Header2"
+            color="primary"
+            className="bg-primary-light border-primary-light p-1 border"
+          >
+            드롭박스
+          </Typography>
+          <View className="flex flex-row gap-5">
+            <Link href="/drop-test" asChild>
+              <Button size="lg">예제 확인</Button>
+            </Link>
           </View>
         </View>
       </View>
