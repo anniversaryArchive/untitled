@@ -1,6 +1,8 @@
 import { colors } from "@/utils/tailwind-colors";
 
-export const getColor = (color: string) => {
+export const getColor = (color?: string) => {
+  if (!color) return colors.primary.DEFAULT;
+
   // hex color인 경우
   if (color.startsWith("#")) return color;
 
