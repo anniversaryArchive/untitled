@@ -20,20 +20,20 @@ export default function Segment({ segments, selectedKey, onSelect }: Props) {
         const isSelected = key === selectedKey;
         const isLast = index === segments.length - 1;
 
+        // 스타일 변수 분리
+        const [pressableBg, typoColor] = isSelected
+          ? ["bg-primary", "primary-light"]
+          : ["bg-primary-light", "primary"];
+
         return (
           <Pressable
             key={key}
             onPress={() => onSelect(key)}
-            className={`flex-1 items-center justify-center ${
-              isSelected
-                ? "bg-primary"
-                : "bg-primary-light"
-            } ${!isLast ? "border-r-2 border-r-primary" : ""}`}
+            className={`flex-1 items-center justify-center ${pressableBg} ${
+              !isLast ? "border-r-2 border-r-primary" : ""
+            }`}
           >
-            <Typography
-              variant="Header3"
-              color={isSelected ? "primary-light" : "primary"}
-            >
+            <Typography variant="Header3" color={typoColor}>
               {label}
             </Typography>
           </Pressable>
