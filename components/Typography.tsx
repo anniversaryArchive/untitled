@@ -5,7 +5,9 @@ import { colors } from "@utils/tailwind-colors";
 
 interface ITypography {
   variant?: keyof typeof typographyTheme.variant;
-  color?: keyof typeof typographyTheme.color;
+  // color 제한하지 않고 String 받도록 수정
+  // 내부에서 매핑 실패 시 fallback 주도록 처리
+  color?: string;
   twotone?: never;
   className?: string;
   children: React.ReactNode;
@@ -33,24 +35,30 @@ const typographyTheme = {
     Caption: "text-[12px] font-Dunggeunmiso",
   },
   color: {
-    "primary": "text-primary",
+    primary: "text-primary",
     "primary-light": "text-primary-light",
-    "secondary": "text-secondary",
+    secondary: "text-secondary",
     "secondary-light": "text-secondary-light",
     "secondary-dark": "text-secondary-dark",
-    "black": "text-black",
+    black: "text-black",
   },
 };
 
 const twotoneColorMap = {
-  "primary": {
+  primary: {
     fill: colors.primary.light,
     stroke: colors.primary.DEFAULT,
   },
 };
 
 const Typography = (props: ITypography | ITwoToneTypography) => {
-  const { variant = "Body1", color = "secondary-dark", twotone, children, className } = props;
+  const {
+    variant = "Body1",
+    color = "secondary-dark",
+    twotone,
+    children,
+    className = "",
+  } = props;
 
   const getTwotoneTypography = (twotone: keyof typeof twotoneColorMap) => {
     const _variant = typographyTheme.variant[variant];
@@ -84,7 +92,11 @@ const Typography = (props: ITypography | ITwoToneTypography) => {
         <>{getTwotoneTypography(twotone)}</>
       ) : (
         <Text
-          className={`${typographyTheme.variant[variant]} ${typographyTheme.color[color]} ${className}`}
+          // color theme 없으면 그대로 className 붙이지 않고 fallback 적용
+          className={`${typographyTheme.variant[variant]} ${
+            typographyTheme.color[color as keyof typeof typographyTheme.color] ??
+            typographyTheme.color["secondary-dark"]
+          } ${className}`}
         >
           {children}
         </Text>
