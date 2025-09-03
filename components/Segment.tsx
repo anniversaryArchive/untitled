@@ -15,7 +15,7 @@ type Props = {
 
 export default function Segment({ segments, selectedKey, onSelect }: Props) {
   return (
-    <View className="flex-row mt-2 h-12 rounded-l-[4px] rounded-r-[4px] border-2 border-primary overflow-hidden">
+    <View className="flex-row mt-2 h-12 rounded-[4px] border-2 border-primary overflow-hidden">
       {segments.map(({ key, label }, index) => {
         const isSelected = key === selectedKey;
         const isLast = index === segments.length - 1;
