@@ -1,8 +1,11 @@
+import { useState } from "react";
 import { Link } from "expo-router";
 import { Image, ScrollView, View } from "react-native";
-import { Typography, Button, InputBox, TextBox, WiggleBorder } from "@/components";
+import { Typography, Button, InputBox, TextBox, WiggleBorder, ProgressBar } from "@/components";
 
 export default function StyleGuide() {
+  const [progress, setProgress] = useState(25);
+
   return (
     <ScrollView className="p-4">
       <View className=" flex h-full gap-6">
@@ -315,6 +318,37 @@ export default function StyleGuide() {
                     />
                   </WiggleBorder>
                 </View>
+              </View>
+            </View>
+          </View>
+
+          <View className="flex gap-4">
+            <Typography
+              variant="Header2"
+              color="primary"
+              className="bg-primary-light border-primary-light p-1 border"
+            >
+              ProgressBar
+            </Typography>
+            <View className="flex justify-around flex-row">
+              <Button onPress={() => setProgress(progress < 10 ? 0 : progress - 10)}>-10</Button>
+              <Typography variant="Body2" className="my-auto">
+                {progress}
+              </Typography>
+              <Button onPress={() => setProgress(progress > 90 ? 100 : progress + 10)}>+10</Button>
+            </View>
+            <View className="flex flex-row gap-5">
+              <Typography variant="Header3" color="secondary" className="w-[100px]">
+                Default
+              </Typography>
+              <View className="flex-1 flex flex-col gap-2 justify-center">
+                <ProgressBar value={progress} />
+                <ProgressBar
+                  value={progress}
+                  activeColor="secondary.dark"
+                  backgroundColor="secondary.light"
+                  height={15}
+                />
               </View>
             </View>
           </View>
