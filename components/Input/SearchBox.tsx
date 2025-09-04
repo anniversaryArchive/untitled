@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useRef } from "react";
 import { Pressable, View } from "react-native";
 import { useNavigation } from "expo-router";
 
 import { colors } from "@utils/tailwind-colors";
 import Icon from "@components/Icon";
-import InputBox from "./InputBox";
+import InputBox, { InputBoxHandle } from "./InputBox";
 
 interface ISearchBoxProps {
   placeholder?: string;
@@ -22,12 +22,14 @@ const searchBoxTheme = {
 
 const SearchBox = (props: ISearchBoxProps) => {
   const { placeholder, onSubmit, className, color = "primary", ...options } = props;
-  const [value, setValue] = useState("");
   const navigation = useNavigation();
+  const inputRef = useRef<InputBoxHandle>(null);
 
-  const handleSubmit = (text: string) => {
-    onSubmit(text);
-    setValue("");
+  const handleSubmit = (text?: string) => {
+    if (!!text?.trim()) {
+      onSubmit(text);
+      inputRef.current?.clear();
+    }
   };
 
   return (
@@ -48,8 +50,7 @@ const SearchBox = (props: ISearchBoxProps) => {
       <View className={`grow`}>
         <InputBox
           wiggleBorder
-          value={value}
-          onChangeText={setValue}
+          ref={inputRef}
           onSubmit={handleSubmit}
           placeholder={placeholder}
           className={`text-[16px] ${className}`}
@@ -59,7 +60,7 @@ const SearchBox = (props: ISearchBoxProps) => {
       </View>
       <Pressable
         onPress={() => {
-          handleSubmit(value);
+          handleSubmit(inputRef.current?.getValue());
         }}
       >
         <Icon name="search" size={24} fill={searchBoxTheme[color]} stroke={searchBoxTheme[color]} />
