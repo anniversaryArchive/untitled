@@ -1,6 +1,6 @@
 import { useCallback } from "react";
 import { View, Text, Pressable } from "react-native";
-import Icon from "react-native-vector-icons/MaterialIcons";
+import Icon from "./Icon";
 
 interface IChip {
   label: string;
@@ -45,7 +45,7 @@ const Chip = (props: IChip) => {
       </Pressable>
       {onDelete && (
         <Pressable onPress={handleDelete}>
-          <Icon name="close" color={"#AAAAAA"} size={size === "sm" ? 10 : 14} />
+          <Icon name="close" stroke={"#AAAAAA"} fill={"#AAAAAA"} size={size === "sm" ? 10 : 14} />
         </Pressable>
       )}
     </View>
