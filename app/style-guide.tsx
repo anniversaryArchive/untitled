@@ -1,8 +1,20 @@
+import { useState } from "react";
 import { Link } from "expo-router";
 import { Image, ScrollView, View } from "react-native";
-import { Typography, Button, InputBox, TextBox, SearchBox, WiggleBorder } from "@/components";
+import {
+  Typography,
+  Button,
+  InputBox,
+  TextBox,
+  SearchBox,
+  WiggleBorder,
+  ProgressBar,
+  Chip,
+} from "@/components";
 
 export default function StyleGuide() {
+  const [progress, setProgress] = useState(25);
+
   return (
     <ScrollView className="p-4">
       <View className=" flex h-full gap-6">
@@ -342,6 +354,37 @@ export default function StyleGuide() {
               </View>
             </View>
           </View>
+
+          <View className="flex gap-4">
+            <Typography
+              variant="Header2"
+              color="primary"
+              className="bg-primary-light border-primary-light p-1 border"
+            >
+              ProgressBar
+            </Typography>
+            <View className="flex flex-row justify-around">
+              <Button onPress={() => setProgress(progress < 10 ? 0 : progress - 10)}>-10</Button>
+              <Typography variant="Body2" className="my-auto">
+                {progress}
+              </Typography>
+              <Button onPress={() => setProgress(progress > 90 ? 100 : progress + 10)}>+10</Button>
+            </View>
+            <View className="flex flex-row gap-5">
+              <Typography variant="Header3" color="secondary" className="w-[100px]">
+                Default
+              </Typography>
+              <View className="flex flex-col justify-center flex-1 gap-2">
+                <ProgressBar value={progress} />
+                <ProgressBar
+                  value={progress}
+                  activeColor="secondary.dark"
+                  backgroundColor="secondary.light"
+                  height={15}
+                />
+              </View>
+            </View>
+          </View>
         </View>
         <View className="flex gap-4">
           <Typography
@@ -369,6 +412,57 @@ export default function StyleGuide() {
             <Link href="/drop-test" asChild>
               <Button size="lg">예제 확인</Button>
             </Link>
+          </View>
+        </View>
+        <View className="flex gap-4">
+          <Typography
+            variant="Header2"
+            color="primary"
+            className="bg-primary-light border-primary-light p-1 border"
+          >
+            Chip
+          </Typography>
+          <View className="flex flex-row gap-5">
+            <Typography variant="Header3" color="secondary" className="w-[100px]">
+              color
+            </Typography>
+            <View className="flex flex-row items-start gap-2">
+              <Chip label="primary" color="primary" />
+              <Chip label="secondary-light(default)" />
+            </View>
+          </View>
+          <View className="flex flex-row gap-5">
+            <Typography variant="Header3" color="secondary" className="w-[100px]">
+              size
+            </Typography>
+            <View className=" flex flex-row gap-2">
+              <Chip label="sm" size="sm" />
+              <Chip label="md(default)" size="md" />
+              <Chip label="lg" size="lg" />
+            </View>
+          </View>
+          <View className="flex flex-row gap-5">
+            <Typography variant="Header3" color="secondary" className="w-[100px]">
+              optional
+            </Typography>
+            <View className="flex items-start gap-2">
+              <Chip
+                value="click"
+                label="onClick(log 확인)"
+                onClick={(value) => {
+                  console.log("onClick", value);
+                }}
+              />
+              <Chip
+                size="lg"
+                value="delete"
+                label="onDelete(log 확인)"
+                onDelete={(value) => {
+                  console.log("onDelete", value);
+                }}
+              />
+              <Typography variant="Footnote">* onClick&onDelete 동시 사용 가능</Typography>
+            </View>
           </View>
         </View>
       </View>
