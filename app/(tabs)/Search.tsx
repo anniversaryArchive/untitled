@@ -1,29 +1,29 @@
-import { useEffect, useState } from "react";
-import { FlatList, View, Alert } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import { View, Alert, ScrollView } from "react-native";
 import { Button, Typography, SearchBox, Chip, GoodsThumbnail } from "@components/index";
 import * as searchHistory from "@utils/searchHistory";
 
 export default function Search() {
   const [recentSearches, setRecentSearches] = useState([]);
 
-  const loadSearches = async () => {
+  const loadSearches = useCallback(async () => {
     const searches = await searchHistory.getRecentSearches();
     setRecentSearches(searches);
-  };
+  }, []);
 
   const handleSearch = async (value: string) => {
     await searchHistory.addRecentSearch(value);
-    loadSearches();
+    await loadSearches();
   };
 
   const handleRemoveSearches = async (value: string) => {
     await searchHistory.removeRecentSearch(value);
-    loadSearches();
+    await loadSearches();
   };
 
   useEffect(() => {
     loadSearches();
-  }, []);
+  }, [loadSearches]);
 
   return (
     <View className="flex gap-12">
@@ -59,26 +59,28 @@ export default function Search() {
               전체 삭제
             </Button>
           </View>
-          <FlatList
+          <ScrollView
             horizontal
-            data={recentSearches}
+            showsHorizontalScrollIndicator={false}
+            className="min-h-11"
             contentContainerClassName="gap-2"
-            keyExtractor={(item, index) => `${item}-${index}`}
-            renderItem={({ item }) => (
+          >
+            {recentSearches.map((term, index) => (
               <Chip
+                key={`${term}_${index}`}
                 size="lg"
                 color="secondary-light"
-                label={item}
+                label={term}
                 onClick={() => {
                   // TODO: 검색 기능 생기면 연결하기
-                  handleSearch(item);
+                  handleSearch(term);
                 }}
                 onDelete={() => {
-                  handleRemoveSearches(item);
+                  handleRemoveSearches(term);
                 }}
               />
-            )}
-          />
+            ))}
+          </ScrollView>
         </View>
       )}
       <View className="flex gap-2">
