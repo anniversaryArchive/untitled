@@ -1,18 +1,22 @@
-import { TextInput } from "react-native";
+import { forwardRef, useImperativeHandle, useRef } from "react";
+import { TextInput, TextInputProps } from "react-native";
 import { getColor } from "@utils/color";
 import { colors } from "@utils/tailwind-colors";
 import WiggleBorder from "@components/WiggleBorder";
 
-export interface IInputBoxProps {
+interface IInputBoxProps extends TextInputProps {
   placeholder?: string;
   className?: string;
   onSubmit?: (value: string) => void;
   type?: string;
   size?: keyof typeof inputTheme.size;
   color?: keyof typeof inputTheme.color;
-  readOnly?: boolean;
   wiggleBorder?: boolean;
-  [options: string]: any;
+}
+
+export interface InputBoxHandle {
+  getValue: () => string;
+  clear: () => void;
 }
 
 export const inputTheme = {
@@ -46,39 +50,57 @@ const BorderComponent = ({
   );
 };
 
-const InputBox = (props: IInputBoxProps) => {
-  const {
-    placeholder,
-    onSubmit,
-    className,
-    color = "secondary-dark",
-    type = "text",
-    size = "sm",
-    wiggleBorder = false,
-    readOnly,
-    ...options
-  } = props;
+const InputBox = forwardRef<InputBoxHandle, IInputBoxProps>(
+  (props: IInputBoxProps, ref?: React.ForwardedRef<InputBoxHandle>) => {
+    const {
+      placeholder,
+      onSubmit,
+      className,
+      color = "secondary-dark",
+      type = "text",
+      size = "sm",
+      wiggleBorder = false,
+      readOnly,
+      ...options
+    } = props;
+    const inputRef = useRef<TextInput>(null);
+    const valueRef = useRef<string>("");
 
-  const defaultProps = `p-3 rounded text-secondary-dark ${!wiggleBorder && "border"} ${inputTheme.color[color]} ${inputTheme.size[size]}`;
-  const readOnlyProps = `bg-gray-200`;
+    useImperativeHandle(ref, () => ({
+      clear: () => {
+        inputRef.current?.clear();
+        valueRef.current = "";
+      },
+      getValue: () => {
+        return valueRef.current;
+      },
+    }));
 
-  return (
-    <BorderComponent wiggleBorder={wiggleBorder} borderColor={color}>
-      <TextInput
-        onSubmitEditing={(e) => {
-          const value = e.nativeEvent.text;
-          onSubmit && onSubmit(value);
-        }}
-        placeholder={placeholder || "검색어를 입력하세요."}
-        placeholderTextColor={colors.secondary["dark-80"]}
-        className={`${defaultProps} ${readOnly && readOnlyProps} ${className}`}
-        clearButtonMode="while-editing"
-        clearTextOnFocus
-        readOnly={readOnly}
-        {...options}
-      />
-    </BorderComponent>
-  );
-};
+    const defaultProps = `p-3 rounded text-secondary-dark ${!wiggleBorder && "border"} ${inputTheme.color[color]} ${inputTheme.size[size]}`;
+    const readOnlyProps = `bg-gray-200`;
+
+    return (
+      <BorderComponent wiggleBorder={wiggleBorder} borderColor={color}>
+        <TextInput
+          ref={inputRef}
+          onSubmitEditing={(e) => {
+            const value = e.nativeEvent.text;
+            onSubmit && onSubmit(value);
+          }}
+          onChangeText={(text) => {
+            valueRef.current = text;
+          }}
+          placeholder={placeholder || "검색어를 입력하세요."}
+          placeholderTextColor={colors.secondary["dark-80"]}
+          className={`${defaultProps} ${readOnly && readOnlyProps} ${className}`}
+          clearButtonMode="while-editing"
+          clearTextOnFocus
+          readOnly={readOnly}
+          {...options}
+        />
+      </BorderComponent>
+    );
+  }
+);
 
 export default InputBox;
