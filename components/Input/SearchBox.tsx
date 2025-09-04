@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import { Pressable, View } from "react-native";
+import { Alert, Pressable, View } from "react-native";
 import { useNavigation } from "expo-router";
 
 import { colors } from "@utils/tailwind-colors";
@@ -25,11 +25,17 @@ const SearchBox = (props: ISearchBoxProps) => {
   const navigation = useNavigation();
   const inputRef = useRef<InputBoxHandle>(null);
 
-  const handleSubmit = (text?: string) => {
-    if (!!text?.trim()) {
-      onSubmit(text);
-      inputRef.current?.clear();
+  const handleSubmit = (value?: string) => {
+    const searchTerm = value || inputRef.current?.getValue();
+
+    if (!searchTerm?.trim()) {
+      return Alert.alert("공백은 입력할 수 없습니다.", undefined, [{ text: "확인" }]);
     }
+
+    onSubmit(searchTerm);
+
+    // value가 안넘어왔을 시 검색 버튼을 누른 것으로 간주
+    !value && inputRef.current?.clear();
   };
 
   return (
@@ -58,11 +64,7 @@ const SearchBox = (props: ISearchBoxProps) => {
           {...options}
         />
       </View>
-      <Pressable
-        onPress={() => {
-          handleSubmit(inputRef.current?.getValue());
-        }}
-      >
+      <Pressable onPress={() => handleSubmit}>
         <Icon name="search" size={24} fill={searchBoxTheme[color]} stroke={searchBoxTheme[color]} />
       </Pressable>
     </View>
