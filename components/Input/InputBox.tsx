@@ -103,7 +103,6 @@ const InputBox = forwardRef<InputBoxHandle, IInputBoxProps>(
           placeholderTextColor={colors.secondary["dark-80"]}
           className={`${defaultProps} ${readOnly && readOnlyProps} ${className}`}
           clearButtonMode="while-editing"
-          clearTextOnFocus
           readOnly={readOnly}
           {...options}
         />
