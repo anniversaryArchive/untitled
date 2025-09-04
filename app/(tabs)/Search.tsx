@@ -1,9 +1,7 @@
 import { useEffect, useState } from "react";
-import { FlatList, Pressable, View, Text, Alert } from "react-native";
+import { FlatList, View, Alert } from "react-native";
+import { Button, Typography, SearchBox, Chip, GoodsThumbnail } from "@components/index";
 import * as searchHistory from "@utils/searchHistory";
-import { Button, Typography, SearchBox } from "@components/index";
-import GoodsThumbnail from "@components/GoodsThumbnail";
-import Icon from "@components/Icon";
 
 export default function Search() {
   const [recentSearches, setRecentSearches] = useState([]);
@@ -67,21 +65,18 @@ export default function Search() {
             contentContainerClassName="gap-2"
             keyExtractor={(item, index) => `${item}-${index}`}
             renderItem={({ item }) => (
-              // TODO: Chip으로수정
-              <View
-                className={`p-2 rounded-full w-fit flex justify-center items-center bg-secondary-light text-secondary-dark flex-row gap-2`}
-              >
-                <Pressable onPress={() => {}}>
-                  <Text className={`text-[14px] font-Dunggeunmiso`}>{item}</Text>
-                </Pressable>
-                <Pressable
-                  onPress={() => {
-                    handleRemoveSearches(item);
-                  }}
-                >
-                  <Icon name="close" fill="#AAAAAA" stroke="#AAAAAA" size={14} />
-                </Pressable>
-              </View>
+              <Chip
+                size="lg"
+                color="secondary-light"
+                label={item}
+                onClick={() => {
+                  // TODO: 검색 기능 생기면 연결하기
+                  handleSearch(item);
+                }}
+                onDelete={() => {
+                  handleRemoveSearches(item);
+                }}
+              />
             )}
           />
         </View>
