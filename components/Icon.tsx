@@ -17,6 +17,8 @@ const iconMap: { [key: string]: React.FC<any> } = {
   star: Icons.Star,
   bell: Icons.Bell,
   user: Icons.User,
+  close: Icons.Close,
+  chevronLeft: Icons.ChevronLeft,
 };
 
 export default function Icon(props: IIconProps) {
