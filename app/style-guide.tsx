@@ -1,8 +1,15 @@
 import { useState } from "react";
 import { Link } from "expo-router";
 import { Image, ScrollView, View } from "react-native";
-import { Typography, Button, InputBox, TextBox, WiggleBorder, Chip } from "@/components";
-import { Typography, Button, InputBox, TextBox, WiggleBorder, ProgressBar, Chip } from "@/components";
+import {
+  Typography,
+  Button,
+  InputBox,
+  TextBox,
+  WiggleBorder,
+  ProgressBar,
+  Chip,
+} from "@/components";
 
 export default function StyleGuide() {
   const [progress, setProgress] = useState(25);
@@ -331,7 +338,7 @@ export default function StyleGuide() {
             >
               ProgressBar
             </Typography>
-            <View className="flex justify-around flex-row">
+            <View className="flex flex-row justify-around">
               <Button onPress={() => setProgress(progress < 10 ? 0 : progress - 10)}>-10</Button>
               <Typography variant="Body2" className="my-auto">
                 {progress}
@@ -342,7 +349,7 @@ export default function StyleGuide() {
               <Typography variant="Header3" color="secondary" className="w-[100px]">
                 Default
               </Typography>
-              <View className="flex-1 flex flex-col gap-2 justify-center">
+              <View className="flex flex-col justify-center flex-1 gap-2">
                 <ProgressBar value={progress} />
                 <ProgressBar
                   value={progress}
