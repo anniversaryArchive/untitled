@@ -12,6 +12,7 @@ interface IInputBoxProps extends TextInputProps {
   size?: keyof typeof inputTheme.size;
   color?: keyof typeof inputTheme.color;
   wiggleBorder?: boolean;
+  clearAfterSubmit?: boolean;
 }
 
 export interface InputBoxHandle {
@@ -61,20 +62,23 @@ const InputBox = forwardRef<InputBoxHandle, IInputBoxProps>(
       size = "sm",
       wiggleBorder = false,
       readOnly,
+      clearAfterSubmit = true,
       ...options
     } = props;
     const inputRef = useRef<TextInput>(null);
     const valueRef = useRef<string>("");
 
     useImperativeHandle(ref, () => ({
-      clear: () => {
-        inputRef.current?.clear();
-        valueRef.current = "";
-      },
+      clear: clearInput,
       getValue: () => {
         return valueRef.current;
       },
     }));
+
+    const clearInput = () => {
+      inputRef.current?.clear();
+      valueRef.current = "";
+    };
 
     const defaultProps = `p-3 rounded text-secondary-dark ${!wiggleBorder && "border"} ${inputTheme.color[color]} ${inputTheme.size[size]}`;
     const readOnlyProps = `bg-gray-200`;
@@ -83,13 +87,18 @@ const InputBox = forwardRef<InputBoxHandle, IInputBoxProps>(
       <BorderComponent wiggleBorder={wiggleBorder} borderColor={color}>
         <TextInput
           ref={inputRef}
-          onSubmitEditing={(e) => {
-            const value = e.nativeEvent.text;
-            onSubmit && onSubmit(value);
-          }}
           onChangeText={(text) => {
             valueRef.current = text;
           }}
+          onSubmitEditing={(e) => {
+            if (onSubmit) {
+              const value = e.nativeEvent.text;
+              onSubmit(value);
+
+              clearAfterSubmit && clearInput();
+            }
+          }}
+          submitBehavior={"blurAndSubmit"}
           placeholder={placeholder || "검색어를 입력하세요."}
           placeholderTextColor={colors.secondary["dark-80"]}
           className={`${defaultProps} ${readOnly && readOnlyProps} ${className}`}
