@@ -64,7 +64,7 @@ const SearchBox = (props: ISearchBoxProps) => {
           {...options}
         />
       </View>
-      <Pressable onPress={() => handleSubmit}>
+      <Pressable onPress={() => handleSubmit()}>
         <Icon name="search" size={24} fill={searchBoxTheme[color]} stroke={searchBoxTheme[color]} />
       </Pressable>
     </View>
