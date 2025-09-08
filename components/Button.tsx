@@ -52,7 +52,7 @@ const Button = (props: IButtonProps) => {
     ...options
   } = props;
 
-  const defaultStyle = `flex items-center justify-center whitespace-nowrap leading-none select-none`;
+  const defaultStyle = `text-center whitespace-nowrap leading-none select-none`;
   const borderRadiusProps = rounded ? "rounded-full" : "rounded-[4px]";
   const widthProps = width === "auto" ? "w-fit" : "w-full";
 
