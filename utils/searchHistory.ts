@@ -7,8 +7,7 @@ const STORAGE_KEY = "@recent_searches";
 export const addRecentSearch = async (searchItem: string) => {
   try {
     // 1. 기존 검색어 목록 불러오기
-    const existingSearchesJSON = await AsyncStorage.getItem(STORAGE_KEY);
-    let searches = existingSearchesJSON ? JSON.parse(existingSearchesJSON) : [];
+    let searches = await getRecentSearches();
 
     // 2. 중복된 검색어 제거 (기존에 있었다면 추가하지않고 맨 위로 올리기 위함)
     searches = searches.filter((item: string) => item !== searchItem);
@@ -30,7 +29,7 @@ export const addRecentSearch = async (searchItem: string) => {
 export const getRecentSearches = async () => {
   try {
     const searchesJSON = await AsyncStorage.getItem(STORAGE_KEY);
-    return searchesJSON ? JSON.parse(searchesJSON) : [];
+    return searchesJSON ? (JSON.parse(searchesJSON) as string[]) : [];
   } catch (e) {
     console.error("최근 검색어 불러오기에 실패했습니다.", e);
     return [];
@@ -49,10 +48,7 @@ export const clearRecentSearches = async () => {
 export const removeRecentSearch = async (removeItem: string) => {
   try {
     // 1. 기존 검색어 목록 불러오기
-    const existingSearchesJSON = await AsyncStorage.getItem(STORAGE_KEY);
-    if (!existingSearchesJSON) return;
-
-    let searches = JSON.parse(existingSearchesJSON);
+    const searches = await getRecentSearches();
 
     // 2. 삭제할 검색어를 제외한 새 배열 생성
     const newSearches = searches.filter((item: string) => item !== removeItem);
