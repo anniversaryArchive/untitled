@@ -4,7 +4,7 @@ import { Button, Typography, SearchBox, Chip, GoodsThumbnail } from "@components
 import * as searchHistory from "@utils/searchHistory";
 
 export default function Search() {
-  const [recentSearches, setRecentSearches] = useState([]);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
 
   const loadSearches = useCallback(async () => {
     const searches = await searchHistory.getRecentSearches();
