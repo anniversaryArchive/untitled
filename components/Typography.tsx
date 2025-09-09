@@ -27,12 +27,14 @@ const typographyTheme = {
     Header2: "text-[24px] font-DunggeunmisoB",
     Header3: "text-[20px] font-DunggeunmisoB",
     Header4: "text-[20px] font-Dunggeunmiso",
+    Header5: "text-[16px] font-DunggeunmisoB",
     Title1: "text-[17px] font-Dunggeunmiso",
     Body1: "text-[16px] font-Dunggeunmiso",
     Body2: "text-[15px] font-Dunggeunmiso",
     Body3: "text-[14px] font-Dunggeunmiso",
     Footnote: "text-[13px] font-Dunggeunmiso",
     Caption: "text-[12px] font-Dunggeunmiso",
+    Tag: "text-[14px] font-DunggeunmisoB",
   },
   color: {
     primary: "text-primary",
@@ -52,13 +54,7 @@ const twotoneColorMap = {
 };
 
 const Typography = (props: ITypography | ITwoToneTypography) => {
-  const {
-    variant = "Body1",
-    color = "secondary-dark",
-    twotone,
-    children,
-    className = "",
-  } = props;
+  const { variant = "Body1", color = "secondary-dark", twotone, children, className = "" } = props;
 
   const getTwotoneTypography = (twotone: keyof typeof twotoneColorMap) => {
     const _variant = typographyTheme.variant[variant];
