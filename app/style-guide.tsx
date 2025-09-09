@@ -132,43 +132,41 @@ export default function StyleGuide() {
               <Typography variant="Header3" color="secondary" className="w-[100px]">
                 variant / disabled
               </Typography>
-              <View className="flex gap-2">
-                <View className=" flex gap-2">
-                  <Button onPress={() => {}}>primary</Button>
-                  <Button variant="outlined" onPress={() => {}}>
-                    primary outlined
-                  </Button>
-                  <Button variant="text" onPress={() => {}}>
-                    primary text
-                  </Button>
-                  <Button onPress={() => {}} disabled>
-                    primary disabled
-                  </Button>
-                  <Button color="secondary" onPress={() => {}}>
-                    secondary
-                  </Button>
-                  <Button variant="outlined" color="secondary" onPress={() => {}}>
-                    secondary outlined
-                  </Button>
-                  <Button variant="text" color="secondary" onPress={() => {}}>
-                    secondary text
-                  </Button>
-                  <Button color="secondary" onPress={() => {}} disabled>
-                    secondary disabled
-                  </Button>
-                  <Button color="secondary-dark" onPress={() => {}}>
-                    secondary-dark
-                  </Button>
-                  <Button variant="outlined" color="secondary-dark" onPress={() => {}}>
-                    secondary-dark outlined
-                  </Button>
-                  <Button variant="text" color="secondary-dark" onPress={() => {}}>
-                    secondary-dark text
-                  </Button>
-                  <Button color="secondary-dark" onPress={() => {}} disabled>
-                    secondary-dark disabled
-                  </Button>
-                </View>
+              <View className=" flex gap-2">
+                <Button onPress={() => {}}>primary</Button>
+                <Button variant="outlined" onPress={() => {}}>
+                  primary outlined
+                </Button>
+                <Button variant="text" onPress={() => {}}>
+                  primary text
+                </Button>
+                <Button onPress={() => {}} disabled>
+                  primary disabled
+                </Button>
+                <Button color="secondary" onPress={() => {}}>
+                  secondary
+                </Button>
+                <Button variant="outlined" color="secondary" onPress={() => {}}>
+                  secondary outlined
+                </Button>
+                <Button variant="text" color="secondary" onPress={() => {}}>
+                  secondary text
+                </Button>
+                <Button color="secondary" onPress={() => {}} disabled>
+                  secondary disabled
+                </Button>
+                <Button color="secondary-dark" onPress={() => {}}>
+                  secondary-dark
+                </Button>
+                <Button variant="outlined" color="secondary-dark" onPress={() => {}}>
+                  secondary-dark outlined
+                </Button>
+                <Button variant="text" color="secondary-dark" onPress={() => {}}>
+                  secondary-dark text
+                </Button>
+                <Button color="secondary-dark" onPress={() => {}} disabled>
+                  secondary-dark disabled
+                </Button>
               </View>
             </View>
             <View className="flex flex-row gap-5">
