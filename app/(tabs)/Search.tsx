@@ -6,55 +6,60 @@ import * as searchHistory from "@utils/searchHistory";
 export default function Search() {
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
 
-  const loadSearches = useCallback(async () => {
-    const searches = await searchHistory.getRecentSearches();
-    setRecentSearches(searches);
+  const handleAddSearch = useCallback(async (value: string) => {
+    setRecentSearches((prev) => {
+      const prevSearches = prev.filter((item) => item !== value);
+      return [value, ...prevSearches].slice(0, 10);
+    });
+    await searchHistory.addRecentSearch(value);
   }, []);
 
-  const handleSearch = async (value: string) => {
-    await searchHistory.addRecentSearch(value);
-    await loadSearches();
-  };
-
-  const handleRemoveSearches = async (value: string) => {
+  const handleRemoveSearch = useCallback(async (value: string) => {
+    setRecentSearches((prev) => prev.filter((item) => item !== value));
     await searchHistory.removeRecentSearch(value);
-    await loadSearches();
-  };
+  }, []);
+
+  const handleClearAllSearches = useCallback(() => {
+    Alert.alert("최근 검색어를 전체 삭제하시겠습니까?", undefined, [
+      {
+        text: "취소",
+        style: "cancel",
+      },
+      {
+        text: "삭제",
+        style: "destructive",
+        onPress: async () => {
+          setRecentSearches([]);
+          await searchHistory.clearRecentSearches();
+        },
+      },
+    ]);
+  }, []);
 
   useEffect(() => {
-    loadSearches();
-  }, [loadSearches]);
+    const loadInitialSearches = async () => {
+      const searches = await searchHistory.getRecentSearches();
+      setRecentSearches(searches);
+    };
+    loadInitialSearches();
+  }, []);
 
   return (
-    <View className="flex gap-12">
+    <View className=" flex gap-12 px-6">
       <SearchBox
         onSubmit={(value) => {
-          handleSearch(value);
+          handleAddSearch(value);
         }}
       />
       {recentSearches.length > 0 && (
         <View className="flex gap-1">
-          <View className="flex flex-row items-baseline justify-between">
+          <View className="flex flex-row items-center justify-between">
             <Typography variant="Header4">최근 검색어</Typography>
             <Button
               variant="text"
               size="md"
               color="secondary-dark"
-              onPress={() => {
-                Alert.alert("최근 검색어를 전체 삭제하시겠습니까?", undefined, [
-                  {
-                    text: "취소",
-                    style: "cancel",
-                  },
-                  {
-                    text: "삭제",
-                    onPress: async () => {
-                      await searchHistory.clearRecentSearches();
-                      setRecentSearches([]);
-                    },
-                  },
-                ]);
-              }}
+              onPress={handleClearAllSearches}
             >
               전체 삭제
             </Button>
@@ -62,8 +67,8 @@ export default function Search() {
           <ScrollView
             horizontal
             showsHorizontalScrollIndicator={false}
-            className="min-h-11"
-            contentContainerClassName="gap-2"
+            className="min-h-11 -mx-6"
+            contentContainerClassName="gap-2 pl-4"
           >
             {recentSearches.map((term, index) => (
               <Chip
@@ -73,10 +78,10 @@ export default function Search() {
                 label={term}
                 onClick={() => {
                   // TODO: 검색 기능 생기면 연결하기
-                  handleSearch(term);
+                  handleAddSearch(term);
                 }}
                 onDelete={() => {
-                  handleRemoveSearches(term);
+                  handleRemoveSearch(term);
                 }}
               />
             ))}
