@@ -1,6 +1,6 @@
 import Typography from "./Typography";
 import Button from "./Button";
-import { InputBox, TextBox } from "./Input";
+import { InputBox, TextBox, SearchBox } from "./Input";
 import WiggleBorder from "./WiggleBorder";
 import ProgressBar from "./ProgressBar";
 import Chip from "./Chip";
@@ -15,6 +15,7 @@ export {
   Button,
   InputBox,
   TextBox,
+  SearchBox,
   WiggleBorder,
   ProgressBar,
   Chip,

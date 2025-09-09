@@ -6,8 +6,10 @@ export const getColor = (color?: string) => {
   // hex color인 경우
   if (color.startsWith("#")) return color;
 
+  const splitUnit = color.includes(".") ? "." : "-";
+
   // tailwind color
-  const colorPath = color.split(".");
+  const colorPath = color.split(splitUnit);
   const mainColor = colorPath[0] as keyof typeof colors;
   const subColor = colorPath[1];
 

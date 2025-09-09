@@ -6,6 +6,7 @@ import {
   Button,
   InputBox,
   TextBox,
+  SearchBox,
   WiggleBorder,
   ProgressBar,
   Chip,
@@ -227,6 +228,7 @@ export default function StyleGuide() {
             </Typography>
             <View className="grow flex gap-2">
               <InputBox placeholder="readOnly" readOnly />
+              <InputBox placeholder="wiggleBorder" wiggleBorder />
             </View>
           </View>
         </View>
@@ -254,6 +256,29 @@ export default function StyleGuide() {
             </Typography>
             <View className="grow flex gap-2">
               <TextBox bold placeholder="bold=true" />
+            </View>
+          </View>
+          <View className="flex gap-4">
+            <Typography
+              variant="Header2"
+              color="primary"
+              className="bg-primary-light border-primary-light p-1 border"
+            >
+              SearchBox
+            </Typography>
+            <View className="flex gap-5">
+              <Typography variant="Header3" color="secondary" className="w-[100px]">
+                color
+              </Typography>
+              <View className="grow flex gap-2">
+                <SearchBox placeholder="primary (default)" onSubmit={() => {}} />
+                <SearchBox color="secondary" placeholder="secondary" onSubmit={() => {}} />
+                <SearchBox
+                  color="secondary-dark"
+                  placeholder="secondary-dark"
+                  onSubmit={() => {}}
+                />
+              </View>
             </View>
           </View>
           <View className="flex gap-4">
