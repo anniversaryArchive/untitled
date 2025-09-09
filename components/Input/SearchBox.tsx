@@ -33,9 +33,6 @@ const SearchBox = (props: ISearchBoxProps) => {
     }
 
     onSubmit(searchTerm);
-
-    // value가 안넘어왔을 시 검색 버튼을 누른 것으로 간주
-    !value && inputRef.current?.clear();
   };
 
   return (
