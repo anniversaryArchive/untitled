@@ -17,6 +17,7 @@ interface IWiggleBorderProps {
   frequency?: number; // 얼마나 자주 흔들릴지 (0-100, default 100)
   wiggle?: number; // 진폭 (0-100, default 30)
   smoothen?: number; // 보간 부드러움 정도 (0-100, default 50)
+  borderZIndex?: number; // default. 1
 }
 
 const WiggleBorder: React.FC<IWiggleBorderProps> = ({
@@ -30,6 +31,7 @@ const WiggleBorder: React.FC<IWiggleBorderProps> = ({
   smoothen = 50,
   margin = 4,
   backgroundColor,
+  borderZIndex = 1,
 }) => {
   const [path, setPath] = useState<string>("");
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
@@ -217,7 +219,16 @@ const WiggleBorder: React.FC<IWiggleBorderProps> = ({
     <View style={containerStyle} onLayout={handleContainerLayout}>
       {/* Wiggle border */}
       {actualWidth > 0 && actualHeight > 0 && (
-        <View style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0 }}>
+        <View
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            zIndex: borderZIndex,
+          }}
+        >
           <Svg
             width={actualWidth + margin * 2}
             height={actualHeight + margin * 2}
@@ -253,6 +264,7 @@ const WiggleBorder: React.FC<IWiggleBorderProps> = ({
           alignItems: "center",
           flex: width === undefined ? 1 : undefined,
           backgroundColor: backgroundColor ? getColor(backgroundColor) : "transparent",
+          zIndex: 1,
         }}
       >
         {/* height가 고정되지 않은 경우, children 변화 감지를 위한 래퍼로 감싸줌 */}
