@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { View, Alert, ScrollView } from "react-native";
-import { Button, Typography, SearchBox, Chip, GoodsThumbnail } from "@components/index";
+import { Button, Typography, SearchBox, Chip } from "@components/index";
 import * as searchHistory from "@utils/searchHistory";
 import SimpleSwiper from "@components/SimpleSwiper";
 
@@ -39,10 +39,10 @@ export default function Search() {
         showsVerticalScrollIndicator={false}
       >
         {/* 최근 검색어 */}
-        {recentSearches.length > 0 && (
-          <View className="mb-4">
-            <View className="flex flex-row justify-between items-center mb-2">
-              <Typography variant="Header4">최근 검색어</Typography>
+        <View className="mt-4 mb-4">
+          <View className="flex flex-row justify-between items-center mb-2">
+            <Typography variant="Header4">최근 검색어</Typography>
+            {recentSearches.length > 0 && (
               <Button
                 variant="text"
                 size="md"
@@ -62,7 +62,10 @@ export default function Search() {
               >
                 전체 삭제
               </Button>
-            </View>
+            )}
+          </View>
+
+          {recentSearches.length > 0 ? (
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
@@ -79,12 +82,20 @@ export default function Search() {
                 />
               ))}
             </ScrollView>
-          </View>
-        )}
+          ) : (
+            <View className="items-center justify-center h-11">
+              <Typography variant="Body2" color="secondary-dark">
+                최근 검색어가 없습니다.
+              </Typography>
+            </View>
+          )}
+        </View>
 
         {/* 최근 본 굿즈 */}
         <View className="mt-4 mb-4">
-          <Typography variant="Header4" className="mb-1">최근 본 굿즈</Typography>
+          <Typography variant="Header4" className="mb-1">
+            최근 본 굿즈
+          </Typography>
           <SimpleSwiper
             data={[
               { id: "1", title: "히나타", subtitle: "[하이큐!! 네무라세테]" },
@@ -100,7 +111,9 @@ export default function Search() {
 
         {/* 인기 굿즈 */}
         <View className="mt-4 mb-4">
-          <Typography variant="Header4" className="mb-1">인기 굿즈</Typography>
+          <Typography variant="Header4" className="mb-1">
+            인기 굿즈
+          </Typography>
           <SimpleSwiper
             data={[
               { id: "1", title: "히나타", subtitle: "[하이큐!! 네무라세테]" },
