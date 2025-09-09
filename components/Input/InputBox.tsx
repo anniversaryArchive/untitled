@@ -12,12 +12,10 @@ interface IInputBoxProps extends TextInputProps {
   size?: keyof typeof inputTheme.size;
   color?: keyof typeof inputTheme.color;
   wiggleBorder?: boolean;
-  clearAfterSubmit?: boolean;
 }
 
 export interface InputBoxHandle {
   getValue: () => string;
-  clear: () => void;
 }
 
 export const inputTheme = {
@@ -62,23 +60,16 @@ const InputBox = forwardRef<InputBoxHandle, IInputBoxProps>(
       size = "sm",
       wiggleBorder = false,
       readOnly,
-      clearAfterSubmit = true,
       ...options
     } = props;
     const inputRef = useRef<TextInput>(null);
     const valueRef = useRef<string>("");
 
     useImperativeHandle(ref, () => ({
-      clear: clearInput,
       getValue: () => {
         return valueRef.current;
       },
     }));
-
-    const clearInput = () => {
-      inputRef.current?.clear();
-      valueRef.current = "";
-    };
 
     const defaultProps = `p-3 rounded text-secondary-dark ${!wiggleBorder && "border"} ${inputTheme.color[color]} ${inputTheme.size[size]}`;
     const readOnlyProps = `bg-gray-200`;
@@ -94,8 +85,6 @@ const InputBox = forwardRef<InputBoxHandle, IInputBoxProps>(
             if (onSubmit) {
               const value = e.nativeEvent.text;
               onSubmit(value);
-
-              clearAfterSubmit && clearInput();
             }
           }}
           submitBehavior={"blurAndSubmit"}
