@@ -1,5 +1,7 @@
 import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import "@styles/global.css";
 
@@ -15,10 +17,14 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack>
-      <Stack.Screen name="index" options={{ title: "HOME" }} />
-      <Stack.Screen name="test" options={{ title: "LOCAL DB TEST" }} />
-      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-    </Stack>
+    <GestureHandlerRootView className="flex-1">
+      <SafeAreaProvider>
+        <Stack>
+          <Stack.Screen name="index" options={{ title: "HOME" }} />
+          <Stack.Screen name="test" options={{ title: "LOCAL DB TEST" }} />
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        </Stack>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 }
