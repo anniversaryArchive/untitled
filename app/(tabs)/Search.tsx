@@ -7,6 +7,8 @@ export default function Search() {
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
 
   const handleAddSearch = useCallback(async (value: string) => {
+    if (!value.trim()) return;
+
     setRecentSearches((prev) => {
       const prevSearches = prev.filter((item) => item !== value);
       return [value, ...prevSearches].slice(0, 10);
