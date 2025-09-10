@@ -4,5 +4,16 @@ import { InputBox, TextBox, SearchBox } from "./Input";
 import WiggleBorder from "./WiggleBorder";
 import ProgressBar from "./ProgressBar";
 import Chip from "./Chip";
+import FolderPicker from "./FolderPicker";
 
-export { Typography, Button, InputBox, TextBox, SearchBox, WiggleBorder, ProgressBar, Chip };
+export {
+  Typography,
+  Button,
+  InputBox,
+  TextBox,
+  SearchBox,
+  WiggleBorder,
+  ProgressBar,
+  Chip,
+  FolderPicker,
+};

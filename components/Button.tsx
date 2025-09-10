@@ -1,72 +1,138 @@
 import React from "react";
 import { Pressable, Text } from "react-native";
 
-interface IButtonProps {
+type ButtonBaseProps = {
   children?: React.ReactNode;
   color?: keyof typeof buttonTheme.color;
-  width?: "auto" | "full";
   size?: keyof typeof buttonTheme.size;
   variant?: "contained" | "outlined" | "text";
   rounded?: boolean;
   disabled?: boolean;
+  bold?: boolean;
+  layout?: "flex" | "block";
+  className?: string;
+  contentClassName?: string;
   [props: string]: any;
-}
+};
+
+type ButtonWidthProps =
+  | {
+      width: "full";
+      textAlign?: "left" | "center" | "right";
+    }
+  | {
+      width?: "auto";
+      textAlign?: never;
+    };
+
+type TButtonProps = ButtonBaseProps & ButtonWidthProps;
 
 const buttonTheme = {
   color: {
     primary: {
       contained: "bg-primary border-primary text-secondary-light border",
-      outlined: "border-primary text-primary border-2",
-      text: "text-primary",
+      outlined: {
+        DEFAULT: "border-primary text-primary border",
+        bold: "border-primary text-primary border-2",
+      },
+      text: "text-primary border-0",
       disabled: "bg-gray-300 border-gray-300 text-primary-light-80 border",
     },
     secondary: {
       contained: "bg-secondary border-secondary text-secondary-light border",
-      outlined: "border-secondary text-secondary border-2",
-      text: "text-secondary",
+      outlined: {
+        DEFAULT: "border-secondary text-secondary border",
+        bold: "border-secondary text-secondary border-2",
+      },
+      text: "text-secondary border-0",
       disabled: "bg-gray-300 border-gray-300 text-secondary-light-80 border",
     },
     "secondary-dark": {
       contained: "bg-secondary-light border-secondary-light text-secondary-dark border",
-      outlined: "border-secondary-dark text-secondary-dark border-2",
-      text: "text-secondary-dark",
+      outlined: {
+        DEFAULT: "border-secondary-dark text-secondary-dark border",
+        bold: "border-secondary-dark text-secondary-dark border-2",
+      },
+      text: "text-secondary-dark border-0",
       disabled: "bg-gray-300 border-gray-300 text-secondary-dark-80 border",
     },
   },
   size: {
-    sm: "h-[28px] font-DunggeunmisoB text-[14px] py-[6.5px] px-[7.5px]",
-    md: "h-[30px] font-Dunggeunmiso text-[14px] py-2 px-3",
-    lg: "h-[44px] font-DunggeunmisoB text-[17px] py-[14px] px-[15px]",
+    sm: "text-[14px] py-1.5 px-3",
+    md: "text-[15px] py-2 px-4",
+    lg: "text-[16px] py-2.5 px-5",
+    xl: "text-[17px] py-3 px-6",
+  },
+  align: {
+    left: "text-left justify-start !pl-3",
+    center: "text-center justify-center",
+    right: "text-right justify-end !pr-3",
   },
 };
 
-const Button = (props: IButtonProps) => {
+const Button = (props: TButtonProps) => {
   const {
     color = "primary",
     width = "auto",
     size = "sm",
     variant = "contained",
+    layout = "block",
     rounded,
     disabled,
+    bold = false,
     children,
+    className,
+    contentClassName,
+    textAlign = "center",
     ...options
   } = props;
 
-  const defaultStyle = `text-center whitespace-nowrap leading-none select-none`;
-  const borderRadiusProps = rounded ? "rounded-full" : "rounded-[4px]";
-  const widthProps = width === "auto" ? "w-fit" : "w-full";
+  const getButtonClasses = () => {
+    const defaultClass = "flex items-center whitespace-nowrap select-none";
+    const colorSet = buttonTheme.color[color];
+    let colorClass = "";
+
+    if (disabled) {
+      colorClass = colorSet.disabled;
+    } else {
+      const variantSet = colorSet[variant];
+
+      if (typeof variantSet === "object") {
+        if (bold && variantSet.bold) {
+          colorClass = variantSet.bold;
+        } else {
+          colorClass = variantSet.DEFAULT;
+        }
+      } else {
+        colorClass = variantSet;
+      }
+    }
+
+    const roundedClass = rounded ? "rounded-full" : "rounded-[4px]";
+    const fontWeightClass = bold ? "font-DunggeunmisoB" : "font-Dunggeunmiso";
+
+    return [
+      defaultClass,
+      colorClass,
+      buttonTheme.size[size],
+      buttonTheme.align[textAlign],
+      roundedClass,
+      fontWeightClass,
+    ]
+      .filter(Boolean)
+      .join(" ");
+  };
+
+  const fullWidthProps = layout === "block" ? "w-full" : "grow";
+  const fitWidthProps = layout === "block" ? "w-fit" : "self-start";
 
   return (
-    <Pressable className={`${width == "full" && "grow"}`} {...options}>
-      {children && (
-        <Text
-          className={`${defaultStyle} ${widthProps} ${borderRadiusProps} ${disabled ? buttonTheme.color[color].disabled : buttonTheme.color[color][variant]} ${buttonTheme.size[size]}`}
-        >
-          {children}
-        </Text>
-      )}
+    <Pressable
+      className={`${width === "full" ? fullWidthProps : fitWidthProps} ${className}`}
+      {...options}
+    >
+      {children && <Text className={`${getButtonClasses()} ${contentClassName}`}>{children}</Text>}
     </Pressable>
   );
 };
-
 export default Button;

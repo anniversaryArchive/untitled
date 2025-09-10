@@ -106,6 +106,9 @@ export default function StyleGuide() {
                 <Button size="lg" onPress={() => {}}>
                   lg
                 </Button>
+                <Button size="xl" onPress={() => {}}>
+                  xl
+                </Button>
               </View>
             </View>
             <View className="flex flex-row gap-5">
@@ -114,38 +117,45 @@ export default function StyleGuide() {
               </Typography>
               <View className="flex gap-2">
                 <View className=" flex gap-2">
-                  <Button onPress={() => {}}>primary</Button>
-                  <Button variant="outlined" onPress={() => {}}>
+                  <Button layout="flex" onPress={() => {}}>
+                    primary
+                  </Button>
+                  <Button layout="flex" variant="outlined" onPress={() => {}}>
                     primary outlined
                   </Button>
-                  <Button variant="text" onPress={() => {}}>
+                  <Button layout="flex" variant="text" onPress={() => {}}>
                     primary text
                   </Button>
-                  <Button onPress={() => {}} disabled>
+                  <Button layout="flex" onPress={() => {}} disabled>
                     primary disabled
                   </Button>
-                  <Button color="secondary" onPress={() => {}}>
+                  <Button layout="flex" color="secondary" onPress={() => {}}>
                     secondary
                   </Button>
-                  <Button variant="outlined" color="secondary" onPress={() => {}}>
+                  <Button layout="flex" variant="outlined" color="secondary" onPress={() => {}}>
                     secondary outlined
                   </Button>
-                  <Button variant="text" color="secondary" onPress={() => {}}>
+                  <Button layout="flex" variant="text" color="secondary" onPress={() => {}}>
                     secondary text
                   </Button>
-                  <Button color="secondary" onPress={() => {}} disabled>
+                  <Button layout="flex" color="secondary" onPress={() => {}} disabled>
                     secondary disabled
                   </Button>
-                  <Button color="secondary-dark" onPress={() => {}}>
+                  <Button layout="flex" color="secondary-dark" onPress={() => {}}>
                     secondary-dark
                   </Button>
-                  <Button variant="outlined" color="secondary-dark" onPress={() => {}}>
+                  <Button
+                    layout="flex"
+                    variant="outlined"
+                    color="secondary-dark"
+                    onPress={() => {}}
+                  >
                     secondary-dark outlined
                   </Button>
-                  <Button variant="text" color="secondary-dark" onPress={() => {}}>
+                  <Button layout="flex" variant="text" color="secondary-dark" onPress={() => {}}>
                     secondary-dark text
                   </Button>
-                  <Button color="secondary-dark" onPress={() => {}} disabled>
+                  <Button layout="flex" color="secondary-dark" onPress={() => {}} disabled>
                     secondary-dark disabled
                   </Button>
                 </View>
@@ -156,8 +166,10 @@ export default function StyleGuide() {
                 rounded
               </Typography>
               <View className=" flex flex-row gap-2">
-                <Button onPress={() => {}}>default</Button>
-                <Button rounded onPress={() => {}}>
+                <Button layout="flex" onPress={() => {}}>
+                  default
+                </Button>
+                <Button layout="flex" rounded onPress={() => {}}>
                   rounded
                 </Button>
               </View>
@@ -167,9 +179,24 @@ export default function StyleGuide() {
                 width
               </Typography>
               <View className="grow flex flex-row gap-2">
-                <Button onPress={() => {}}>fit(default)</Button>
-                <Button width="full" onPress={() => {}}>
+                <Button layout="flex" onPress={() => {}}>
+                  fit(default)
+                </Button>
+                <Button layout="flex" width="full" onPress={() => {}}>
                   full
+                </Button>
+              </View>
+            </View>
+            <View className="flex flex-row gap-5">
+              <Typography variant="Header3" color="secondary" className="w-[100px]">
+                bold
+              </Typography>
+              <View className="grow flex flex-row gap-2">
+                <Button layout="flex" bold onPress={() => {}}>
+                  bold
+                </Button>
+                <Button layout="flex" variant="outlined" bold onPress={() => {}}>
+                  outlined bold
                 </Button>
               </View>
             </View>
