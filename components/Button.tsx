@@ -1,7 +1,7 @@
 import React from "react";
 import { Pressable, Text } from "react-native";
 
-type ButtonBaseProps = {
+type TButtonBaseProps = {
   children?: React.ReactNode;
   color?: keyof typeof buttonTheme.color;
   size?: keyof typeof buttonTheme.size;
@@ -15,7 +15,7 @@ type ButtonBaseProps = {
   [props: string]: any;
 };
 
-type ButtonWidthProps =
+type TButtonWidthProps =
   | {
       width: "full";
       textAlign?: "left" | "center" | "right";
@@ -25,7 +25,7 @@ type ButtonWidthProps =
       textAlign?: never;
     };
 
-type TButtonProps = ButtonBaseProps & ButtonWidthProps;
+type TButtonProps = TButtonBaseProps & TButtonWidthProps;
 
 const buttonTheme = {
   color: {

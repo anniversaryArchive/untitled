@@ -13,7 +13,7 @@ import { InputBox } from "./Input";
 
 import { TFolder } from "@/types/folder";
 
-interface IFolderPickerProps extends BottomSheetProps {
+interface IFolderPickerProps extends Omit<BottomSheetProps, "children"> {
   onSelectFolder: (folder: TFolder) => void;
 }
 
