@@ -25,7 +25,7 @@ class TbFolder {
         const firstRow = await inst.getFirstAsync("SELECT * FROM folder");
 
         if (firstRow === null) {
-          await inst.runAsync("INSERT INTO folder (name) VALUES (?)", "기본폴더");
+          await inst.runAsync("INSERT INTO folder (name) VALUES (?)", "기본 폴더");
         }
       }
 
