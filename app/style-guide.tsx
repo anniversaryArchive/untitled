@@ -119,7 +119,7 @@ export default function StyleGuide() {
               <Typography variant="Header3" color="secondary" className="w-[100px]">
                 size
               </Typography>
-              <View className=" flex flex-row gap-2">
+              <View className="flex flex-row items-start gap-2">
                 <Button onPress={() => {}}>sm</Button>
                 <Button size="md" onPress={() => {}}>
                   md
@@ -212,6 +212,22 @@ export default function StyleGuide() {
               </Button>
               <Button layout="flex" variant="outlined" bold onPress={() => {}}>
                 outlined bold
+              </Button>
+            </View>
+          </View>
+          <View className="flex flex-row gap-5">
+            <Typography variant="Header3" color="secondary" className="w-[100px] break-words">
+              textAlign (w-full)
+            </Typography>
+            <View className="grow flex gap-2">
+              <Button layout="flex" width="full" textAlign="left" onPress={() => {}}>
+                left
+              </Button>
+              <Button layout="flex" width="full" textAlign="center" onPress={() => {}}>
+                center
+              </Button>
+              <Button layout="flex" width="full" textAlign="right" onPress={() => {}}>
+                right
               </Button>
             </View>
           </View>
