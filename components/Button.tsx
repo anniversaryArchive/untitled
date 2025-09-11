@@ -30,7 +30,10 @@ type TButtonProps = TButtonBaseProps & TButtonWidthProps;
 const buttonTheme = {
   color: {
     primary: {
-      contained: "bg-primary border-primary text-secondary-light border",
+      contained: {
+        DEFAULT: "bg-primary border-primary text-secondary-light border",
+        bold: "bg-primary border-primary text-secondary-light border-2",
+      },
       outlined: {
         DEFAULT: "border-primary text-primary border",
         bold: "border-primary text-primary border-2",
@@ -39,7 +42,10 @@ const buttonTheme = {
       disabled: "bg-gray-300 border-gray-300 text-primary-light-80 border",
     },
     secondary: {
-      contained: "bg-secondary border-secondary text-secondary-light border",
+      contained: {
+        DEFAULT: "bg-secondary border-secondary text-secondary-light border",
+        bold: "bg-secondary border-secondary text-secondary-light border-2",
+      },
       outlined: {
         DEFAULT: "border-secondary text-secondary border",
         bold: "border-secondary text-secondary border-2",
@@ -48,7 +54,10 @@ const buttonTheme = {
       disabled: "bg-gray-300 border-gray-300 text-secondary-light-80 border",
     },
     "secondary-dark": {
-      contained: "bg-secondary-light border-secondary-light text-secondary-dark border",
+      contained: {
+        DEFAULT: "bg-secondary-light border-secondary-light text-secondary-dark border",
+        bold: "bg-secondary-light border-secondary-light text-secondary-dark border-2",
+      },
       outlined: {
         DEFAULT: "border-secondary-dark text-secondary-dark border",
         bold: "border-secondary-dark text-secondary-dark border-2",
