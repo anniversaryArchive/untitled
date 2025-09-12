@@ -21,7 +21,6 @@ export default function RootLayout() {
       <SafeAreaProvider>
         <Stack>
           <Stack.Screen name="index" options={{ title: "HOME" }} />
-          <Stack.Screen name="test" options={{ title: "LOCAL DB TEST" }} />
           <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
         </Stack>
       </SafeAreaProvider>

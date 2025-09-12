@@ -18,7 +18,7 @@ export default function BottomTest() {
             setOpen(true);
           }}
         >
-          폴더 선택
+          폴더 선택 BottomSheet
         </Button>
         <Button
           size="sm"
@@ -29,6 +29,15 @@ export default function BottomTest() {
           }}
         >
           {`DB 초기화 (reload 필수!!)`}
+        </Button>
+        <Button
+          bold
+          size="xl"
+          onPress={() => {
+            setBookmarkSheetOpen(true);
+          }}
+        >
+          북마크 BottomSheet
         </Button>
         <FolderPicker
           open={open}

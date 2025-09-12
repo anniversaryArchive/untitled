@@ -21,6 +21,8 @@ const iconMap: { [key: string]: React.FC<any> } = {
   chevronLeft: Icons.ChevronLeft,
   chevronRight: Icons.ChevronRight,
   newFolder: Icons.NewFolder,
+  folderFill: Icons.FolderFill,
+  plus: Icons.Plus,
 };
 
 export default function Icon(props: IIconProps) {
