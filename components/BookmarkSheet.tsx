@@ -1,10 +1,10 @@
 import { useCallback, useState } from "react";
-import { Pressable, Image } from "react-native";
+import { Pressable, Image, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ImagePickerAsset } from "expo-image-picker";
 
 import { colors } from "@utils/tailwind-colors";
-import { selectImage } from "@utils/saveImage";
+import { saveImage, selectImage } from "@utils/saveImage";
 import { activeBottomSheet } from "@/stores/activeBottomSheet";
 import { useDefaultFolder } from "@/stores/useDefaultFolder";
 import { BOOKMARK_TYPE } from "@/constants/global";
@@ -49,6 +49,39 @@ const BookmarkSheet = (props: IBookmarkSheetProps) => {
     setMemo("");
     closeSheet();
   }, []);
+
+  const handleSubmit = async () => {
+    if (!validate()) return;
+
+    let saveImg = null;
+    if (image) saveImg = await saveImage(image);
+
+    // DB 양식 정한게 없는거같아서 필요한 것 같은것만 대강 모아놨습니당
+    const data = Object.fromEntries(
+      Object.entries({
+        type,
+        img: saveImg?.path || undefined,
+        name: itemName,
+        folder: selectedFolder.id,
+        memo,
+      }).filter(([_, value]) => value != null && value !== "")
+    );
+
+    console.log(data);
+    handleClose();
+  };
+
+  const validate = () => {
+    if (!itemName.trim()) {
+      return Alert.alert("이름은 필수 입력입니다", undefined, [
+        {
+          text: "확인",
+        },
+      ]);
+    }
+
+    return true;
+  };
 
   return (
     <>
@@ -118,7 +151,7 @@ const BookmarkSheet = (props: IBookmarkSheetProps) => {
             placeholder="메모"
             className="min-h-28"
           />
-          <Button size="xl" className="mt-20" width="full" rounded bold>
+          <Button size="xl" className="mt-20" width="full" rounded bold onPress={handleSubmit}>
             추가
           </Button>
         </SafeAreaView>
