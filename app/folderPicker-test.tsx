@@ -1,12 +1,11 @@
-import { useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { BookmarkSheet, Button, FolderPicker } from "@components/index";
+import { Button, FolderPicker } from "@components/index";
 import folder from "@table/folder";
+import { activeBottomSheet } from "@/stores/activeBottomSheet";
 
 export default function BottomTest() {
-  const [open, setOpen] = useState(false);
-  const [bookmarkSheetOpen, setBookmarkSheetOpen] = useState(false);
+  const openSheet = activeBottomSheet((state) => state.openSheet);
 
   return (
     <GestureHandlerRootView>
@@ -15,7 +14,7 @@ export default function BottomTest() {
           bold
           size="xl"
           onPress={() => {
-            setOpen(true);
+            openSheet("FOLDER");
           }}
         >
           폴더 선택 BottomSheet
@@ -30,30 +29,7 @@ export default function BottomTest() {
         >
           {`DB 초기화 (reload 필수!!)`}
         </Button>
-        <Button
-          bold
-          size="xl"
-          onPress={() => {
-            setBookmarkSheetOpen(true);
-          }}
-        >
-          북마크 BottomSheet
-        </Button>
-        <FolderPicker
-          open={open}
-          onClose={() => {
-            setOpen(false);
-          }}
-          onSelectFolder={(folder) => {
-            setOpen(false);
-          }}
-        />
-        <BookmarkSheet
-          open={bookmarkSheetOpen}
-          onClose={() => {
-            setBookmarkSheetOpen(false);
-          }}
-        />
+        <FolderPicker onSelectFolder={(folder) => {}} />
       </SafeAreaView>
     </GestureHandlerRootView>
   );

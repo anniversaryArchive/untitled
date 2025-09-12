@@ -14,32 +14,46 @@ import {
   Divider,
   FolderPicker,
 } from ".";
-import { BottomSheetProps } from "./BottomSheet";
 import { colors } from "@utils/tailwind-colors";
 import { selectImage } from "@utils/saveImage";
+import { activeBottomSheet } from "@/stores/activeBottomSheet";
+import { useDefaultFolder } from "@/stores/useDefaultFolder";
 import { BOOKMARK_TYPE } from "@/constants/global";
 import { TBookmarkType } from "@/types/bookmark";
+import { TFolder } from "@/types/folder";
 
-interface IBookmarkSheetProps extends Omit<BottomSheetProps, "children"> {}
+interface IBookmarkSheetProps {}
+
+const SHEET_NAME = "BOOKMARK";
 
 const BookmarkSheet = (props: IBookmarkSheetProps) => {
-  const { open, onClose } = props;
+  const defaultFolder = useDefaultFolder(({ folder }) => folder) as TFolder;
+
   const [type, setType] = useState<TBookmarkType>("WISH");
-  const [folderPickerOpen, setFolderPickerOpen] = useState(false);
   const [image, setImage] = useState<ImagePickerAsset | null>(null);
+  const [itemName, setItemName] = useState("");
+  const [selectedFolder, setSelectFolder] = useState<TFolder>(defaultFolder);
+  const [memo, setMemo] = useState("");
+
+  const { sheetStack, openSheet, closeSheet } = activeBottomSheet();
+  const isOpen = sheetStack[sheetStack.length - 1] === SHEET_NAME;
 
   const pickImage = async () => {
     const uploadImg = await selectImage();
     if (uploadImg) setImage(uploadImg);
   };
 
-  useEffect(() => {
-    open && setImage(null);
-  }, [open]);
+  const handleClose = () => {
+    setImage(null);
+    setItemName("");
+    setSelectFolder(defaultFolder);
+    setMemo("");
+    closeSheet();
+  };
 
   return (
     <>
-      <BottomSheet open={open} onClose={onClose}>
+      <BottomSheet open={isOpen} onClose={handleClose}>
         <SafeAreaView edges={["bottom"]} className="flex justify-center gap-3">
           <Typography variant="Header3" className="text-center">
             추가
@@ -60,7 +74,12 @@ const BookmarkSheet = (props: IBookmarkSheetProps) => {
               />
             )}
           </Pressable>
-          <InputBox size="lg" placeholder="이름을 입력해주세요" />
+          <InputBox
+            value={itemName}
+            onChangeText={setItemName}
+            size="lg"
+            placeholder="이름을 입력해주세요"
+          />
           <Divider />
           <Button
             bold
@@ -87,27 +106,25 @@ const BookmarkSheet = (props: IBookmarkSheetProps) => {
               />
             }
             onPress={() => {
-              setFolderPickerOpen(true);
+              openSheet("FOLDER");
             }}
           >
-            기본폴더
+            {selectedFolder.name}
           </Button>
           <Divider />
-          <TextBox placeholder="메모" bold className="min-h-28" />
+          <TextBox
+            value={memo}
+            onChangeText={setMemo}
+            bold
+            placeholder="메모"
+            className="min-h-28"
+          />
           <Button size="xl" className="mt-20" width="full" rounded bold>
             추가
           </Button>
         </SafeAreaView>
       </BottomSheet>
-      <FolderPicker
-        open={folderPickerOpen}
-        onClose={() => {
-          setFolderPickerOpen(true);
-        }}
-        onSelectFolder={(folder) => {
-          console.log(folder);
-        }}
-      />
+      <FolderPicker onSelectFolder={setSelectFolder} />
     </>
   );
 };

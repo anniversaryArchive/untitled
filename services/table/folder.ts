@@ -62,6 +62,18 @@ class TbFolder {
     }
   }
 
+  async getFolderById(id: TFolder["id"]): Promise<TFolder | null> {
+    const db = await this.#dbInstance;
+    if (!db) return null;
+
+    try {
+      return await db.getFirstAsync<TFolder>("SELECT * FROM folder WHERE id = ?", id);
+    } catch (error) {
+      console.error("TbFolder getOne Error : ", error);
+      return null;
+    }
+  }
+
   async update(id: string, newname: string): Promise<boolean> {
     const db = await this.#dbInstance;
     if (!db) return false;

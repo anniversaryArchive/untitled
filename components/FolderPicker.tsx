@@ -4,21 +4,25 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import folder from "@table/folder";
 import { colors } from "@utils/tailwind-colors";
-
-import { Icon, InputBox, Typography, Button } from ".";
-import BottomSheet, { BottomSheetProps } from "./BottomSheet";
+import { activeBottomSheet } from "@/stores/activeBottomSheet";
+import { Icon, InputBox, Typography, Button, BottomSheet } from ".";
 
 import { TFolder } from "@/types/folder";
 
-interface IFolderPickerProps extends Omit<BottomSheetProps, "children"> {
+interface IFolderPickerProps {
   onSelectFolder: (folder: TFolder) => void;
 }
 
+const SHEET_NAME = "FOLDER";
+
 const FolderPicker = (props: IFolderPickerProps) => {
-  const { open, onClose, onSelectFolder } = props;
+  const { onSelectFolder } = props;
   const [mode, setMode] = useState<"select" | "add">("select");
   const [folderList, setFolderList] = useState<TFolder[]>([]);
   const [folderName, setFolderName] = useState("");
+
+  const { sheetStack, closeSheet } = activeBottomSheet();
+  const isOpen = sheetStack[sheetStack.length - 1] === SHEET_NAME;
 
   const loadFolderList = useCallback(async () => {
     const folderList = await folder.getAll();
@@ -46,12 +50,12 @@ const FolderPicker = (props: IFolderPickerProps) => {
   }, []);
 
   useEffect(() => {
-    open && loadFolderList();
-  }, [open]);
+    isOpen && loadFolderList();
+  }, [isOpen]);
 
   return (
-    <BottomSheet open={open} onClose={onClose}>
-      <SafeAreaView edges={["bottom"]} className="flex gap-3">
+    <BottomSheet open={isOpen} onClose={closeSheet}>
+      <SafeAreaView edges={["bottom"]} className="flex gap-2">
         <View className="relative h-8">
           <View className="left-4 absolute z-10 w-8">
             {mode === "add" && (
@@ -106,6 +110,7 @@ const FolderPicker = (props: IFolderPickerProps) => {
                   className="border-b-hairline border-gray-400" // 추후 Divider component로 변경
                   onPress={() => {
                     onSelectFolder(item);
+                    closeSheet();
                   }}
                 >
                   {item.name}
