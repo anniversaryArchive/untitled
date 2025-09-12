@@ -5,6 +5,7 @@ import Bell from "./notifications.svg";
 import User from "./person.svg";
 import Close from "./close.svg";
 import ChevronLeft from "./chevronLeft.svg";
+import ChevronRight from "./chevronRight.svg";
 import NewFolder from "./newFolder.svg";
 
-export { Folder, Search, Star, Bell, User, Close, ChevronLeft, NewFolder };
+export { Folder, Search, Star, Bell, User, Close, ChevronLeft, ChevronRight, NewFolder };

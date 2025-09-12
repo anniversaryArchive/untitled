@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Button, FolderPicker } from "@components/index";
+import { BookmarkSheet, Button, FolderPicker } from "@components/index";
 import folder from "@table/folder";
 
 export default function BottomTest() {
   const [open, setOpen] = useState(false);
+  const [bookmarkSheetOpen, setBookmarkSheetOpen] = useState(false);
 
   return (
     <GestureHandlerRootView>
@@ -36,6 +37,12 @@ export default function BottomTest() {
           }}
           onSelectFolder={(folder) => {
             setOpen(false);
+          }}
+        />
+        <BookmarkSheet
+          open={bookmarkSheetOpen}
+          onClose={() => {
+            setBookmarkSheetOpen(false);
           }}
         />
       </SafeAreaView>
