@@ -1,24 +1,23 @@
-import { useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import { Pressable, Image } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ImagePickerAsset } from "expo-image-picker";
 
-import {
-  BottomSheet,
-  Button,
-  Icon,
-  InputBox,
-  Segment,
-  TextBox,
-  Typography,
-  Divider,
-  FolderPicker,
-} from ".";
 import { colors } from "@utils/tailwind-colors";
 import { selectImage } from "@utils/saveImage";
 import { activeBottomSheet } from "@/stores/activeBottomSheet";
 import { useDefaultFolder } from "@/stores/useDefaultFolder";
 import { BOOKMARK_TYPE } from "@/constants/global";
+
+import Icon from "./Icon";
+import Button from "./Button";
+import BottomSheet from "./BottomSheet";
+import Divider from "./Divider";
+import FolderPicker from "./FolderPicker";
+import { InputBox, TextBox } from "./Input";
+import Segment from "./Segment";
+import Typography from "./Typography";
+
 import { TBookmarkType } from "@/types/bookmark";
 import { TFolder } from "@/types/folder";
 
@@ -43,13 +42,13 @@ const BookmarkSheet = (props: IBookmarkSheetProps) => {
     if (uploadImg) setImage(uploadImg);
   };
 
-  const handleClose = () => {
+  const handleClose = useCallback(() => {
     setImage(null);
     setItemName("");
     setSelectFolder(defaultFolder);
     setMemo("");
     closeSheet();
-  };
+  }, []);
 
   return (
     <>

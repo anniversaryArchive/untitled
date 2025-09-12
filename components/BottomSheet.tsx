@@ -36,6 +36,7 @@ export default function BottomSheet({ open, onClose, children }: BottomSheetProp
       // 바텀시트 닫기
       translateY.value = withSpring(SCREEN_HEIGHT, { damping: 30 });
       overlayOpacity.value = withTiming(0, { duration: 300 });
+      // 닫을 때 키보드 활성화 시, 비활성화 처리
       Keyboard.isVisible() && Keyboard.dismiss();
     }
   }, [open]);
