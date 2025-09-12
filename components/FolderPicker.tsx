@@ -5,8 +5,11 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import folder from "@table/folder";
 import { colors } from "@utils/tailwind-colors";
 
-import { Icon, InputBox, Typography, Button } from ".";
+import Icon from "./Icon";
+import Button from "./Button";
+import Typography from "./Typography";
 import BottomSheet, { BottomSheetProps } from "./BottomSheet";
+import { InputBox } from "./Input";
 
 import { TFolder } from "@/types/folder";
 
