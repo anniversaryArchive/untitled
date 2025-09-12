@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Dimensions, View, Pressable } from "react-native";
+import { Dimensions, View, Pressable, Keyboard } from "react-native";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
 import Animated, {
   useSharedValue,
@@ -36,6 +36,7 @@ export default function BottomSheet({ open, onClose, children }: BottomSheetProp
       // 바텀시트 닫기
       translateY.value = withSpring(SCREEN_HEIGHT, { damping: 30 });
       overlayOpacity.value = withTiming(0, { duration: 300 });
+      Keyboard.isVisible() && Keyboard.dismiss();
     }
   }, [open]);
 

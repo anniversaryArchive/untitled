@@ -51,7 +51,7 @@ const FolderPicker = (props: IFolderPickerProps) => {
 
   return (
     <BottomSheet open={open} onClose={onClose}>
-      <SafeAreaView edges={["bottom"]} className="flex gap-2">
+      <SafeAreaView edges={["bottom"]} className="flex gap-3">
         <View className="relative h-8">
           <View className="left-4 absolute z-10 w-8">
             {mode === "add" && (
@@ -103,7 +103,7 @@ const FolderPicker = (props: IFolderPickerProps) => {
                   textAlign="left"
                   bold={isDefaultFolder}
                   color={isDefaultFolder ? "secondary" : "secondary-dark"}
-                  className="border-b-hairline border-gray-400"
+                  className="border-b-hairline border-gray-400" // 추후 Divider component로 변경
                   onPress={() => {
                     onSelectFolder(item);
                   }}
@@ -114,9 +114,9 @@ const FolderPicker = (props: IFolderPickerProps) => {
             }}
           />
         ) : (
-          <View className=" gap-18 flex justify-between gap-20">
+          <View className="flex justify-between gap-20">
             <InputBox
-              size="md"
+              size="lg"
               value={folderName}
               onChangeText={setFolderName}
               onSubmit={handleAddFolder}
