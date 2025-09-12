@@ -4,7 +4,7 @@ import { Button, Typography, SearchBox, Chip } from "@components/index";
 import * as searchHistory from "@utils/searchHistory";
 import SimpleSwiper from "@components/SimpleSwiper";
 
-interface GoodsItem {
+interface IGoodsItem {
   id: string;
   title: string;
   subtitle: string;
@@ -12,7 +12,7 @@ interface GoodsItem {
 
 export default function Search() {
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
-  const [recentGoods, setRecentGoods] = useState<GoodsItem[]>([
+  const [recentGoods, setRecentGoods] = useState<IGoodsItem[]>([
     { id: "1", title: "히나타", subtitle: "[하이큐!! 네무라세테]" },
     { id: "2", title: "카게야마", subtitle: "[하이큐!! 극장판]" },
     { id: "3", title: "츠키시마", subtitle: "[하이큐!! 특별판]" },
