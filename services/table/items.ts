@@ -125,7 +125,6 @@ class TbItems {
         ...values,
         id,
       ]);
-      console.log(`아이템 #${id}의 정보가 수정되었습니다.`);
 
       return !!result.changes;
     } catch (error) {

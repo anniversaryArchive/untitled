@@ -70,11 +70,7 @@ const BookmarkSheet = (props: IBookmarkSheetProps) => {
       memo: (memo?.trim() && memo) ?? null,
     };
 
-    console.log(data);
-
-    const res = await items.create(data);
-    console.log(res);
-
+    await items.create(data);
     handleClose();
   };
 
