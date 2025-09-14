@@ -4,7 +4,7 @@ import { FlatList, Pressable, ScrollView, View } from "react-native";
 import { Button, GoodsThumbnail, Icon, InputBox, Segment, Typography } from "@components/index";
 import { colors } from "@utils/tailwind-colors";
 import { BOOKMARK_TYPE } from "@/constants/global";
-import folder from "@table/folder";
+import folder from "@table/folders";
 
 import { TFolder } from "@/types/folder";
 import { TBookmarkType } from "@/types/bookmark";

@@ -1,7 +1,7 @@
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, FolderPicker } from "@components/index";
-import folder from "@table/folder";
+import folder from "@table/folders";
 import { activeBottomSheet } from "@/stores/activeBottomSheet";
 
 export default function BottomTest() {

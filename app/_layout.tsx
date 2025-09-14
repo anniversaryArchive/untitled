@@ -4,8 +4,9 @@ import { Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+
+import folder from "@table/folders";
 import { useDefaultFolder } from "@/stores/useDefaultFolder";
-import folder from "@table/folder";
 import { TFolder } from "@/types/folder";
 
 export default function RootLayout() {
