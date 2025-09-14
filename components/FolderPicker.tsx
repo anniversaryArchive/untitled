@@ -2,7 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Alert, FlatList, Pressable, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import folder from "@table/folder";
+import folder from "@table/folders";
 import { colors } from "@utils/tailwind-colors";
 
 import Icon from "./Icon";
