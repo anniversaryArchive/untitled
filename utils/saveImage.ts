@@ -18,18 +18,23 @@ const grantedMediaLibraryPermission = async () => {
 
 const selectImage = async () => {
   const isGranted = await grantedMediaLibraryPermission();
-  if (!isGranted) return console.error("Canntot access to mediaLibray");
+  if (!isGranted) {
+    console.error("Canntot access to mediaLibray");
+    return null;
+  }
 
   const selectImg = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: "images",
   });
 
   if (!selectImg.canceled) return selectImg.assets[0];
+
+  return null;
 };
 
 const saveImage = async (img?: ImagePicker.ImagePickerAsset) => {
   let selectImg = img || (await selectImage());
-  if (!selectImg) return;
+  if (!selectImg) return null;
 
   // 리사이징
   const context = ImageManipulator.manipulate(selectImg.uri);
@@ -51,6 +56,7 @@ const saveImage = async (img?: ImagePicker.ImagePickerAsset) => {
     return saveImg;
   } catch (e) {
     console.error("err", e);
+    return null;
   }
 };
 

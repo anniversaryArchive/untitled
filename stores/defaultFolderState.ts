@@ -8,7 +8,7 @@ interface IDefaultFolderState {
   initializeFolder: (loadedFolder: TFolder) => void;
 }
 
-export const useDefaultFolder = create<IDefaultFolderState>((set) => ({
+export const defaultFolderState = create<IDefaultFolderState>((set) => ({
   folder: null,
   initializeFolder: (loadedFolder) =>
     set({

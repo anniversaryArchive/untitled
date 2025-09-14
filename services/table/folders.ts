@@ -67,15 +67,9 @@ class TbFolders {
     if (!db) return null;
 
     try {
-<<<<<<< HEAD:services/table/folder.ts
       return await db.getFirstAsync<TFolder>("SELECT * FROM folder WHERE id = ?", id);
     } catch (error) {
-      console.error("TbFolder getOne Error : ", error);
-=======
-      return await db.getFirstAsync<TFolder>("SELECT * FROM folders WHERE id = ?", id);
-    } catch (error) {
-      console.error("TbFolders getOne Error : ", error);
->>>>>>> 915548f7de1af6b69592a23706c31022cf34ea86:services/table/folders.ts
+      console.error("TbFolders getFolderById Error : ", error);
       return null;
     }
   }

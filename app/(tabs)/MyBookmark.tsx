@@ -1,29 +1,103 @@
 import { useEffect, useState } from "react";
-import { FlatList, Pressable, ScrollView, View } from "react-native";
+import { FlatList, Image, Pressable, ScrollView, View } from "react-native";
 
-import { Button, GoodsThumbnail, Icon, InputBox, Segment, Typography } from "@components/index";
+import { Button, Chip, Icon, InputBox, Segment, Typography, WiggleBorder } from "@components/index";
+import { supabase } from "@utils/supabase";
 import { colors } from "@utils/tailwind-colors";
 import { BOOKMARK_TYPE } from "@/constants/global";
 import folder from "@table/folders";
+import items from "@table/items";
 
 import { TFolder } from "@/types/folder";
 import { TBookmarkType } from "@/types/bookmark";
+import { TItem } from "@/types/item";
+
+type TGacha = {
+  id: number;
+  created_at: Date;
+  updated_at: Date;
+  name: string;
+  name_kr: string;
+  image_link: string;
+  anime_id?: number;
+  price: number;
+};
+
+const GoodsThumbnail = ({ image, folderName, name, gachaName }: any) => {
+  return (
+    <View className="flex gap-[10px] w-44">
+      <WiggleBorder width={155} height={155}>
+        <Image source={{ uri: image }} className="w-full h-full" />
+      </WiggleBorder>
+      <View className="flex gap-2">
+        <View className="flex flex-row items-center gap-2">
+          <Chip size="sm" label={folderName} />
+          <Typography variant="Body4" color="primary">
+            {name}
+          </Typography>
+        </View>
+        <Typography variant="Caption2">{gachaName}</Typography>
+      </View>
+    </View>
+  );
+};
 
 export default function MyBookmark() {
   const [mode, setMode] = useState<TBookmarkType>("WISH");
   const [viewMode, setViewMode] = useState<"folder" | "item">("item");
-  const [folderList, setFolderList] = useState<TFolder[]>([]);
+  const [folderList, setFolderList] = useState<Map<number, TFolder>>();
   const [selectedFolder, setSelectedFolder] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
+  const [itemList, setItemList] = useState<
+    Array<TItem & { folderName: string; gachaInfo: TGacha }>
+  >([]);
+
+  const loadBookmarkItems = async () => {
+    const itemList =
+      selectedFolder === 0 ? await items.getAll() : await items.getAllByFolderId(selectedFolder);
+
+    const ids = itemList.map((i) => i.gacha_id);
+
+    const { data: gachaData, error: supabaseError } = await supabase
+      .from("gacha")
+      .select("*")
+      .in("id", ids);
+
+    if (supabaseError) {
+      throw supabaseError; // 에러가 발생하면 catch 블록으로 던지기
+    }
+
+    const gachaDataMap = new Map(gachaData.map((gacha) => [gacha.id, gacha]));
+
+    const mergedList = itemList.map((item) => {
+      const gachaInfo = gachaDataMap.get(item.gacha_id);
+      const folderInfo = folderList!.get(item.folder_id);
+
+      return { ...item, folderName: folderInfo?.name as string, gachaInfo };
+    });
+
+    setItemList(mergedList);
+  };
 
   useEffect(() => {
     const loadFolderList = async () => {
       const folderList = await folder.getAll();
-      setFolderList([{ id: 0, name: "전체", created_at: new Date() }, ...folderList]);
+      setFolderList(
+        new Map(
+          [{ id: 0, name: "전체", created_at: new Date() }, ...folderList].map((folder) => [
+            folder.id,
+            folder,
+          ])
+        )
+      );
     };
 
     loadFolderList();
   }, []);
+
+  useEffect(() => {
+    if (folderList) loadBookmarkItems();
+  }, [selectedFolder, folderList]);
 
   useEffect(() => {
     setSearchTerm("");
@@ -52,22 +126,23 @@ export default function MyBookmark() {
           contentContainerClassName="flex gap-3 flex-row pl-6"
           showsHorizontalScrollIndicator={false}
         >
-          {folderList.map(({ id, name }) => {
-            const isSelected = id === selectedFolder;
+          {folderList &&
+            Array.from(folderList).map(([id, { name }]) => {
+              const isSelected = id === selectedFolder;
 
-            return (
-              <Button
-                key={id}
-                bold
-                variant={isSelected ? "contained" : "outlined"}
-                onPress={() => {
-                  setSelectedFolder(id);
-                }}
-              >
-                {name}
-              </Button>
-            );
-          })}
+              return (
+                <Button
+                  key={`folder_` + id}
+                  bold
+                  variant={isSelected ? "contained" : "outlined"}
+                  onPress={() => {
+                    setSelectedFolder(id);
+                  }}
+                >
+                  {name}
+                </Button>
+              );
+            })}
         </ScrollView>
         <InputBox size="md" color="secondary" value={searchTerm} onChangeText={setSearchTerm} />
 
@@ -98,17 +173,23 @@ export default function MyBookmark() {
             </Button>
           </View>
           <FlatList
-            data={[1, 2, 3, 4, 5, 6, 7, 8]}
-            contentContainerClassName="pb-4"
-            columnWrapperClassName="flex flex-row justify-between"
+            data={itemList}
+            extraData={selectedFolder}
+            contentContainerClassName="pb-4 flex gap-2 justify-center"
+            columnWrapperClassName="flex flex-row items-center justify-between p-2"
             numColumns={2}
-            keyExtractor={(_, index) => `${index}`}
+            keyExtractor={(item) => `${item.id}`}
             showsVerticalScrollIndicator={false}
-            renderItem={() => {
+            renderItem={({ item }) => {
+              const { gachaInfo } = item;
+
               return (
-                <View className="p-2">
-                  <GoodsThumbnail />
-                </View>
+                <GoodsThumbnail
+                  name={item.name}
+                  folderName={item.folderName}
+                  gachaName={gachaInfo.name_kr}
+                  image={gachaInfo.image_link}
+                />
               );
             }}
           />

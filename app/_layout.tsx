@@ -6,15 +6,15 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import folder from "@table/folders";
-import { useDefaultFolder } from "@/stores/useDefaultFolder";
 import { TFolder } from "@/types/folder";
+import { defaultFolderState } from "@/stores/defaultFolderState";
 
 export default function RootLayout() {
   const [fontLoaded] = useFonts({
     "Dunggeunmiso": require("../assets/fonts/Hakgyoansim-Dunggeunmiso-OTF-R.otf"),
     "DunggeunmisoB": require("../assets/fonts/Hakgyoansim-Dunggeunmiso-OTF-B.otf"),
   });
-  const initializeFolder = useDefaultFolder((state) => state.initializeFolder);
+  const initializeFolder = defaultFolderState((state) => state.initializeFolder);
 
   useEffect(() => {
     const loadFolder = async () => {

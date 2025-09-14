@@ -6,8 +6,9 @@ import { ImagePickerAsset } from "expo-image-picker";
 import { colors } from "@utils/tailwind-colors";
 import { saveImage, selectImage } from "@utils/saveImage";
 import { activeBottomSheet } from "@/stores/activeBottomSheet";
-import { useDefaultFolder } from "@/stores/useDefaultFolder";
 import { BOOKMARK_TYPE } from "@/constants/global";
+import useDefaultFolder from "@/hooks/useDefaultFolder";
+import items from "@table/items";
 
 import Icon from "./Icon";
 import Button from "./Button";
@@ -18,28 +19,32 @@ import { InputBox, TextBox } from "./Input";
 import Segment from "./Segment";
 import Typography from "./Typography";
 
+import { TCreateItemDTO } from "@/types/item";
 import { TBookmarkType } from "@/types/bookmark";
 import { TFolder } from "@/types/folder";
 
-interface IBookmarkSheetProps {}
+interface IBookmarkSheetProps {
+  gachaId: number;
+}
 
 const SHEET_NAME = "BOOKMARK";
 
 const BookmarkSheet = (props: IBookmarkSheetProps) => {
-  const defaultFolder = useDefaultFolder(({ folder }) => folder) as TFolder;
+  const { gachaId } = props;
+  const defaultFolder = useDefaultFolder();
 
   const [type, setType] = useState<TBookmarkType>("WISH");
   const [image, setImage] = useState<ImagePickerAsset | null>(null);
   const [itemName, setItemName] = useState("");
   const [selectedFolder, setSelectFolder] = useState<TFolder>(defaultFolder);
-  const [memo, setMemo] = useState("");
+  const [memo, setMemo] = useState<string | null>(null);
 
   const { sheetStack, openSheet, closeSheet } = activeBottomSheet();
   const isOpen = sheetStack[sheetStack.length - 1] === SHEET_NAME;
 
   const pickImage = async () => {
     const uploadImg = await selectImage();
-    if (uploadImg) setImage(uploadImg);
+    setImage(uploadImg);
   };
 
   const handleClose = useCallback(() => {
@@ -53,21 +58,23 @@ const BookmarkSheet = (props: IBookmarkSheetProps) => {
   const handleSubmit = async () => {
     if (!validate()) return;
 
-    let saveImg = null;
-    if (image) saveImg = await saveImage(image);
+    const saveImg = image ? await saveImage(image) : null;
 
     // DB 양식 정한게 없는거같아서 필요한 것 같은것만 대강 모아놨습니당
-    const data = Object.fromEntries(
-      Object.entries({
-        type,
-        img: saveImg?.path || undefined,
-        name: itemName,
-        folder: selectedFolder.id,
-        memo,
-      }).filter(([_, value]) => value != null && value !== "")
-    );
+    const data: TCreateItemDTO = {
+      gacha_id: gachaId,
+      folder_id: selectedFolder.id,
+      type,
+      name: itemName,
+      thumbnail: saveImg?.path ?? null,
+      memo: (memo?.trim() && memo) ?? null,
+    };
 
     console.log(data);
+
+    const res = await items.create(data);
+    console.log(res);
+
     handleClose();
   };
 
