@@ -2,7 +2,7 @@ import { useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Button, FolderPicker } from "@components/index";
-import folder from "@table/folder";
+import folder from "@table/folders";
 
 export default function BottomTest() {
   const [open, setOpen] = useState(false);
