@@ -51,7 +51,7 @@ export default function Search() {
   return (
     <View className="flex-1">
       {/* 상단 고정 SearchBox */}
-      <View>
+      <View className="ml-2 mr-2">
         <SearchBox className="h-16" onSubmit={handleSearch} />
       </View>
 
@@ -62,7 +62,7 @@ export default function Search() {
       >
         {/* 최근 검색어 */}
         <View className="mt-4 mb-4">
-          <View className="flex flex-row justify-between items-center mb-2">
+          <View className="flex flex-row justify-between items-center mb-2 ml-4 mr-4">
             <Typography variant="Header4">최근 검색어</Typography>
             {recentSearches.length > 0 && (
               <Button
@@ -91,18 +91,22 @@ export default function Search() {
             <ScrollView
               horizontal
               showsHorizontalScrollIndicator={false}
-              contentContainerClassName="gap-2 items-center min-h-11"
+              contentContainerClassName="gap-2 items-center min-h-11 ml-4"
             >
-              {recentSearches.map((term, index) => (
-                <Chip
-                  key={`${term}_${index}`}
-                  size="lg"
-                  color="secondary-light"
-                  label={term}
-                  onClick={() => handleSearch(term)}
-                  onDelete={() => handleRemoveSearches(term)}
-                />
-              ))}
+              {recentSearches.map((term, index) => {
+                const isLast = index === recentSearches.length - 1;
+                return (
+                  <Chip
+                    key={`${term}_${index}`}
+                    size="lg"
+                    color="secondary-light"
+                    label={term}
+                    onClick={() => handleSearch(term)}
+                    onDelete={() => handleRemoveSearches(term)}
+                    className={isLast ? "mr-4" : ""}
+                  />
+                );
+              })}
             </ScrollView>
           ) : (
             <View className="items-center justify-center h-11">
@@ -115,7 +119,7 @@ export default function Search() {
 
         {/* 최근 본 굿즈 */}
         <View className="mt-4 mb-4">
-          <View className="flex flex-row justify-between items-center mb-2">
+          <View className="flex flex-row justify-between items-center mb-2 ml-4 mr-4">
             <Typography variant="Header4">최근 본 굿즈</Typography>
             {recentGoods.length > 0 && (
               <Button
@@ -137,7 +141,7 @@ export default function Search() {
               onSlidePress={(item) => console.log("선택한 굿즈:", item)}
             />
           ) : (
-            <View className="items-center justify-center h-11">
+            <View className="items-center justify-center h-11 ml-4 mr-4">
               <Typography variant="Body2" color="secondary-dark">
                 최근 본 굿즈가 없습니다.
               </Typography>
@@ -147,7 +151,7 @@ export default function Search() {
 
         {/* 인기 굿즈 */}
         <View className="mt-4 mb-4">
-          <Typography variant="Header4" className="mb-2">
+          <Typography variant="Header4" className="mb-2 ml-4 mr-4">
             인기 굿즈
           </Typography>
           <SimpleSwiper
