@@ -12,6 +12,7 @@ import { TFolder } from "@/types/folder";
 import { TBookmarkType } from "@/types/bookmark";
 import { TItem } from "@/types/item";
 
+// 임의로 선언한 타입입니다
 type TGacha = {
   id: number;
   created_at: Date;
@@ -23,6 +24,8 @@ type TGacha = {
   price: number;
 };
 
+// conflict 날 것 같아서 임의로 선언한 컴포넌트입니당
+// 추후 소정씨가 작업한 걸로 대체할 예정입니당
 const GoodsThumbnail = ({ image, folderName, name, gachaName }: any) => {
   return (
     <View className="flex gap-[10px] w-44">
@@ -43,7 +46,7 @@ const GoodsThumbnail = ({ image, folderName, name, gachaName }: any) => {
 };
 
 export default function MyBookmark() {
-  const [mode, setMode] = useState<TBookmarkType>("WISH");
+  const [bookmarkType, setBookmarkType] = useState<TBookmarkType>("WISH");
   const [viewMode, setViewMode] = useState<"folder" | "item">("item");
   const [folderList, setFolderList] = useState<Map<number, TFolder>>();
   const [selectedFolder, setSelectedFolder] = useState(0);
@@ -55,8 +58,9 @@ export default function MyBookmark() {
   const loadBookmarkItems = async () => {
     const itemList =
       selectedFolder === 0 ? await items.getAll() : await items.getAllByFolderId(selectedFolder);
+    const filteredItemList = itemList.filter((i) => i.type === bookmarkType);
 
-    const ids = itemList.map((i) => i.gacha_id);
+    const ids = filteredItemList.map((i) => i.gacha_id);
 
     const { data: gachaData, error: supabaseError } = await supabase
       .from("gacha")
@@ -69,7 +73,7 @@ export default function MyBookmark() {
 
     const gachaDataMap = new Map(gachaData.map((gacha) => [gacha.id, gacha]));
 
-    const mergedList = itemList.map((item) => {
+    const mergedList = filteredItemList.map((item) => {
       const gachaInfo = gachaDataMap.get(item.gacha_id);
       const folderInfo = folderList!.get(item.folder_id);
 
@@ -97,13 +101,13 @@ export default function MyBookmark() {
 
   useEffect(() => {
     if (folderList) loadBookmarkItems();
-  }, [selectedFolder, folderList]);
+  }, [selectedFolder, bookmarkType, folderList]);
 
   useEffect(() => {
     setSearchTerm("");
     setViewMode("item");
     setSelectedFolder(0);
-  }, [mode]);
+  }, [bookmarkType]);
 
   return (
     <View className="flex-1 gap-4 px-6 pt-1">
@@ -117,7 +121,7 @@ export default function MyBookmark() {
         </Pressable>
       </View>
 
-      <Segment segments={BOOKMARK_TYPE} selectedKey={mode} onSelect={setMode} />
+      <Segment segments={BOOKMARK_TYPE} selectedKey={bookmarkType} onSelect={setBookmarkType} />
       <View className="flex-1 gap-4">
         {/* 폴더 리스트 */}
         <ScrollView
@@ -188,7 +192,7 @@ export default function MyBookmark() {
                   name={item.name}
                   folderName={item.folderName}
                   gachaName={gachaInfo.name_kr}
-                  image={gachaInfo.image_link}
+                  image={item.thumbnail || gachaInfo.image_link}
                 />
               );
             }}
