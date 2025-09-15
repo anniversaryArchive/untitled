@@ -10,26 +10,19 @@ interface GoodsThumbnailProps {
 
 const GoodsThumbnail = ({ title, subtitle, imgUrl }: GoodsThumbnailProps) => {
   return (
-    <View className="flex gap-[10px]" style={{ position: "relative" }}>
-      <View style={{ width: 155, height: 155 }}>
+    <View className="flex gap-[10px] relative">
+      <View className="w-[155px] h-[155px]">
         <WiggleBorder width={155} height={155} />
         {imgUrl && (
           <Image
             source={{ uri: imgUrl }}
-            style={{
-              width: 145,
-              height: 145,
-              position: "absolute",
-              top: 5,
-              left: 5,
-              borderRadius: 10,
-            }}
+            className="w-[145px] h-[145px] absolute top-[5px] left-[5px] rounded-[10px]"
             resizeMode="cover"
           />
         )}
       </View>
       {/* 텍스트 영역 */}
-      <View style={{ maxWidth: 150, overflow: "hidden" }} className="flex gap-1">
+      <View className="max-w-[150px] overflow-hidden flex gap-1">
         <View className="flex flex-row items-center gap-2">
           <Typography
             variant="Body4"
@@ -40,7 +33,7 @@ const GoodsThumbnail = ({ title, subtitle, imgUrl }: GoodsThumbnailProps) => {
             {title}
           </Typography>
         </View>
-        <View style={{ maxWidth: 150, overflow: "hidden" }}>
+        <View className="max-w-[150px] overflow-hidden">
           <Typography variant="Body4" numberOfLines={1} ellipsizeMode="tail">
             {subtitle}
           </Typography>
