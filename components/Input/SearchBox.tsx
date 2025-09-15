@@ -1,3 +1,4 @@
+// SearchBox.tsx
 import { useRef } from "react";
 import { Alert, Pressable, View } from "react-native";
 import { useNavigation } from "expo-router";

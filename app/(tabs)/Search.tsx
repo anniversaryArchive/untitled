@@ -1,8 +1,9 @@
+// Search.tsx
 import { useCallback, useEffect, useState } from "react";
 import { View, Alert, ScrollView } from "react-native";
 import { Button, Typography, SearchBox, Chip } from "@components/index";
 import * as searchHistory from "@utils/searchHistory";
-import { supabase } from "@/utils/supabase"; // supabase 클라이언트 임포트
+import { supabase } from "@/utils/supabase";
 import SimpleSwiper from "@components/SimpleSwiper";
 
 interface IGoodsItem {
@@ -20,11 +21,9 @@ export default function Search() {
     { id: "4", title: "나루토", subtitle: "[나루토 극장판]" },
   ]);
 
-  // 임시 로그인 체크 상태 (true일 때 supabase, false일 때 로컬)
   const [isLoggedIn] = useState(true);
 
-  // 임시 하드코딩 user id
-  const user = { id: '550e8400-e29b-41d4-a716-446655440000' };
+  const user = { id: "550e8400-e29b-41d4-a716-446655440000" };
 
   const loadSearches = useCallback(async () => {
     if (isLoggedIn) {
@@ -45,7 +44,6 @@ export default function Search() {
         setRecentSearches(data?.map((item) => item.keyword) || []);
       }
     } else {
-      // 로컬에서 최근 검색어 로드
       const searches = await searchHistory.getRecentSearches();
       setRecentSearches(searches);
     }
@@ -96,22 +94,47 @@ export default function Search() {
     ]);
   };
 
+  const handleClearRecentSearches = () => {
+    Alert.alert("최근 검색어를 전체 삭제하시겠습니까?", undefined, [
+      { text: "취소", style: "cancel" },
+      {
+        text: "삭제",
+        onPress: async () => {
+          try {
+            if (isLoggedIn && user) {
+              const { error } = await supabase
+                .from("recent_search")
+                .delete()
+                .eq("user_id", user.id);
+              if (error) {
+                console.error("Supabase recent search clear error", error);
+                return;
+              }
+            } else {
+              await searchHistory.clearRecentSearches();
+            }
+            setRecentSearches([]);
+          } catch (error) {
+            console.error("Error clearing recent searches", error);
+          }
+        },
+      },
+    ]);
+  };
+
   useEffect(() => {
     loadSearches();
   }, [loadSearches]);
 
   return (
     <View className="flex-1">
-      {/* 상단 고정 SearchBox */}
       <View className="ml-2 mr-2">
         <SearchBox className="h-16" onSubmit={handleSearch} />
       </View>
-      {/* 아래 스크롤 영역 */}
       <ScrollView
         contentContainerClassName="pb-4"
         showsVerticalScrollIndicator={false}
       >
-        {/* 최근 검색어 */}
         <View className="mt-4 mb-4">
           <View className="flex flex-row justify-between items-center mb-2 ml-4 mr-4">
             <Typography variant="Header4">최근 검색어</Typography>
@@ -120,28 +143,7 @@ export default function Search() {
                 variant="text"
                 size="md"
                 color="secondary-dark"
-                onPress={() => {
-                  Alert.alert("최근 검색어를 전체 삭제하시겠습니까?", undefined, [
-                    { text: "취소", style: "cancel" },
-                    {
-                      text: "삭제",
-                      onPress: async () => {
-                        if (isLoggedIn && user) {
-                          const { error } = await supabase
-                            .from("recent_search")
-                            .delete()
-                            .eq("user_id", user.id);
-                          if (error) {
-                            console.error("Supabase recent search clear error", error);
-                          }
-                        } else {
-                          await searchHistory.clearRecentSearches();
-                        }
-                        setRecentSearches([]);
-                      },
-                    },
-                  ]);
-                }}
+                onPress={handleClearRecentSearches}
               >
                 전체 삭제
               </Button>
@@ -176,7 +178,6 @@ export default function Search() {
             </View>
           )}
         </View>
-        {/* 최근 본 굿즈 */}
         <View className="mt-4 mb-4">
           <View className="flex flex-row justify-between items-center mb-2 ml-4 mr-4">
             <Typography variant="Header4">최근 본 굿즈</Typography>
@@ -206,7 +207,6 @@ export default function Search() {
             </View>
           )}
         </View>
-        {/* 인기 굿즈 */}
         <View className="mt-4 mb-4">
           <Typography variant="Header4" className="mb-2 ml-4 mr-4">
             인기 굿즈
