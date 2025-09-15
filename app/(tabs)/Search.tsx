@@ -14,25 +14,21 @@ export default function Search() {
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [recentGoods, setRecentGoods] = useState<IGoodsItem[]>([]);
   const [popularGoods, setPopularGoods] = useState<IGoodsItem[]>([]);
-  const [isLoggedIn] = useState(true);
 
-  const userId = "550e8400-e29b-41d4-a716-446655440000";
+  // 로그인 여부 관련 코드 삭제
+  // userId도 삭제
 
   const loadSearches = useCallback(async () => {
-    const searches = await searchHistory.getRecentSearches(
-      isLoggedIn,
-      isLoggedIn ? userId : undefined
-    );
+    // 항상 로컬 DB 사용
+    const searches = await searchHistory.getRecentSearches(false);
     setRecentSearches(searches);
-  }, [isLoggedIn, userId]);
+  }, []);
 
   const loadRecentGoods = useCallback(async () => {
-    const goods = await searchHistory.getRecentGoods(
-      isLoggedIn,
-      isLoggedIn ? userId : undefined
-    );
+    // 항상 로컬 DB 사용
+    const goods = await searchHistory.getRecentGoods(false);
     setRecentGoods(goods);
-  }, [isLoggedIn, userId]);
+  }, []);
 
   const loadPopularGoods = useCallback(async () => {
     const goods = await searchHistory.getPopularGoods();
@@ -40,20 +36,13 @@ export default function Search() {
   }, []);
 
   const handleSearch = async (value: string) => {
-    await searchHistory.addRecentSearch(
-      value,
-      isLoggedIn,
-      isLoggedIn ? userId : undefined
-    );
+    // 로그인 여부 전달 제거, 항상 로컬 DB 사용
+    await searchHistory.addRecentSearch(value, false);
     await loadSearches();
   };
 
   const handleRemoveSearches = async (value: string) => {
-    await searchHistory.removeRecentSearch(
-      value,
-      isLoggedIn,
-      isLoggedIn ? userId : undefined
-    );
+    await searchHistory.removeRecentSearch(value, false);
     await loadSearches();
   };
 
@@ -64,7 +53,7 @@ export default function Search() {
         text: "삭제",
         onPress: async () => {
           try {
-            await searchHistory.clearRecentGoods(isLoggedIn, isLoggedIn ? userId : undefined);
+            await searchHistory.clearRecentGoods(false);
             setRecentGoods([]);
           } catch (error) {
             console.error("Error clearing recent goods", error);
@@ -80,7 +69,7 @@ export default function Search() {
       {
         text: "삭제",
         onPress: async () => {
-          await searchHistory.clearRecentSearches(isLoggedIn, isLoggedIn ? userId : undefined);
+          await searchHistory.clearRecentSearches(false);
           setRecentSearches([]);
         },
       },
@@ -103,7 +92,12 @@ export default function Search() {
         <View className="flex flex-row justify-between items-center mb-2 ml-4 mr-4">
           <Typography variant="Header4">최근 검색어</Typography>
           {recentSearches.length > 0 && (
-            <Button variant="text" size="md" color="secondary-dark" onPress={handleClearRecentSearches}>
+            <Button
+              variant="text"
+              size="md"
+              color="secondary-dark"
+              onPress={handleClearRecentSearches}
+            >
               전체 삭제
             </Button>
           )}
@@ -143,7 +137,12 @@ export default function Search() {
         <View className="flex flex-row justify-between items-center mb-2 ml-4 mr-4">
           <Typography variant="Header4">최근 본 굿즈</Typography>
           {recentGoods.length > 0 && (
-            <Button variant="text" size="md" color="secondary-dark" onPress={handleClearRecentGoods}>
+            <Button
+              variant="text"
+              size="md"
+              color="secondary-dark"
+              onPress={handleClearRecentGoods}
+            >
               전체 삭제
             </Button>
           )}
