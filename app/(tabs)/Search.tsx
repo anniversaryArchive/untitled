@@ -14,9 +14,9 @@ interface IGoodsItem {
 export default function Search() {
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [recentGoods, setRecentGoods] = useState<IGoodsItem[]>([]);
+  const [popularGoods, setPopularGoods] = useState<IGoodsItem[]>([]);
   const [isLoggedIn] = useState(true);
 
-  // userId만 별도로 선언해 의존성 관리 용이하게 함
   const userId = "550e8400-e29b-41d4-a716-446655440000";
 
   const loadSearches = useCallback(async () => {
@@ -33,16 +33,28 @@ export default function Search() {
       isLoggedIn ? userId : undefined
     );
     setRecentGoods(goods);
-    console.log(goods);
   }, [isLoggedIn, userId]);
 
+  const loadPopularGoods = useCallback(async () => {
+    const goods = await searchHistory.getPopularGoods();
+    setPopularGoods(goods);
+  }, []);
+
   const handleSearch = async (value: string) => {
-    await searchHistory.addRecentSearch(value, isLoggedIn, isLoggedIn ? userId : undefined);
+    await searchHistory.addRecentSearch(
+      value,
+      isLoggedIn,
+      isLoggedIn ? userId : undefined
+    );
     await loadSearches();
   };
 
   const handleRemoveSearches = async (value: string) => {
-    await searchHistory.removeRecentSearch(value, isLoggedIn, isLoggedIn ? userId : undefined);
+    await searchHistory.removeRecentSearch(
+      value,
+      isLoggedIn,
+      isLoggedIn ? userId : undefined
+    );
     await loadSearches();
   };
 
@@ -79,7 +91,8 @@ export default function Search() {
   useEffect(() => {
     loadSearches();
     loadRecentGoods();
-  }, [isLoggedIn, userId]);
+    loadPopularGoods();
+  }, [loadSearches, loadRecentGoods, loadPopularGoods]);
 
   return (
     <View className="flex-1">
@@ -126,6 +139,7 @@ export default function Search() {
             </View>
           )}
         </View>
+
         {/* 최근 본 굿즈 */}
         <View className="mt-4 mb-4">
           <View className="flex flex-row justify-between items-center mb-2 ml-4 mr-4">
@@ -151,22 +165,26 @@ export default function Search() {
             </View>
           )}
         </View>
+
         {/* 인기 굿즈 */}
         <View className="mt-4 mb-4">
-          <Typography variant="Header4" className="mb-2 ml-4 mr-4">
-            인기 굿즈
-          </Typography>
-          <SimpleSwiper
-            data={[
-              { id: "1", title: "히나타", subtitle: "[하이큐!! 네무라세테]" },
-              { id: "2", title: "카게야마", subtitle: "[하이큐!! 극장판]" },
-              { id: "3", title: "츠키시마", subtitle: "[하이큐!! 특별판]" },
-              { id: "4", title: "나루토", subtitle: "[나루토 극장판]" },
-            ]}
-            slidesPerView={2.5}
-            itemSpacing={12}
-            onSlidePress={(item) => console.log("선택한 굿즈:", item)}
-          />
+          <View className="flex flex-row justify-between items-center mb-2 ml-4 mr-4">
+            <Typography variant="Header4">인기 굿즈</Typography>
+          </View>
+          {popularGoods.length > 0 ? (
+            <SimpleSwiper
+              data={popularGoods}
+              slidesPerView={2.5}
+              itemSpacing={12}
+              onSlidePress={(item) => console.log("선택한 인기 굿즈:", item)}
+            />
+          ) : (
+            <View className="items-center justify-center h-11 ml-4 mr-4">
+              <Typography variant="Body2" color="secondary-dark">
+                인기 굿즈가 없습니다.
+              </Typography>
+            </View>
+          )}
         </View>
       </ScrollView>
     </View>
