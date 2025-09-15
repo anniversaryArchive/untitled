@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { View, Alert, ScrollView } from "react-native";
 import { Button, Typography, SearchBox, Chip } from "@components/index";
 import * as searchHistory from "@utils/searchHistory";
-import { supabase } from "@/utils/supabase";
 import SimpleSwiper from "@components/SimpleSwiper";
 
 interface IGoodsItem {
@@ -99,94 +98,92 @@ export default function Search() {
       <View className="ml-2 mr-2">
         <SearchBox className="h-16" onSubmit={handleSearch} />
       </View>
-      <ScrollView contentContainerClassName="pb-4" showsVerticalScrollIndicator={false}>
-        {/* 최근 검색어 */}
-        <View className="mt-4 mb-4">
-          <View className="flex flex-row justify-between items-center mb-2 ml-4 mr-4">
-            <Typography variant="Header4">최근 검색어</Typography>
-            {recentSearches.length > 0 && (
-              <Button variant="text" size="md" color="secondary-dark" onPress={handleClearRecentSearches}>
-                전체 삭제
-              </Button>
-            )}
-          </View>
-          {recentSearches.length > 0 ? (
-            <ScrollView
-              horizontal
-              showsHorizontalScrollIndicator={false}
-              contentContainerClassName="gap-2 items-center min-h-11 ml-4"
-            >
-              {recentSearches.map((term, index) => {
-                const isLast = index === recentSearches.length - 1;
-                return (
-                  <Chip
-                    key={`${term}_${index}`}
-                    size="lg"
-                    color="secondary-light"
-                    label={term}
-                    onClick={() => handleSearch(term)}
-                    onDelete={() => handleRemoveSearches(term)}
-                    className={isLast ? "mr-4" : ""}
-                  />
-                );
-              })}
-            </ScrollView>
-          ) : (
-            <View className="items-center justify-center h-11">
-              <Typography variant="Body2" color="secondary-dark">
-                최근 검색어가 없습니다.
-              </Typography>
-            </View>
+      {/* 최근 검색어 */}
+      <View className="mt-4 mb-4">
+        <View className="flex flex-row justify-between items-center mb-2 ml-4 mr-4">
+          <Typography variant="Header4">최근 검색어</Typography>
+          {recentSearches.length > 0 && (
+            <Button variant="text" size="md" color="secondary-dark" onPress={handleClearRecentSearches}>
+              전체 삭제
+            </Button>
           )}
         </View>
+        {recentSearches.length > 0 ? (
+          <ScrollView
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            contentContainerClassName="gap-2 items-center min-h-11 ml-4"
+          >
+            {recentSearches.map((term, index) => {
+              const isLast = index === recentSearches.length - 1;
+              return (
+                <Chip
+                  key={`${term}_${index}`}
+                  size="lg"
+                  color="secondary-light"
+                  label={term}
+                  onClick={() => handleSearch(term)}
+                  onDelete={() => handleRemoveSearches(term)}
+                  className={isLast ? "mr-4" : ""}
+                />
+              );
+            })}
+          </ScrollView>
+        ) : (
+          <View className="items-center justify-center h-11">
+            <Typography variant="Body2" color="secondary-dark">
+              최근 검색어가 없습니다.
+            </Typography>
+          </View>
+        )}
+      </View>
 
-        {/* 최근 본 굿즈 */}
-        <View className="mt-4 mb-4">
-          <View className="flex flex-row justify-between items-center mb-2 ml-4 mr-4">
-            <Typography variant="Header4">최근 본 굿즈</Typography>
-            {recentGoods.length > 0 && (
-              <Button variant="text" size="md" color="secondary-dark" onPress={handleClearRecentGoods}>
-                전체 삭제
-              </Button>
-            )}
-          </View>
-          {recentGoods.length > 0 ? (
-            <SimpleSwiper
-              data={recentGoods}
-              slidesPerView={2.5}
-              itemSpacing={12}
-              onSlidePress={(item) => console.log("선택한 굿즈:", item)}
-            />
-          ) : (
-            <View className="items-center justify-center h-11 ml-4 mr-4">
-              <Typography variant="Body2" color="secondary-dark">
-                최근 본 굿즈가 없습니다.
-              </Typography>
-            </View>
+      {/* 최근 본 굿즈 */}
+      <View className="mt-4 mb-4">
+        <View className="flex flex-row justify-between items-center mb-2 ml-4 mr-4">
+          <Typography variant="Header4">최근 본 굿즈</Typography>
+          {recentGoods.length > 0 && (
+            <Button variant="text" size="md" color="secondary-dark" onPress={handleClearRecentGoods}>
+              전체 삭제
+            </Button>
           )}
         </View>
+        {recentGoods.length > 0 ? (
+          <SimpleSwiper
+            data={recentGoods}
+            slidesPerView={2.5}
+            itemSpacing={12}
+            onSlidePress={(item) => console.log("선택한 굿즈:", item)}
+          />
+        ) : (
+          <View className="items-center justify-center h-11 ml-4 mr-4">
+            <Typography variant="Body2" color="secondary-dark">
+              최근 본 굿즈가 없습니다.
+            </Typography>
+          </View>
+        )}
+      </View>
 
-        {/* 인기 굿즈 */}
-        <View className="mt-4 mb-4">
-          <View className="flex flex-row justify-between items-center mb-2 ml-4 mr-4">
-            <Typography variant="Header4">인기 굿즈</Typography>
-          </View>
-          {popularGoods.length > 0 ? (
-            <SimpleSwiper
-              data={popularGoods}
-              slidesPerView={2.5}
-              itemSpacing={12}
-              onSlidePress={(item) => console.log("선택한 인기 굿즈:", item)}
-            />
-          ) : (
-            <View className="items-center justify-center h-11 ml-4 mr-4">
-              <Typography variant="Body2" color="secondary-dark">
-                인기 굿즈가 없습니다.
-              </Typography>
-            </View>
-          )}
+      {/* 인기 굿즈 */}
+      <View className="mt-4 mb-4">
+        <View className="flex flex-row justify-between items-center mb-2 ml-4 mr-4">
+          <Typography variant="Header4">인기 굿즈</Typography>
         </View>
-      </ScrollView>
+        {popularGoods.length > 0 ? (
+          <SimpleSwiper
+            data={popularGoods}
+            slidesPerView={2.5}
+            itemSpacing={12}
+            onSlidePress={(item) => console.log("선택한 인기 굿즈:", item)}
+          />
+        ) : (
+          <View className="items-center justify-center h-11 ml-4 mr-4">
+            <Typography variant="Body2" color="secondary-dark">
+              인기 굿즈가 없습니다.
+            </Typography>
+          </View>
+        )}
+      </View>
     </View>
   );
 }
