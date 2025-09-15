@@ -9,8 +9,7 @@ interface IChip {
   value?: string;
   onClick?: (value?: string) => void;
   onDelete?: (value?: string) => void;
-  className?: string;    // 외부 클래스명 추가
-  style?: object;        // 외부 스타일 추가
+  className?: string;
 }
 
 const chipTheme = {
