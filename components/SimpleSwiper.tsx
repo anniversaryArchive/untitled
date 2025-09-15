@@ -60,7 +60,7 @@ export default function SimpleSwiper({
         }}
         className="rounded-lg"
       >
-        <GoodsThumbnail title={item.title} subtitle={item.subtitle} />
+        <GoodsThumbnail title={item.title} subtitle={item.subtitle} imgUrl={item.imageLink} />
       </TouchableOpacity>
     );
   };

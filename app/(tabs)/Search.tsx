@@ -1,4 +1,3 @@
-// Search.tsx
 import { useCallback, useEffect, useState } from "react";
 import { View, Alert, ScrollView } from "react-native";
 import { Button, Typography, SearchBox, Chip } from "@components/index";
@@ -14,74 +13,37 @@ interface IGoodsItem {
 
 export default function Search() {
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
-  const [recentGoods, setRecentGoods] = useState<IGoodsItem[]>([
-    { id: "1", title: "히나타", subtitle: "[하이큐!! 네무라세테]" },
-    { id: "2", title: "카게야마", subtitle: "[하이큐!! 극장판]" },
-    { id: "3", title: "츠키시마", subtitle: "[하이큐!! 특별판]" },
-    { id: "4", title: "나루토", subtitle: "[나루토 극장판]" },
-  ]);
-
+  const [recentGoods, setRecentGoods] = useState<IGoodsItem[]>([]);
   const [isLoggedIn] = useState(true);
 
-  const user = { id: "550e8400-e29b-41d4-a716-446655440000" };
+  // userId만 별도로 선언해 의존성 관리 용이하게 함
+  const userId = "550e8400-e29b-41d4-a716-446655440000";
 
   const loadSearches = useCallback(async () => {
-    if (isLoggedIn) {
-      if (!user) {
-        setRecentSearches([]);
-        return;
-      }
-      const { data, error } = await supabase
-        .from("recent_search")
-        .select("keyword")
-        .eq("user_id", user.id)
-        .order("searched_at", { ascending: false })
-        .limit(10);
-      if (error) {
-        console.error("Supabase recent search load error", error);
-        setRecentSearches([]);
-      } else {
-        setRecentSearches(data?.map((item) => item.keyword) || []);
-      }
-    } else {
-      const searches = await searchHistory.getRecentSearches();
-      setRecentSearches(searches);
-    }
-  }, [isLoggedIn, user]);
+    const searches = await searchHistory.getRecentSearches(
+      isLoggedIn,
+      isLoggedIn ? userId : undefined
+    );
+    setRecentSearches(searches);
+  }, [isLoggedIn, userId]);
+
+  const loadRecentGoods = useCallback(async () => {
+    const goods = await searchHistory.getRecentGoods(
+      isLoggedIn,
+      isLoggedIn ? userId : undefined
+    );
+    setRecentGoods(goods);
+    console.log(goods);
+  }, [isLoggedIn, userId]);
 
   const handleSearch = async (value: string) => {
-    if (isLoggedIn) {
-      if (!user) return;
-      const { error } = await supabase.from("recent_search").insert({
-        user_id: user.id,
-        keyword: value,
-      });
-      if (error) {
-        console.error("Supabase recent search insert error", error);
-      }
-      await loadSearches();
-    } else {
-      await searchHistory.addRecentSearch(value);
-      await loadSearches();
-    }
+    await searchHistory.addRecentSearch(value, isLoggedIn, isLoggedIn ? userId : undefined);
+    await loadSearches();
   };
 
   const handleRemoveSearches = async (value: string) => {
-    if (isLoggedIn) {
-      if (!user) return;
-      const { error } = await supabase
-        .from("recent_search")
-        .delete()
-        .eq("user_id", user.id)
-        .eq("keyword", value);
-      if (error) {
-        console.error("Supabase recent search delete error", error);
-      }
-      await loadSearches();
-    } else {
-      await searchHistory.removeRecentSearch(value);
-      await loadSearches();
-    }
+    await searchHistory.removeRecentSearch(value, isLoggedIn, isLoggedIn ? userId : undefined);
+    await loadSearches();
   };
 
   const handleClearRecentGoods = () => {
@@ -89,7 +51,14 @@ export default function Search() {
       { text: "취소", style: "cancel" },
       {
         text: "삭제",
-        onPress: () => setRecentGoods([]),
+        onPress: async () => {
+          try {
+            await searchHistory.clearRecentGoods(isLoggedIn, isLoggedIn ? userId : undefined);
+            setRecentGoods([]);
+          } catch (error) {
+            console.error("Error clearing recent goods", error);
+          }
+        },
       },
     ]);
   };
@@ -100,23 +69,8 @@ export default function Search() {
       {
         text: "삭제",
         onPress: async () => {
-          try {
-            if (isLoggedIn && user) {
-              const { error } = await supabase
-                .from("recent_search")
-                .delete()
-                .eq("user_id", user.id);
-              if (error) {
-                console.error("Supabase recent search clear error", error);
-                return;
-              }
-            } else {
-              await searchHistory.clearRecentSearches();
-            }
-            setRecentSearches([]);
-          } catch (error) {
-            console.error("Error clearing recent searches", error);
-          }
+          await searchHistory.clearRecentSearches(isLoggedIn, isLoggedIn ? userId : undefined);
+          setRecentSearches([]);
         },
       },
     ]);
@@ -124,27 +78,21 @@ export default function Search() {
 
   useEffect(() => {
     loadSearches();
-  }, [loadSearches]);
+    loadRecentGoods();
+  }, [isLoggedIn, userId]);
 
   return (
     <View className="flex-1">
       <View className="ml-2 mr-2">
         <SearchBox className="h-16" onSubmit={handleSearch} />
       </View>
-      <ScrollView
-        contentContainerClassName="pb-4"
-        showsVerticalScrollIndicator={false}
-      >
+      <ScrollView contentContainerClassName="pb-4" showsVerticalScrollIndicator={false}>
+        {/* 최근 검색어 */}
         <View className="mt-4 mb-4">
           <View className="flex flex-row justify-between items-center mb-2 ml-4 mr-4">
             <Typography variant="Header4">최근 검색어</Typography>
             {recentSearches.length > 0 && (
-              <Button
-                variant="text"
-                size="md"
-                color="secondary-dark"
-                onPress={handleClearRecentSearches}
-              >
+              <Button variant="text" size="md" color="secondary-dark" onPress={handleClearRecentSearches}>
                 전체 삭제
               </Button>
             )}
@@ -178,16 +126,12 @@ export default function Search() {
             </View>
           )}
         </View>
+        {/* 최근 본 굿즈 */}
         <View className="mt-4 mb-4">
           <View className="flex flex-row justify-between items-center mb-2 ml-4 mr-4">
             <Typography variant="Header4">최근 본 굿즈</Typography>
             {recentGoods.length > 0 && (
-              <Button
-                variant="text"
-                size="md"
-                color="secondary-dark"
-                onPress={handleClearRecentGoods}
-              >
+              <Button variant="text" size="md" color="secondary-dark" onPress={handleClearRecentGoods}>
                 전체 삭제
               </Button>
             )}
@@ -207,6 +151,7 @@ export default function Search() {
             </View>
           )}
         </View>
+        {/* 인기 굿즈 */}
         <View className="mt-4 mb-4">
           <Typography variant="Header4" className="mb-2 ml-4 mr-4">
             인기 굿즈
