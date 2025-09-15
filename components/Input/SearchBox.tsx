@@ -51,8 +51,7 @@ const SearchBox = (props: ISearchBoxProps) => {
           stroke={searchBoxTheme[color]}
         />
       </Pressable>
-
-      <View className="grow">
+      <View className={`grow`}>
         <InputBox
           wiggleBorder
           ref={inputRef}
