@@ -6,26 +6,9 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { supabase } from "@/utils/supabase";
 
 import { WiggleBorder, WiggleDivider, Chip, Typography, Icon } from "@/components";
+import { TGacha } from "@/types/gacha";
 
 const MOCKUP_LIST = [{ id: 1, name: "히나타", type: "wish" }] as const;
-
-interface IAnime {
-  id: number;
-  kr_title: string;
-}
-
-interface IGacha {
-  id: number;
-  created_at: string;
-  updated_at: string;
-  name: string;
-  name_kr: string;
-  image_link: string;
-  anime_id?: number;
-  price: number;
-  anime?: IAnime;
-}
-
 interface IGachaItem {
   id: number;
   name: string;
@@ -37,7 +20,7 @@ export default function DetailPagef() {
   const navigation = useNavigation();
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  const [gachaData, setGachaData] = React.useState<IGacha | null>(null);
+  const [gachaData, setGachaData] = React.useState<TGacha | null>(null);
   const [list, setList] = React.useState<IGachaItem[]>([]);
 
   React.useEffect(() => {

@@ -4,18 +4,24 @@ import { useSharedValue } from 'react-native-reanimated';
 import Carousel from 'react-native-reanimated-carousel';
 
 interface SlideItem {
-  id: string;
+  id: number;
   imageUrl?: string;
 }
 
 interface FeaturedSwiperProps {
   data: SlideItem[];
   title: string;
+  loop?: boolean;
   onSlidePress?: (item: SlideItem, index: number) => void;
 }
 
-export default function FeaturedSwiper({ data, title, onSlidePress }: FeaturedSwiperProps) {
-  const [screenWidth, setScreenWidth] = useState(Dimensions.get('window').width);
+export default function FeaturedSwiper({
+  data,
+  title,
+  loop = false,
+  onSlidePress,
+}: FeaturedSwiperProps) {
+  const [screenWidth, setScreenWidth] = useState(Dimensions.get("window").width);
 
   useEffect(() => {
     const onChange = ({ window }: { window: { width: number } }) => {
@@ -64,7 +70,7 @@ export default function FeaturedSwiper({ data, title, onSlidePress }: FeaturedSw
     <View style={[styles.container, { overflow: 'visible' }]}>
       <Text style={styles.headerTitle}>{title}</Text>
       <Carousel
-        loop={false}
+        loop={loop}
         width={slideWidth}
         height={slideHeight}
         autoPlay={false}
