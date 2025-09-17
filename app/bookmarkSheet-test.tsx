@@ -29,7 +29,6 @@ export default function BottomTest() {
 
         if (error || !data) throw error;
         setGachaList(data);
-        setGachaId(data[0].id);
       } catch (err) {
         console.error("🚨 Catch block error:", err);
       }
