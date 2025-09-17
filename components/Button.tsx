@@ -160,8 +160,8 @@ const Button = (props: TButtonProps) => {
 
     const container = cn(
       "flex items-center whitespace-nowrap select-none",
-      hasIcon ? " flex-row justify-between gap-3" : "justify-center",
-      rounded ? "rounded-full" : "rounded-[4px]",
+      hasIcon ? "flex-row justify-between gap-3" : "justify-center",
+      rounded ? "rounded-full" : "rounded",
       width === "full" ? fullWidthProps : fitWidthProps,
       buttonTheme.size[size].container,
       colorContainerClass,
