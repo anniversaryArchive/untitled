@@ -34,25 +34,28 @@ const FolderPicker = (props: IFolderPickerProps) => {
     setFolderList(folderList);
   }, []);
 
-  const handleAddFolder = useCallback(async (value: string) => {
-    if (!value.trim()) return;
+  const handleAddFolder = useCallback(
+    async (value: string) => {
+      if (!value.trim()) return;
 
-    const isExist = folderList.some(({ name }) => name == value);
-    if (isExist) {
-      return Alert.alert("같은 폴더는 둘이 될 수 없어요!", undefined, [
-        {
-          text: "확인",
-        },
-      ]);
-    }
+      const isExist = folderList.some(({ name }) => name == value);
+      if (isExist) {
+        return Alert.alert("같은 폴더는 둘이 될 수 없어요!", undefined, [
+          {
+            text: "확인",
+          },
+        ]);
+      }
 
-    const res = await folder.create(value);
-    if (res) {
-      await loadFolderList();
-      setMode("select");
-      setFolderName("");
-    }
-  }, []);
+      const res = await folder.create(value);
+      if (res) {
+        await loadFolderList();
+        setMode("select");
+        setFolderName("");
+      }
+    },
+    [folderList, loadFolderList]
+  );
 
   useEffect(() => {
     isOpen && loadFolderList();

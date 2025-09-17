@@ -1,3 +1,4 @@
+import "react-native-reanimated/src/initializers"; // TODO: 4.1.1 버전 출시 시 제거
 import React, { useEffect } from "react";
 import { Dimensions, View, Pressable, Keyboard } from "react-native";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
