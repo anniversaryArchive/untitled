@@ -1,7 +1,7 @@
 import React from "react";
 import { View, ScrollView, Image, Pressable } from "react-native";
 import { useLocalSearchParams, useNavigation } from "expo-router";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 import { supabase } from "@/utils/supabase";
 
@@ -35,7 +35,6 @@ interface IGachaItem {
 
 export default function DetailPagef() {
   const navigation = useNavigation();
-  const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const [gachaData, setGachaData] = React.useState<IGacha | null>(null);
