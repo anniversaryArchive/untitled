@@ -34,9 +34,9 @@ const buttonTheme = {
     },
   },
   size: {
-    sm: "h-[28px] font-DunggeunmisoB text-[14px] py-[6.5px] px-[7.5px]",
+    sm: "h-[28px] font-DunggeunmisoB text-[14px] py-1.5 px-2",
     md: "h-[30px] font-Dunggeunmiso text-[14px] py-2 px-3",
-    lg: "h-[44px] font-DunggeunmisoB text-[17px] py-[14px] px-[15px]",
+    lg: "h-[44px] font-DunggeunmisoB text-[17px] py-3 px-4",
   },
 };
 
@@ -52,15 +52,14 @@ const Button = (props: IButtonProps) => {
     ...options
   } = props;
 
-  const defaultStyle = `flex items-center justify-center whitespace-nowrap leading-none select-none`;
+  const defaultStyle = `flex justify-center items-center text-center whitespace-nowrap leading-none select-none`;
   const borderRadiusProps = rounded ? "rounded-full" : "rounded-[4px]";
-  const widthProps = width === "auto" ? "w-fit" : "w-full";
 
   return (
-    <Pressable className={`${width == "full" && "grow"}`} {...options}>
+    <Pressable className={`${width === "full" ? "grow" : "self-start"} `} {...options}>
       {children && (
         <Text
-          className={`${defaultStyle} ${widthProps} ${borderRadiusProps} ${disabled ? buttonTheme.color[color].disabled : buttonTheme.color[color][variant]} ${buttonTheme.size[size]}`}
+          className={`${defaultStyle} ${borderRadiusProps} ${disabled ? buttonTheme.color[color].disabled : buttonTheme.color[color][variant]} ${buttonTheme.size[size]}`}
         >
           {children}
         </Text>
