@@ -19,6 +19,13 @@ export default function Index() {
           </Text>
         </Pressable>
       </Link>
+      <Link href="/folderPicker-test" asChild>
+        <Pressable>
+          <Text className="font-dunggeunmiso text-secondary-dark text-2xl">
+            폴더 선택 테스트 화면
+          </Text>
+        </Pressable>
+      </Link>
     </View>
   );
 }
