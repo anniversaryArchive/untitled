@@ -97,7 +97,7 @@ const FolderPicker = (props: IFolderPickerProps) => {
             data={folderList}
             className="min-h-72 max-h-96"
             contentContainerClassName="flex gap-1"
-            keyExtractor={(forder) => `${forder.id}`}
+            keyExtractor={(folder) => `${folder.id}`}
             renderItem={({ item }) => {
               const isDefaultFolder = item.id === 1;
 
