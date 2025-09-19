@@ -32,7 +32,7 @@ export default function SimpleSwiper({
   const [screenWidth, setScreenWidth] = useState(
     Dimensions.get("window").width
   );
-  const flatListRef = useRef<FlatList>(null);
+  const flatListRef = useRef<FlatList<SlideItem> | null>(null);
 
   useEffect(() => {
     const onChange = ({ window }: { window: { width: number } }) => {
@@ -83,13 +83,3 @@ export default function SimpleSwiper({
     </View>
   );
 }
-<<<<<<< HEAD
-
-const styles = StyleSheet.create({
-  container: {
-    width: "100%",
-  },
-  slide: {},
-});
-=======
->>>>>>> main
