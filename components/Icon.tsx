@@ -19,7 +19,7 @@ const iconMap: { [key: string]: React.FC<any> } = {
   user: Icons.User,
   close: Icons.Close,
   chevronLeft: Icons.ChevronLeft,
-  plus: Icons.Plus,
+  plus2: Icons.Plus2,
   back: Icons.Back,
 };
 
