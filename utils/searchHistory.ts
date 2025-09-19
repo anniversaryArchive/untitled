@@ -152,3 +152,50 @@ export const getPopularGoods = async (
     return [];
   }
 };
+
+/**
+ * gacha 테이블에서 name_kr과 일치하는 데이터 검색, offset 지원
+ */
+export const searchGachaByNameKr = async (
+  keyword: string,
+  limit = 10,
+  offset = 0
+): Promise<{ items: IGoodsItem[]; totalCount: number }> => {
+  try {
+    // 데이터 쿼리
+    const { data, error } = await supabase
+      .from("gacha")
+      .select("id, name_kr, name, image_link")
+      .ilike("name_kr", `%${keyword}%`)
+      .range(offset, offset + limit - 1);
+
+    if (error) {
+      console.error("Supabase gacha search error", error);
+      return { items: [], totalCount: 0 };
+    }
+
+    // 전체 개수 쿼리 (count)
+    const { count, error: countError } = await supabase
+      .from("gacha")
+      .select("id", { count: 'exact', head: true })
+      .ilike("name_kr", `%${keyword}%`);
+
+    if (countError) {
+      console.error("Supabase gacha count error", countError);
+      return { items: data || [], totalCount: 0 };
+    }
+
+    return {
+      items: data?.map((item) => ({
+        id: item.id,
+        title: item.name_kr,
+        subtitle: item.name,
+        imageLink: item.image_link,
+      })) || [],
+      totalCount: count || 0,
+    };
+  } catch (e) {
+    console.error("Error searching gacha by name_kr", e);
+    return { items: [], totalCount: 0 };
+  }
+};
