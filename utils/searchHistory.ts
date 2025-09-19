@@ -1,22 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "@/utils/supabase";
-import { supabase } from "@/utils/supabase";
 
 const MAX_RECENT_SEARCHES = 10;
-const MAX_RECENT_GOODS = 10;
-
-const SEARCH_STORAGE_KEY = "@recent_searches";
-const GOODS_STORAGE_KEY = "@recent_goods";
-
-export interface IGoodsItem {
-  id: string;
-  title: string;
-  subtitle: string;
-}
-
-/**
- * 최근 검색어 저장
- */
 const MAX_RECENT_GOODS = 10;
 
 const SEARCH_STORAGE_KEY = "@recent_searches";
@@ -51,13 +36,7 @@ export const addRecentSearch = async (searchItem: string) => {
  * 최근 검색어 불러오기
  */
 export const getRecentSearches = async (): Promise<string[]> => {
-/**
- * 최근 검색어 불러오기
- */
-export const getRecentSearches = async (): Promise<string[]> => {
   try {
-    const searchesJSON = await AsyncStorage.getItem(SEARCH_STORAGE_KEY);
-    return searchesJSON ? JSON.parse(searchesJSON) : [];
     const searchesJSON = await AsyncStorage.getItem(SEARCH_STORAGE_KEY);
     return searchesJSON ? JSON.parse(searchesJSON) : [];
   } catch (e) {
@@ -67,22 +46,6 @@ export const getRecentSearches = async (): Promise<string[]> => {
   }
 };
 
-/**
- * 특정 검색어 삭제
- */
-export const removeRecentSearch = async (removeItem: string) => {
-  try {
-    const searches = await getRecentSearches();
-    const newSearches = searches.filter((item: string) => item !== removeItem);
-    await AsyncStorage.setItem(SEARCH_STORAGE_KEY, JSON.stringify(newSearches));
-  } catch (e) {
-    console.error("로컬 최근 검색어 삭제 실패", e);
-  }
-};
-
-/**
- * 전체 최근 검색어 삭제
- */
 /**
  * 특정 검색어 삭제
  */
@@ -114,7 +77,7 @@ export const addRecentGood = async (item: IGoodsItem) => {
   try {
     let goods: IGoodsItem[] = await getRecentGoods();
 
-    goods = goods.filter(good => good.id !== item.id);
+    goods = goods.filter((good) => good.id !== item.id);
     goods.unshift(item);
 
     const newGoods = goods.slice(0, MAX_RECENT_GOODS);
@@ -151,13 +114,12 @@ export const clearRecentGoods = async () => {
 /**
  * 인기 굿즈 불러오기
  */
-export const getPopularGoods = async (
-  limit: number = 10
-): Promise<IGoodsItem[]> => {
+export const getPopularGoods = async (limit: number = 10): Promise<IGoodsItem[]> => {
   try {
     const { data, error } = await supabase
       .from("popular_goods")
-      .select(`
+      .select(
+        `
         *,
         gacha (
           id,
@@ -167,7 +129,8 @@ export const getPopularGoods = async (
           anime_id,
           price
         )
-      `)
+      `
+      )
       .order("viewed_at", { ascending: false })
       .limit(limit);
 
@@ -217,7 +180,7 @@ export const searchGachaByNameKr = async (
     // 전체 개수 쿼리 (count)
     const { count, error: countError } = await supabase
       .from("gacha")
-      .select("id", { count: 'exact', head: true })
+      .select("id", { count: "exact", head: true })
       .ilike("name_kr", `%${keyword}%`);
 
     if (countError) {
@@ -226,12 +189,13 @@ export const searchGachaByNameKr = async (
     }
 
     return {
-      items: data?.map((item) => ({
-        id: item.id,
-        title: item.name_kr,
-        subtitle: item.name,
-        imageLink: item.image_link,
-      })) || [],
+      items:
+        data?.map((item) => ({
+          id: item.id,
+          title: item.name_kr,
+          subtitle: item.name,
+          imageLink: item.image_link,
+        })) || [],
       totalCount: count || 0,
     };
   } catch (e) {
