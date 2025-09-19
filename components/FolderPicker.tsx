@@ -4,24 +4,30 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import folder from "@table/folders";
 import { colors } from "@utils/tailwind-colors";
+import { activeBottomSheet } from "@/stores/activeBottomSheet";
 
 import Icon from "./Icon";
 import Button from "./Button";
 import Typography from "./Typography";
-import BottomSheet, { BottomSheetProps } from "./BottomSheet";
+import BottomSheet from "./BottomSheet";
 import { InputBox } from "./Input";
 
 import { TFolder } from "@/types/folder";
 
-interface IFolderPickerProps extends Omit<BottomSheetProps, "children"> {
+interface IFolderPickerProps {
   onSelectFolder: (folder: TFolder) => void;
 }
 
+const SHEET_NAME = "FOLDER";
+
 const FolderPicker = (props: IFolderPickerProps) => {
-  const { open, onClose, onSelectFolder } = props;
+  const { onSelectFolder } = props;
   const [mode, setMode] = useState<"select" | "add">("select");
   const [folderList, setFolderList] = useState<TFolder[]>([]);
   const [folderName, setFolderName] = useState("");
+
+  const { sheetStack, closeSheet } = activeBottomSheet();
+  const isOpen = sheetStack[sheetStack.length - 1] === SHEET_NAME;
 
   const loadFolderList = useCallback(async () => {
     const folderList = await folder.getAll();
@@ -52,12 +58,12 @@ const FolderPicker = (props: IFolderPickerProps) => {
   );
 
   useEffect(() => {
-    open && loadFolderList();
-  }, [open]);
+    isOpen && loadFolderList();
+  }, [isOpen]);
 
   return (
-    <BottomSheet open={open} onClose={onClose}>
-      <SafeAreaView edges={["bottom"]} className="flex gap-3">
+    <BottomSheet open={isOpen} onClose={closeSheet}>
+      <SafeAreaView edges={["bottom"]} className="flex gap-2">
         <View className="relative h-8">
           <View className="left-4 absolute z-10 w-8">
             {mode === "add" && (
@@ -97,7 +103,7 @@ const FolderPicker = (props: IFolderPickerProps) => {
             data={folderList}
             className="min-h-72 max-h-96"
             contentContainerClassName="flex gap-1"
-            keyExtractor={(folder) => `${folder.id}`}
+            keyExtractor={(forder) => `${forder.id}`}
             renderItem={({ item }) => {
               const isDefaultFolder = item.id === 1;
 
@@ -112,6 +118,7 @@ const FolderPicker = (props: IFolderPickerProps) => {
                   className="border-b-hairline border-gray-400" // 추후 Divider component로 변경
                   onPress={() => {
                     onSelectFolder(item);
+                    closeSheet();
                   }}
                 >
                   {item.name}

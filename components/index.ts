@@ -11,6 +11,8 @@ import Segment from "./Segment";
 import DropDown from "./DropDown";
 import Icon from "./Icon";
 import FolderPicker from "./FolderPicker";
+import BookmarkSheet from "./BookmarkSheet";
+import Divider from "./Divider";
 
 export {
   Typography,
@@ -29,4 +31,6 @@ export {
   DropDown,
   Icon,
   FolderPicker,
+  BookmarkSheet,
+  Divider,
 };

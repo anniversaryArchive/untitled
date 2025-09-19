@@ -26,6 +26,11 @@ export default function Index() {
           </Text>
         </Pressable>
       </Link>
+      <Link href="/bookmarkSheet-test" asChild>
+        <Pressable>
+          <Text className="font-dunggeunmiso text-secondary-dark text-2xl">북마크 테스트 화면</Text>
+        </Pressable>
+      </Link>
     </View>
   );
 }
