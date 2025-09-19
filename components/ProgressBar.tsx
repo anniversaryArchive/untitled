@@ -1,4 +1,3 @@
-import "react-native-reanimated/src/initializers"; // TODO: 4.1.1 버전 출시 시 제거
 import { useEffect } from "react";
 import { View } from "react-native";
 import Animated, { useAnimatedStyle, withTiming, useSharedValue } from "react-native-reanimated";

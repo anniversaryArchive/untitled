@@ -10,9 +10,6 @@ import { BasicSwiper, FeaturedSwiper } from "./Swiper";
 import Segment from "./Segment";
 import DropDown from "./DropDown";
 import Icon from "./Icon";
-import FolderPicker from "./FolderPicker";
-import BookmarkSheet from "./BookmarkSheet";
-import Divider from "./Divider";
 
 export {
   Typography,
@@ -30,7 +27,4 @@ export {
   Segment,
   DropDown,
   Icon,
-  FolderPicker,
-  BookmarkSheet,
-  Divider,
 };
