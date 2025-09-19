@@ -67,9 +67,9 @@ class TbFolders {
     if (!db) return null;
 
     try {
-      return await db.getFirstAsync<TFolder>("SELECT * FROM folder WHERE id = ?", id);
+      return await db.getFirstAsync<TFolder>("SELECT * FROM folders WHERE id = ?", id);
     } catch (error) {
-      console.error("TbFolders getFolderById Error : ", error);
+      console.error("TbFolders getOne Error : ", error);
       return null;
     }
   }

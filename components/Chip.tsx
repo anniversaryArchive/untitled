@@ -9,6 +9,7 @@ interface IChip {
   value?: string;
   onClick?: (value?: string) => void;
   onDelete?: (value?: string) => void;
+  className?: string;
 }
 
 const chipTheme = {
@@ -24,19 +25,29 @@ const chipTheme = {
 };
 
 const Chip = (props: IChip) => {
-  const { label, size = "md", color = "secondary-light", value, onClick, onDelete } = props;
+  const {
+    label,
+    size = "md",
+    color = "secondary-light",
+    value,
+    onClick,
+    onDelete,
+    className = "",
+    style,
+  } = props;
 
   const handleClick = useCallback(() => {
     if (onClick) onClick(value || label);
-  }, [onClick]);
+  }, [onClick, value, label]);
 
   const handleDelete = useCallback(() => {
     if (onDelete) onDelete(value || label);
-  }, [onDelete]);
+  }, [onDelete, value, label]);
 
   return (
     <View
-      className={`w-fit flex justify-center items-center ${chipTheme.color[color].bg} ${chipTheme.size[size].bg} ${onDelete && "flex-row gap-2"}`}
+      className={`w-fit flex justify-center items-center ${chipTheme.color[color].bg} ${chipTheme.size[size].bg} ${onDelete ? "flex-row gap-2" : ""} ${className}`}
+      style={style}
     >
       <Pressable onPress={handleClick} disabled={!onClick}>
         <Text className={`${chipTheme.size[size].text} ${chipTheme.color[color].text}`}>

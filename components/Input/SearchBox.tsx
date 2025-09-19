@@ -1,3 +1,4 @@
+// SearchBox.tsx
 import { useRef } from "react";
 import { Alert, Pressable, View } from "react-native";
 import { useNavigation } from "expo-router";
@@ -33,10 +34,11 @@ const SearchBox = (props: ISearchBoxProps) => {
     }
 
     onSubmit(searchTerm);
+    !value && inputRef.current?.clear();
   };
 
   return (
-    <View className={`flex flex-row w-full items-center gap-3`}>
+    <View className={`flex flex-row w-full items-center gap-3 ${className}`}>
       <Pressable
         onPress={() => {
           navigation.goBack();
@@ -56,13 +58,19 @@ const SearchBox = (props: ISearchBoxProps) => {
           ref={inputRef}
           onSubmit={handleSubmit}
           placeholder={placeholder}
-          className={`text-[16px] ${className}`}
+          className="text-[16px]"
           color={color}
           {...options}
         />
       </View>
+
       <Pressable onPress={() => handleSubmit()}>
-        <Icon name="search" size={24} fill={searchBoxTheme[color]} stroke={searchBoxTheme[color]} />
+        <Icon
+          name="search"
+          size={24}
+          fill={searchBoxTheme[color]}
+          stroke={searchBoxTheme[color]}
+        />
       </Pressable>
     </View>
   );
