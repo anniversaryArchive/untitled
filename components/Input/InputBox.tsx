@@ -1,4 +1,4 @@
-import { forwardRef, useImperativeHandle, useRef } from "react";
+import React, { forwardRef, useImperativeHandle, useRef } from "react";
 import { TextInput, TextInputProps } from "react-native";
 import { getColor } from "@utils/color";
 import { colors } from "@utils/tailwind-colors";
@@ -12,7 +12,6 @@ interface IInputBoxProps extends TextInputProps {
   size?: keyof typeof inputTheme.size;
   color?: keyof typeof inputTheme.color;
   wiggleBorder?: boolean;
-  clearAfterSubmit?: boolean;
 }
 
 export interface InputBoxHandle {
@@ -34,10 +33,10 @@ export const inputTheme = {
 };
 
 const BorderComponent = ({
-  wiggleBorder,
-  borderColor,
-  children,
-}: {
+                           wiggleBorder,
+                           borderColor,
+                           children,
+                         }: {
   wiggleBorder: boolean;
   borderColor: keyof typeof inputTheme.color;
   children: React.ReactNode;
@@ -51,65 +50,63 @@ const BorderComponent = ({
   );
 };
 
-const InputBox = forwardRef<InputBoxHandle, IInputBoxProps>(
-  (props: IInputBoxProps, ref?: React.ForwardedRef<InputBoxHandle>) => {
-    const {
-      placeholder,
-      onSubmit,
-      className,
-      color = "secondary-dark",
-      type = "text",
-      size = "sm",
-      wiggleBorder = false,
-      readOnly,
-      clearAfterSubmit = true,
-      ...options
-    } = props;
-    const inputRef = useRef<TextInput>(null);
-    const valueRef = useRef<string>("");
+const InputBox = forwardRef<InputBoxHandle, IInputBoxProps>((props, ref) => {
+  const {
+    placeholder,
+    onSubmit,
+    className,
+    color = "secondary-dark",
+    size = "sm",
+    wiggleBorder = false,
+    readOnly,
+    onChangeText,
+    ...options
+  } = props;
 
-    useImperativeHandle(ref, () => ({
-      clear: clearInput,
-      getValue: () => {
-        return valueRef.current;
-      },
-    }));
+  const inputRef = useRef<TextInput>(null);
+  const textRef = useRef(""); // 텍스트 값을 ref로 저장
 
-    const clearInput = () => {
+  useImperativeHandle(ref, () => ({
+    getValue: () => textRef.current,
+    clear: () => {
+      textRef.current = "";
       inputRef.current?.clear();
-      valueRef.current = "";
-    };
+    },
+  }));
 
-    const defaultProps = `p-3 rounded text-secondary-dark ${!wiggleBorder && "border"} ${inputTheme.color[color]} ${inputTheme.size[size]}`;
-    const readOnlyProps = `bg-gray-200`;
+  const handleChangeText = (newText: string) => {
+    textRef.current = newText;
+    if (onChangeText) {
+      onChangeText(newText);
+    }
+  };
 
-    return (
-      <BorderComponent wiggleBorder={wiggleBorder} borderColor={color}>
-        <TextInput
-          ref={inputRef}
-          onChangeText={(text) => {
-            valueRef.current = text;
-          }}
-          onSubmitEditing={(e) => {
-            if (onSubmit) {
-              const value = e.nativeEvent.text;
-              onSubmit(value);
+  const defaultProps = `p-3 rounded text-secondary-dark ${
+    !wiggleBorder ? "border" : ""
+  } ${inputTheme.color[color]} ${inputTheme.size[size]}`;
+  const readOnlyProps = `bg-gray-200`;
 
-              clearAfterSubmit && clearInput();
-            }
-          }}
-          submitBehavior={"blurAndSubmit"}
-          placeholder={placeholder || "검색어를 입력하세요."}
-          placeholderTextColor={colors.secondary["dark-80"]}
-          className={`${defaultProps} ${readOnly && readOnlyProps} ${className}`}
-          clearButtonMode="while-editing"
-          clearTextOnFocus
-          readOnly={readOnly}
-          {...options}
-        />
-      </BorderComponent>
-    );
-  }
-);
+  return (
+    <BorderComponent wiggleBorder={wiggleBorder} borderColor={color}>
+      <TextInput
+        ref={inputRef}
+        defaultValue={""} // uncontrolled input 시작 값
+        onChangeText={handleChangeText}
+        onSubmitEditing={(e) => {
+          if (onSubmit) {
+            onSubmit(e.nativeEvent.text);
+          }
+        }}
+        submitBehavior={"blurAndSubmit"}
+        placeholder={placeholder || "검색어를 입력하세요."}
+        placeholderTextColor={colors.secondary["dark-80"]}
+        className={`${defaultProps} ${readOnly ? readOnlyProps : ""} ${className}`}
+        clearButtonMode="while-editing"
+        editable={!readOnly}
+        {...options}
+      />
+    </BorderComponent>
+  );
+});
 
 export default InputBox;

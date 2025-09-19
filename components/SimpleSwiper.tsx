@@ -34,7 +34,6 @@ export default function SimpleSwiper({
   );
   const flatListRef = useRef<FlatList>(null);
 
-  // 화면 사이즈 변경 대응
   useEffect(() => {
     const onChange = ({ window }: { window: { width: number } }) => {
       setScreenWidth(window.width);
@@ -56,22 +55,20 @@ export default function SimpleSwiper({
       <TouchableOpacity
         activeOpacity={0.8}
         onPress={() => onSlidePress?.(item, index)}
-        style={[
-          styles.slide,
-          {
-            width: itemWidth,
-            marginLeft: isFirst ? 0 : itemSpacing / 2,
-            marginRight: isLast ? 0 : itemSpacing / 2,
-          },
-        ]}
+        style={{
+          width: itemWidth,
+          marginLeft: isFirst ? 16 : itemSpacing / 2,  // 첫 슬라이드 왼쪽 margin 16
+          marginRight: isLast ? 16 : itemSpacing / 2,   // 마지막 슬라이드 오른쪽 margin 16
+        }}
+        className="rounded-lg"
       >
-        <GoodsThumbnail title={item.title} subtitle={item.subtitle} />
+        <GoodsThumbnail title={item.title} subtitle={item.subtitle} imgUrl={item.imageLink} />
       </TouchableOpacity>
     );
   };
 
   return (
-    <View style={styles.container}>
+    <View className="w-full">
       <FlatList
         ref={flatListRef}
         horizontal
@@ -79,13 +76,14 @@ export default function SimpleSwiper({
         renderItem={renderItem}
         keyExtractor={(item) => item.id}
         showsHorizontalScrollIndicator={false}
-        snapToInterval={itemWidth + itemSpacing / 2} // 스냅 효과
+        snapToInterval={itemWidth + itemSpacing / 2}
         decelerationRate="fast"
         contentContainerStyle={{ paddingHorizontal: 0 }}
       />
     </View>
   );
 }
+<<<<<<< HEAD
 
 const styles = StyleSheet.create({
   container: {
@@ -93,3 +91,5 @@ const styles = StyleSheet.create({
   },
   slide: {},
 });
+=======
+>>>>>>> main
