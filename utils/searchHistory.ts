@@ -25,7 +25,9 @@ export const addRecentSearch = async (searchItem: string) => {
 
     const newSearches = searches.slice(0, MAX_RECENT_SEARCHES);
     await AsyncStorage.setItem(SEARCH_STORAGE_KEY, JSON.stringify(newSearches));
+    await AsyncStorage.setItem(SEARCH_STORAGE_KEY, JSON.stringify(newSearches));
   } catch (e) {
+    console.error("로컬 최근 검색어 저장 실패", e);
     console.error("로컬 최근 검색어 저장 실패", e);
   }
 };
@@ -38,6 +40,7 @@ export const getRecentSearches = async (): Promise<string[]> => {
     const searchesJSON = await AsyncStorage.getItem(SEARCH_STORAGE_KEY);
     return searchesJSON ? JSON.parse(searchesJSON) : [];
   } catch (e) {
+    console.error("로컬 최근 검색어 불러오기 실패", e);
     console.error("로컬 최근 검색어 불러오기 실패", e);
     return [];
   }
