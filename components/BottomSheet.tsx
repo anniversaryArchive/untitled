@@ -1,3 +1,4 @@
+import "react-native-reanimated/src/initializers"; // TODO: 4.1.1 버전 출시 시 제거
 import React, { useEffect } from "react";
 import { Dimensions, View, Pressable } from "react-native";
 import { GestureDetector, Gesture } from "react-native-gesture-handler";
@@ -24,8 +25,6 @@ export default function BottomSheet({ open, onClose, children }: BottomSheetProp
   // 배경 오버레이 투명도 값
   const overlayOpacity = useSharedValue(0);
 
-
-
   // open 상태 변화 감지
   useEffect(() => {
     if (open) {
@@ -48,10 +47,9 @@ export default function BottomSheet({ open, onClose, children }: BottomSheetProp
         translateY.value = e.translationY;
 
         // 드래그 거리에 따른 오버레이 투명도 변화
-        overlayOpacity.value = withTiming(
-          0.3 * (1 - e.translationY / (SCREEN_HEIGHT * 0.5)),
-          { duration: 50 }
-        );
+        overlayOpacity.value = withTiming(0.3 * (1 - e.translationY / (SCREEN_HEIGHT * 0.5)), {
+          duration: 50,
+        });
       }
     })
     .onEnd(() => {
