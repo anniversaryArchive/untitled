@@ -2,6 +2,7 @@ import Typography from "./Typography";
 import Button from "./Button";
 import { InputBox, TextBox, SearchBox } from "./Input";
 import WiggleBorder from "./WiggleBorder";
+import WiggleDivider from "./WiggleDivider";
 import ProgressBar from "./ProgressBar";
 import Chip from "./Chip";
 import GoodsThumbnail from "./GoodsThumbnail";
@@ -19,10 +20,11 @@ export {
   Button,
   InputBox,
   TextBox,
-  SearchBox,
   WiggleBorder,
+  WiggleDivider,
   ProgressBar,
   Chip,
+  SearchBox,
   GoodsThumbnail,
   BottomSheet,
   BasicSwiper,
