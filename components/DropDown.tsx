@@ -1,7 +1,5 @@
 import React from 'react';
 import { View, Text, TouchableOpacity, StyleSheet, FlatList, Modal } from 'react-native';
-import Icon from '@components/Icon'; // 경로 맞게 수정
-import { colors } from '@utils/tailwind-colors'; // 경로 맞게 수정
 
 type DropDownProps<T> = {
   data: T[];
@@ -10,13 +8,6 @@ type DropDownProps<T> = {
   labelExtractor: (item: T) => string; // 데이터 항목에서 보여줄 텍스트를 추출
   placeholder?: string;
   disabled?: boolean; // 비활성화 여부
-  color?: keyof typeof searchBoxTheme;
-};
-
-const searchBoxTheme = {
-  primary: colors.primary.DEFAULT,
-  secondary: colors.secondary.DEFAULT,
-  "secondary-dark": colors.secondary.dark,
 };
 
 function DropDown<T>({
@@ -26,11 +17,8 @@ function DropDown<T>({
                        labelExtractor,
                        placeholder = "Select",
                        disabled = false,
-                       color = "primary",
                      }: DropDownProps<T>) {
   const [isOpen, setIsOpen] = React.useState(false);
-
-  const iconColor = searchBoxTheme[color];
 
   const handleSelect = (item: T) => {
     onValueChange(item);
@@ -46,18 +34,11 @@ function DropDown<T>({
         }}
         activeOpacity={disabled ? 1 : 0.7}
       >
-        <View style={styles.buttonContent}>
-          <Text style={[styles.buttonText, disabled && styles.textDisabled]}>
-            {selectedValue ? labelExtractor(selectedValue) : placeholder}
-          </Text>
-          <Icon
-            name="chevronDown" // 필요 시 "chevronLeft" 등 아이콘명 변경 가능
-            size={24}
-            fill={iconColor}
-            stroke={iconColor}
-          />
-        </View>
+        <Text style={[styles.buttonText, disabled && styles.textDisabled]}>
+          {selectedValue ? labelExtractor(selectedValue) : placeholder}
+        </Text>
       </TouchableOpacity>
+
       <Modal visible={isOpen} transparent animationType="fade">
         <TouchableOpacity style={styles.overlay} onPress={() => setIsOpen(false)}>
           <View style={styles.dropdown}>
@@ -80,8 +61,7 @@ function DropDown<T>({
 
 const styles = StyleSheet.create({
   button: {
-    paddingVertical: 12,
-    paddingHorizontal: 16, // 좌우 여백 추가
+    padding: 12,
     backgroundColor: '#fff',
     borderRadius: 6,
     borderWidth: 1,
@@ -90,16 +70,11 @@ const styles = StyleSheet.create({
   buttonDisabled: {
     opacity: 0.5,
   },
-  buttonContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
   buttonText: {
     fontSize: 14,
     color: '#998372',
+    textAlign: 'center',
     fontFamily: 'DunggeunmisoB',
-    flex: 1,
   },
   textDisabled: {
     color: '#ccc',

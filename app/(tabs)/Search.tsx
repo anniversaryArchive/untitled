@@ -3,7 +3,6 @@ import { View, Alert, ScrollView } from "react-native";
 import { Button, Typography, SearchBox, Chip } from "@components/index";
 import * as searchHistory from "@utils/searchHistory";
 import SimpleSwiper from "@components/SimpleSwiper";
-import { useRouter } from "expo-router";
 
 interface IGoodsItem {
   id: string;
@@ -11,8 +10,7 @@ interface IGoodsItem {
   subtitle: string;
 }
 
-export default function Index() {
-  const router = useRouter();
+export default function Search() {
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [recentGoods, setRecentGoods] = useState<IGoodsItem[]>([]);
   const [popularGoods, setPopularGoods] = useState<IGoodsItem[]>([]);
@@ -41,11 +39,6 @@ export default function Index() {
     // 로그인 여부 전달 제거, 항상 로컬 DB 사용
     await searchHistory.addRecentSearch(value, false);
     await loadSearches();
-
-    router.push({
-      pathname: "/Search/search-results",
-      params: { searchTerm: value }
-    });
   };
 
   const handleRemoveSearches = async (value: string) => {
@@ -90,7 +83,7 @@ export default function Index() {
   }, [loadSearches, loadRecentGoods, loadPopularGoods]);
 
   return (
-    <View className="flex-1 bg-white">
+    <View className="flex-1">
       <View className="ml-2 mr-2">
         <SearchBox className="h-16" onSubmit={handleSearch} />
       </View>

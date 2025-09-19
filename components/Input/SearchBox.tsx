@@ -12,8 +12,6 @@ interface ISearchBoxProps {
   className?: string;
   color?: keyof typeof searchBoxTheme;
   onSubmit: (value: string) => void;
-  value?: string;
-  onChangeText?: (text: string) => void;
   [options: string]: any;
 }
 
@@ -24,27 +22,19 @@ const searchBoxTheme = {
 };
 
 const SearchBox = (props: ISearchBoxProps) => {
-  const {
-    placeholder,
-    onSubmit,
-    className,
-    color = "primary",
-    value,
-    onChangeText,
-    ...options
-  } = props;
+  const { placeholder, onSubmit, className, color = "primary", ...options } = props;
   const navigation = useNavigation();
   const inputRef = useRef<InputBoxHandle>(null);
 
-  const handleSubmit = (inputValue?: string) => {
-    const searchTerm = inputValue ?? value ?? "";
+  const handleSubmit = (value?: string) => {
+    const searchTerm = value || inputRef.current?.getValue();
 
-    if (!searchTerm.trim()) {
+    if (!searchTerm?.trim()) {
       return Alert.alert("공백은 입력할 수 없습니다.", undefined, [{ text: "확인" }]);
     }
 
     onSubmit(searchTerm);
-    // 인풋 클리어는 외부에서 상태를 관리하므로 제거하거나 필요시 별도 처리
+    !value && inputRef.current?.clear();
   };
 
   return (
@@ -66,8 +56,6 @@ const SearchBox = (props: ISearchBoxProps) => {
         <InputBox
           wiggleBorder
           ref={inputRef}
-          value={value}
-          onChangeText={onChangeText}
           onSubmit={handleSubmit}
           placeholder={placeholder}
           className="text-[16px]"
@@ -76,7 +64,7 @@ const SearchBox = (props: ISearchBoxProps) => {
         />
       </View>
 
-      <Pressable onPress={() => handleSubmit(value)}>
+      <Pressable onPress={() => handleSubmit()}>
         <Icon
           name="search"
           size={24}
