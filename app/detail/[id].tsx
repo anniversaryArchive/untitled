@@ -141,7 +141,7 @@ export default function DetailPagef() {
 
       {/* Add Gacha Floating Button */}
       <Pressable
-        className="bg-primary rounded-full p-2 absolute right-3"
+        className="bg-primary rounded-full p-2 absolute right-6"
         style={{ bottom: 8 + insets.bottom }}
         onPress={handleAddGacha}
       >
