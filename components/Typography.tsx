@@ -1,16 +1,15 @@
 import { Text, View } from "react-native";
 import Svg, { Text as SvgText } from "react-native-svg";
-
 import { colors } from "@utils/tailwind-colors";
 
 interface ITypography {
   variant?: keyof typeof typographyTheme.variant;
-  // color 제한하지 않고 String 받도록 수정
-  // 내부에서 매핑 실패 시 fallback 주도록 처리
   color?: string;
   twotone?: never;
   className?: string;
   children: React.ReactNode;
+  numberOfLines?: number;            // 추가: 한 줄 제한
+  ellipsizeMode?: "head" | "middle" | "tail" | "clip"; // 추가: 말줄임표 위치
 }
 
 interface ITwoToneTypography {
@@ -60,16 +59,17 @@ const Typography = (props: ITypography | ITwoToneTypography) => {
     twotone,
     children,
     className = "",
+
+    numberOfLines,           // 추가
+    ellipsizeMode,           // 추가
   } = props;
 
   const getTwotoneTypography = (twotone: keyof typeof twotoneColorMap) => {
     const _variant = typographyTheme.variant[variant];
     const sizeRegex = /text-\[(\d+)px\]/;
     const sizeMatch = _variant.match(sizeRegex);
-
     const fontSize = parseInt(sizeMatch?.[1] ?? "0");
     const strokeWidth: number = variant === "Header1" ? 2 : 1.5;
-
     return (
       <Svg height={fontSize + strokeWidth} width="100%">
         <SvgText
@@ -94,11 +94,12 @@ const Typography = (props: ITypography | ITwoToneTypography) => {
         <>{getTwotoneTypography(twotone)}</>
       ) : (
         <Text
-          // color theme 없으면 그대로 className 붙이지 않고 fallback 적용
           className={`${typographyTheme.variant[variant]} ${
-            typographyTheme.color[color as keyof typeof typographyTheme.color] ??
-            typographyTheme.color["secondary-dark"]
+            typographyTheme.color[color as keyof typeof typographyTheme.color] ?? typographyTheme.color["secondary-dark"]
           } ${className}`}
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={{ flexShrink: 1, overflow: "hidden" }}
         >
           {children}
         </Text>
