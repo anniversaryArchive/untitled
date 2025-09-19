@@ -19,10 +19,6 @@ const iconMap: { [key: string]: React.FC<any> } = {
   user: Icons.User,
   close: Icons.Close,
   chevronLeft: Icons.ChevronLeft,
-  chevronRight: Icons.ChevronRight,
-  newFolder: Icons.NewFolder,
-  folderFill: Icons.FolderFill,
-  plus: Icons.Plus,
   chevronDown: Icons.ChevronDown,
 };
 

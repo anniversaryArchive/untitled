@@ -1,22 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "@/utils/supabase";
-import { supabase } from "@/utils/supabase";
 
 const MAX_RECENT_SEARCHES = 10;
-const MAX_RECENT_GOODS = 10;
-
-const SEARCH_STORAGE_KEY = "@recent_searches";
-const GOODS_STORAGE_KEY = "@recent_goods";
-
-export interface IGoodsItem {
-  id: string;
-  title: string;
-  subtitle: string;
-}
-
-/**
- * 최근 검색어 저장
- */
 const MAX_RECENT_GOODS = 10;
 
 const SEARCH_STORAGE_KEY = "@recent_searches";
@@ -40,9 +25,7 @@ export const addRecentSearch = async (searchItem: string) => {
 
     const newSearches = searches.slice(0, MAX_RECENT_SEARCHES);
     await AsyncStorage.setItem(SEARCH_STORAGE_KEY, JSON.stringify(newSearches));
-    await AsyncStorage.setItem(SEARCH_STORAGE_KEY, JSON.stringify(newSearches));
   } catch (e) {
-    console.error("로컬 최근 검색어 저장 실패", e);
     console.error("로컬 최근 검색어 저장 실패", e);
   }
 };
@@ -51,38 +34,15 @@ export const addRecentSearch = async (searchItem: string) => {
  * 최근 검색어 불러오기
  */
 export const getRecentSearches = async (): Promise<string[]> => {
-/**
- * 최근 검색어 불러오기
- */
-export const getRecentSearches = async (): Promise<string[]> => {
   try {
     const searchesJSON = await AsyncStorage.getItem(SEARCH_STORAGE_KEY);
     return searchesJSON ? JSON.parse(searchesJSON) : [];
-    const searchesJSON = await AsyncStorage.getItem(SEARCH_STORAGE_KEY);
-    return searchesJSON ? JSON.parse(searchesJSON) : [];
   } catch (e) {
-    console.error("로컬 최근 검색어 불러오기 실패", e);
     console.error("로컬 최근 검색어 불러오기 실패", e);
     return [];
   }
 };
 
-/**
- * 특정 검색어 삭제
- */
-export const removeRecentSearch = async (removeItem: string) => {
-  try {
-    const searches = await getRecentSearches();
-    const newSearches = searches.filter((item: string) => item !== removeItem);
-    await AsyncStorage.setItem(SEARCH_STORAGE_KEY, JSON.stringify(newSearches));
-  } catch (e) {
-    console.error("로컬 최근 검색어 삭제 실패", e);
-  }
-};
-
-/**
- * 전체 최근 검색어 삭제
- */
 /**
  * 특정 검색어 삭제
  */
