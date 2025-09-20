@@ -1,7 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { Dimensions, View, Text, Image, StyleSheet, Platform, TouchableOpacity } from 'react-native';
-import { useSharedValue } from 'react-native-reanimated';
-import Carousel from 'react-native-reanimated-carousel';
+import React, { useState, useEffect } from "react";
+import {
+  Dimensions,
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  Platform,
+  TouchableOpacity,
+} from "react-native";
+import { useSharedValue } from "react-native-reanimated";
+import Carousel from "react-native-reanimated-carousel";
+
+import { WiggleBorder } from "@/components";
 
 interface SlideItem {
   id: number;
@@ -58,11 +68,13 @@ export default function FeaturedSwiper({
       }}
       style={[styles.slide, { width: slideWidth, height: slideHeight }]}
     >
+<WiggleBorder height={slideHeight} borderZIndex={3}>
       {item.imageUrl ? (
         <Image source={{ uri: item.imageUrl }} style={styles.image} resizeMode="cover" />
       ) : (
         <View style={styles.empty} />
       )}
+      </WiggleBorder>
     </TouchableOpacity>
   );
 
@@ -112,14 +124,7 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     fontFamily: 'DunggeunmisoB',
   },
-  slide: {
-    borderRadius: 10,
-    overflow: 'hidden',
-    backgroundColor: '#FFF',
-    justifyContent: 'flex-end',
-    borderWidth: 1,
-    borderColor: '#FFBBC1',
-  },
+  slide: { overflow: "hidden", justifyContent: "flex-end" },
   image: {
     ...StyleSheet.absoluteFillObject,
     borderRadius: 10,
