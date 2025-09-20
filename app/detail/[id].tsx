@@ -4,6 +4,7 @@ import { useLocalSearchParams, useNavigation } from "expo-router";
 import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 import { supabase } from "@/utils/supabase";
+import { getDeviceUuid } from "@/utils/deviceUuid";
 
 import { WiggleBorder, WiggleDivider, Chip, Typography, Icon } from "@/components";
 import { TGacha } from "@/types/gacha";
@@ -44,6 +45,7 @@ export default function DetailPagef() {
 
         if (error || !data) throw error;
         setGachaData(data);
+
         // TODO: 가챠 내 아이템 목록은 임시로 mockup 데이터, 추후에 치환
         setList([...MOCKUP_LIST]);
       } catch (err) {
@@ -52,7 +54,19 @@ export default function DetailPagef() {
       }
     };
 
+    // 가챠 상세 조회 로그 기록
+    const logGachaView = async () => {
+      try {
+        const deviceUuid = await getDeviceUuid();
+        if (!deviceUuid) return;
+        await supabase.from("gacha_view_log").insert({ uuid: deviceUuid, gacha_id: id });
+      } catch (logError) {
+        console.error("🚨 가챠 조회 로그 기록 실패:", logError);
+      }
+    };
+
     fetchGachaData();
+    logGachaView();
   }, [navigation, id]);
 
   const handleAddGacha = () => {
