@@ -4,7 +4,7 @@ import { router } from "expo-router";
 
 import { supabase } from "@/utils/supabase";
 
-import { Button, Typography, FeaturedSwiper } from "@/components";
+import { Button, Typography, FeaturedSwiper, WiggleBorder } from "@/components";
 
 const LIMIT_COUNT = 5;
 
@@ -14,9 +14,16 @@ interface PreviewGacha {
   anime_id: number;
 }
 
+interface Notice {
+  id: number;
+  title: string;
+  created_at: string;
+}
+
 export default function Home() {
   const [newGachaList, setNewGachaList] = useState<PreviewGacha[]>([]);
   const [popularGachaList, setPopularGachaList] = useState<PreviewGacha[]>([]);
+  const [noticeList, setNoticeList] = useState<Notice[]>([]);
 
   useEffect(() => {
     const fetchNewGachaData = async () => {
@@ -76,8 +83,24 @@ export default function Home() {
       }
     };
 
+    const fetchNoticeData = async () => {
+      try {
+        const { data } = await supabase
+          .from("notice")
+          .select("*")
+          .order("is_fixed", { ascending: false })
+          .order("created_at", { ascending: false })
+          .limit(2);
+        console.log("🚀 공지사항 데이터:", data);
+        setNoticeList(data || []);
+      } catch (error) {
+        console.error("❌ 공지사항 데이터 조회 실패:", error);
+      }
+    };
+
     fetchNewGachaData();
     fetchPopularGachaData();
+    fetchNoticeData();
   }, []);
 
   const handleNavigateToDetail = (id: number) => {
@@ -86,10 +109,6 @@ export default function Home() {
 
   return (
     <View>
-      <Typography variant="Header1" color="secondary-dark">
-        홈
-      </Typography>
-
       <View>
         <FeaturedSwiper
           title="새로 나왔어요!"
@@ -104,6 +123,42 @@ export default function Home() {
           onSlidePress={(item) => handleNavigateToDetail(item.id)}
           loop={true}
         />
+
+        <View className="bg-primary-light py-7 px-4">
+          <View className="flex justify-between flex-row">
+            <Typography variant="Header2" color="secondary-dark">
+              공지사항
+            </Typography>
+
+            <Button variant="text" size="sm">
+              <Typography variant="Body1" color="#D9D9D9">
+                전체보기 &gt;
+              </Typography>
+            </Button>
+          </View>
+
+          <View className="flex flex-col gap-3">
+            {noticeList.map((notice) => (
+              <WiggleBorder
+                key={`notice-${notice.id}`}
+                backgroundColor="#FFF"
+                borderZIndex={2}
+                height={60}
+              >
+                <View className="p-3 mr-auto">
+                  <View className="mb-1">
+                    <Typography variant="Header5" color="primary">
+                      {notice.title}
+                    </Typography>
+                  </View>
+                  <Typography variant="Caption2" color="secondary-dark">
+                    {notice.created_at}
+                  </Typography>
+                </View>
+              </WiggleBorder>
+            ))}
+          </View>
+        </View>
 
         <Button onPress={() => handleNavigateToDetail(67)}>
           <Typography variant="Body1" color="white">
