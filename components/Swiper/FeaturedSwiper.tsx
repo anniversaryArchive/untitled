@@ -22,6 +22,8 @@ interface FeaturedSwiperProps {
   data: SlideItem[];
   title: string;
   loop?: boolean;
+  width?: number;
+  offset?: number;
   onSlidePress?: (item: SlideItem, index: number) => void;
 }
 
@@ -29,6 +31,8 @@ export default function FeaturedSwiper({
   data,
   title,
   loop = false,
+  width,
+  offset,
   onSlidePress,
 }: FeaturedSwiperProps) {
   const [screenWidth, setScreenWidth] = useState(Dimensions.get("window").width);
@@ -55,7 +59,10 @@ export default function FeaturedSwiper({
     parallaxOffset = 40;
   }
 
-  const slideHeight = 200;
+  if (width) slideWidth = width;
+  if (offset) parallaxOffset = offset;
+
+  const slideHeight = 250;
   const progress = useSharedValue<number>(0);
 
   const renderItem = ({ item, index }: { item: SlideItem; index: number }) => (
@@ -68,12 +75,12 @@ export default function FeaturedSwiper({
       }}
       style={[styles.slide, { width: slideWidth, height: slideHeight }]}
     >
-<WiggleBorder height={slideHeight} borderZIndex={3}>
-      {item.imageUrl ? (
-        <Image source={{ uri: item.imageUrl }} style={styles.image} resizeMode="cover" />
-      ) : (
-        <View style={styles.empty} />
-      )}
+      <WiggleBorder height={slideHeight} borderZIndex={3}>
+        {item.imageUrl ? (
+          <Image source={{ uri: item.imageUrl }} style={styles.image} resizeMode="contain" />
+        ) : (
+          <View style={styles.empty} />
+        )}
       </WiggleBorder>
     </TouchableOpacity>
   );

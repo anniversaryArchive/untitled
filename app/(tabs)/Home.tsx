@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { View } from "react-native";
+import { View, ScrollView } from "react-native";
 import { router } from "expo-router";
 
 import { supabase } from "@/utils/supabase";
 
-import { Button, Typography, FeaturedSwiper, WiggleBorder } from "@/components";
+import { Button, Typography, FeaturedSwiper, WiggleBorder, BasicSwiper, Icon } from "@/components";
 
 const LIMIT_COUNT = 5;
 
@@ -26,9 +26,9 @@ export default function Home() {
   const [noticeList, setNoticeList] = useState<Notice[]>([]);
 
   useEffect(() => {
+    // 최근에 새로 추가된 가챠 5개 조회
     const fetchNewGachaData = async () => {
       try {
-        // 새로 나왔어요!
         const { data } = await supabase
           .from("gacha")
           .select("*")
@@ -83,6 +83,7 @@ export default function Home() {
       }
     };
 
+    // 공지사항 데이터 2개 조회
     const fetchNoticeData = async () => {
       try {
         const { data } = await supabase
@@ -108,23 +109,41 @@ export default function Home() {
   };
 
   return (
-    <View>
-      <View>
+    <View className="flex-1">
+      <View className="w-full bg-white flex justify-between flex-row py-2 px-4">
+        <Typography variant="Header1" color="primary">
+          LOGO
+        </Typography>
+        <View className="my-auto">
+          <Icon name="search" size={24} fill="primary" stroke="primary" />
+        </View>
+      </View>
+      <ScrollView className="flex-1">
+        {/* 배너 영역 */}
+        <BasicSwiper data={[1, 2, 3]} />
+
+        {/* 새로 나온 가챠! */}
         <FeaturedSwiper
           title="새로 나왔어요!"
           data={newGachaList.map((gacha) => ({ ...gacha, imageUrl: gacha.image_link }))}
-          onSlidePress={(item) => handleNavigateToDetail(item.id)}
+          width={225}
+          offset={20}
           loop={true}
+          onSlidePress={(item) => handleNavigateToDetail(item.id)}
         />
 
+        {/* 인기 가챠 */}
         <FeaturedSwiper
           title="지금 이게 인기에요!"
           data={popularGachaList.map((gacha) => ({ ...gacha, imageUrl: gacha.image_link }))}
-          onSlidePress={(item) => handleNavigateToDetail(item.id)}
+          width={225}
+          offset={20}
           loop={true}
+          onSlidePress={(item) => handleNavigateToDetail(item.id)}
         />
 
-        <View className="bg-primary-light py-7 px-4">
+        {/* 공지사항 */}
+        <View className="bg-primary-light py-7 px-4 mt-8">
           <View className="flex justify-between flex-row">
             <Typography variant="Header2" color="secondary-dark">
               공지사항
@@ -159,13 +178,7 @@ export default function Home() {
             ))}
           </View>
         </View>
-
-        <Button onPress={() => handleNavigateToDetail(67)}>
-          <Typography variant="Body1" color="white">
-            상세페이지로 이동 (ID: 67)
-          </Typography>
-        </Button>
-      </View>
+      </ScrollView>
     </View>
   );
 }
