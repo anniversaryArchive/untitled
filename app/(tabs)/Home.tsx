@@ -1,10 +1,19 @@
 import { useEffect, useState } from "react";
-import { View, ScrollView } from "react-native";
+import { View, ScrollView, Pressable } from "react-native";
 import { router } from "expo-router";
 
 import { supabase } from "@/utils/supabase";
 
-import { Button, Typography, FeaturedSwiper, WiggleBorder, BasicSwiper, Icon } from "@/components";
+import {
+  Button,
+  Typography,
+  FeaturedSwiper,
+  WiggleBorder,
+  BasicSwiper,
+  Icon,
+  ProgressBar,
+} from "@/components";
+import { formatYmdHm } from "@/utils/format";
 
 const LIMIT_COUNT = 5;
 
@@ -24,6 +33,7 @@ export default function Home() {
   const [newGachaList, setNewGachaList] = useState<PreviewGacha[]>([]);
   const [popularGachaList, setPopularGachaList] = useState<PreviewGacha[]>([]);
   const [noticeList, setNoticeList] = useState<Notice[]>([]);
+  const [possessionRate, setPossessionRate] = useState<number>(0);
 
   useEffect(() => {
     // 최근에 새로 추가된 가챠 5개 조회
@@ -108,6 +118,10 @@ export default function Home() {
     router.push(`/detail/${id}`);
   };
 
+  const goToSearch = () => {
+    router.push("/(tabs)/Search");
+  };
+
   return (
     <View className="flex-1">
       <View className="w-full bg-white flex justify-between flex-row py-2 px-4">
@@ -115,12 +129,25 @@ export default function Home() {
           LOGO
         </Typography>
         <View className="my-auto">
-          <Icon name="search" size={24} fill="primary" stroke="primary" />
+          <Pressable onPress={goToSearch}>
+            <Icon name="bigHeadSearch" size={24} />
+          </Pressable>
         </View>
       </View>
       <ScrollView className="flex-1">
         {/* 배너 영역 */}
         <BasicSwiper data={[1, 2, 3]} />
+
+        {/* 내 굿즈 소장률 */}
+        <View className="px-4 py-6">
+          <Typography variant="Header2" color="primary">
+            내 굿즈 소장률
+          </Typography>
+
+          <View className="mt-4">
+            <ProgressBar value={possessionRate} />
+          </View>
+        </View>
 
         {/* 새로 나온 가챠! */}
         <FeaturedSwiper
@@ -131,7 +158,6 @@ export default function Home() {
           loop={true}
           onSlidePress={(item) => handleNavigateToDetail(item.id)}
         />
-
         {/* 인기 가챠 */}
         <FeaturedSwiper
           title="지금 이게 인기에요!"
@@ -141,16 +167,15 @@ export default function Home() {
           loop={true}
           onSlidePress={(item) => handleNavigateToDetail(item.id)}
         />
-
         {/* 공지사항 */}
         <View className="bg-primary-light py-7 px-4 mt-8">
-          <View className="flex justify-between flex-row">
+          <View className="flex justify-between flex-row mb-2">
             <Typography variant="Header2" color="secondary-dark">
               공지사항
             </Typography>
 
             <Button variant="text" size="sm">
-              <Typography variant="Body1" color="#D9D9D9">
+              <Typography variant="Tag" className="text-gray-04">
                 전체보기 &gt;
               </Typography>
             </Button>
@@ -170,8 +195,8 @@ export default function Home() {
                       {notice.title}
                     </Typography>
                   </View>
-                  <Typography variant="Caption2" color="secondary-dark">
-                    {notice.created_at}
+                  <Typography variant="Caption" className="text-gray-04">
+                    {formatYmdHm(notice.created_at)}
                   </Typography>
                 </View>
               </WiggleBorder>
