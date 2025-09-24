@@ -171,12 +171,6 @@ const WiggleBorder: React.FC<IWiggleBorderProps> = ({
       setChildrenSize({ width: width, height: height });
   };
 
-  // children 내용이 변경될 때마다 레이아웃 재계산을 위한 effect
-  useEffect(() => {
-    // children이 변경되면 childrenSize를 초기화하여 다시 측정하도록 함
-    setChildrenSize({ width: 0, height: 0 });
-  }, [children]);
-
   // 실제 렌더링에 사용할 크기 계산 (여백을 뺀 실제 border 영역)
   const actualWidth =
     typeof width === "number"
