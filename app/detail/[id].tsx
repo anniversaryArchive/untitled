@@ -45,7 +45,6 @@ export default function DetailPagef() {
 
         if (error || !data) throw error;
         setGachaData(data);
-
         // TODO: 가챠 내 아이템 목록은 임시로 mockup 데이터, 추후에 치환
         setList([...MOCKUP_LIST]);
       } catch (err) {
