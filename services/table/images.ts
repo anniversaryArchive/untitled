@@ -3,8 +3,6 @@ import * as SQLite from "expo-sqlite";
 import CommonTabledbInstance from "@/utils/sqlite";
 import { buildSelectQuery, buildDeleteQuery, buildInsertQuery } from "@utils/buildSqliteQuery";
 
-import { TImage } from "@/types/image";
-
 class TbImages {
   #dbInstance: Promise<SQLite.SQLiteDatabase | null>;
 
@@ -50,7 +48,7 @@ class TbImages {
         orderBy: "created_at",
         order: "DESC",
       },
-    } as TQueryOptions<TImage>
+    } as TSelectQueryOptions<TImage>
   ): Promise<TImage[]> {
     const db = await this.#dbInstance;
     if (!db) return [];
@@ -60,6 +58,25 @@ class TbImages {
     } catch (error) {
       console.error("TbImages getAll Error : ", error);
       return [];
+    }
+  }
+
+  async getOne(
+    options = {
+      sort: {
+        orderBy: "created_at",
+        order: "DESC",
+      },
+    } as TSelectQueryOptions<TImage>
+  ): Promise<TImage | null> {
+    const db = await this.#dbInstance;
+    if (!db) return null;
+
+    try {
+      return await db.getFirstAsync<TImage>(buildSelectQuery<TImage>("images", options));
+    } catch (error) {
+      console.error("TbImages getAll Error : ", error);
+      return null;
     }
   }
 

@@ -8,7 +8,7 @@ export function buildSelectQuery<T>(tableName: TTable, options?: TQueryOptions<T
   return sql;
 }
 
-export function buildDeleteQuery<T>(tableName: TTable, options?: TQueryOptions<T>): string {
+export function buildDeleteQuery<T>(tableName: TTable, options: TQueryOptions<T>): string {
   let sql = `DELETE FROM ${tableName}`;
 
   if (options) {

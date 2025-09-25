@@ -8,7 +8,7 @@ type TSortOptions<T> = {
 type TQueryOptions<T> = TSelectQueryOptions<T> | TDeleteQueryOptions<T>;
 
 type TSelectQueryOptions<T> = {
-  sort?: SortOptions<T>;
+  sort?: TSortOptions<T>;
   where?: Partial<T>;
   limit?: number;
 };

@@ -19,7 +19,7 @@ export default function Index() {
   };
 
   const loadPrevImage = async () => {
-    const img = await images.getLastest();
+    const img = await images.getOne();
 
     if (img?.assetId) {
       setPrevImg(img.assetId);
