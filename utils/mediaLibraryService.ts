@@ -75,7 +75,7 @@ const loadImage = async (assetId: string) => {
     return assetInfo.uri;
   } else {
     // 로컬 디비에 저장되어있는 assetId 삭제
-    // await images.deleteByAssetId(assetId);
+    await images.delete({ where: { assetId } });
     return null;
   }
 };

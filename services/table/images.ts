@@ -1,6 +1,7 @@
 import * as SQLite from "expo-sqlite";
 
 import CommonTabledbInstance from "@/utils/sqlite";
+import { buildSelectQuery, buildDeleteQuery, buildInsertQuery } from "@utils/buildSqliteQuery";
 
 import { TImage } from "@/types/image";
 
@@ -34,61 +35,43 @@ class TbImages {
       const db = await this.#dbInstance;
       if (!db) return false;
 
-      const res = await db.runAsync("INSERT INTO images (path) VALUES (?)", assetId);
+      const res = await db.runAsync(buildInsertQuery<TImage>("images", { assetId }));
 
       return !!res.changes;
     } catch (error) {
-      console.error("TbImages create Error : ", error);
+      console.error("TbImagess create Error : ", error);
       return false;
     }
   }
 
-  async getAll(): Promise<TImage[]> {
+  async getAll(
+    options = {
+      sort: {
+        orderBy: "created_at",
+        order: "DESC",
+      },
+    } as TQueryOptions<TImage>
+  ): Promise<TImage[]> {
     const db = await this.#dbInstance;
     if (!db) return [];
 
     try {
-      return await db.getAllAsync<TImage>("SELECT * FROM images ORDER BY created_at DESC");
+      return await db.getAllAsync<TImage>(buildSelectQuery<TImage>("images", options));
     } catch (error) {
       console.error("TbImages getAll Error : ", error);
       return [];
     }
   }
 
-  async getLastest(): Promise<TImage | null> {
-    const db = await this.#dbInstance;
-    if (!db) return null;
-
-    try {
-      return await db.getFirstAsync<TImage>("SELECT * FROM images ORDER BY created_at DESC");
-    } catch (error) {
-      console.error("TbImages getLastest Error : ", error);
-      return null;
-    }
-  }
-
-  async delete(id: string): Promise<boolean> {
+  async delete(options: TDeleteQueryOptions<TImage>): Promise<boolean> {
     const db = await this.#dbInstance;
     if (!db) return false;
 
     try {
-      const result = await db.runAsync("DELETE FROM images WHERE id = ?", id);
+      const result = await db.runAsync(buildDeleteQuery<TImage>("images", options));
       return result.changes > 0;
     } catch (error) {
-      console.error(`TbImages delete ${id} Error : ${error}`);
-      return false;
-    }
-  }
-
-  async deleteByAssetId(assetId: string): Promise<boolean> {
-    const db = await this.#dbInstance;
-    if (!db) return false;
-
-    try {
-      const result = await db.runAsync("DELETE FROM images WHERE assetId = ?", assetId);
-      return result.changes > 0;
-    } catch (error) {
-      console.error(`TbImages deleteByAssetId ${assetId} Error : ${error}`);
+      console.error(`TbImages options: ${options}\ndelete Error: ${error}`);
       return false;
     }
   }

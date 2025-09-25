@@ -1,5 +1,5 @@
 export type TImage = {
   id: string;
-  path: string;
+  assetId: string;
   created_at: string;
 };
