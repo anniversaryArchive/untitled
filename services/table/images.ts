@@ -19,7 +19,7 @@ class TbImages {
            CREATE TABLE IF NOT EXISTS images (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             assetId TEXT NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL
           );`);
       }
       return inst;
@@ -34,7 +34,7 @@ class TbImages {
       const db = await this.#dbInstance;
       if (!db) return false;
 
-      const res = await db.runAsync("INSERT INTO images (path) VALUES (?)", assetId);
+      const res = await db.runAsync("INSERT INTO images (assetId) VALUES (?)", assetId);
 
       return !!res.changes;
     } catch (error) {
