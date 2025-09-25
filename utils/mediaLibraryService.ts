@@ -1,18 +1,25 @@
+import { Alert, Linking } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as MediaLibrary from "expo-media-library";
 
 import images from "@table/images";
-import { Alert, Linking } from "react-native";
 
 const grantedPermission = async () => {
-  const { accessPrivileges, canAskAgain, granted } = await MediaLibrary.getPermissionsAsync();
+  const initialStatus = await MediaLibrary.getPermissionsAsync();
 
-  if (!granted) {
-    const { granted: newPermission } = await MediaLibrary.requestPermissionsAsync();
-    return newPermission;
+  // 모든 권한이 허용된 경우
+  if (initialStatus.granted && initialStatus.accessPrivileges === "all") {
+    return true;
   }
 
-  if (accessPrivileges === "limited" && canAskAgain) {
+  // 권한이 허용되지 않았고, 다시 물어볼 수 있는 경우
+  if (!initialStatus.granted && initialStatus.canAskAgain) {
+    const { granted } = await MediaLibrary.requestPermissionsAsync();
+    return granted;
+  }
+
+  // '제한된 접근' 권한인 경우
+  if (initialStatus.accessPrivileges === "limited") {
     Alert.alert(
       "'모든 사진' 접근 허용이 필요합니다",
       "사진을 모두 보려면 설정에서 '모든 사진'으로 권한을 변경해주세요.",
@@ -30,7 +37,20 @@ const grantedPermission = async () => {
     return false;
   }
 
-  return granted;
+  // 권한이 거부되었고, 다시 물어볼 수 없는 경우
+  if (!initialStatus.granted && !initialStatus.canAskAgain) {
+    Alert.alert(
+      "권한이 거부되었습니다",
+      "사진첩에 접근하려면 앱 설정에서 직접 권한을 허용해야 합니다.",
+      [
+        { text: "취소", style: "cancel" },
+        { text: "설정으로 이동", onPress: () => Linking.openSettings() },
+      ]
+    );
+    return false;
+  }
+
+  return false;
 };
 
 const selectImage = async () => {
@@ -51,33 +71,21 @@ const selectImage = async () => {
 };
 
 const saveImage = async (img?: ImagePicker.ImagePickerAsset) => {
-  let selectImg = img || (await selectImage());
-  if (!selectImg) return null;
+  const selectImg = img || (await selectImage());
+
+  if (!selectImg || !selectImg.assetId) {
+    return null;
+  }
 
   try {
+    // 로컬 디비 저장
     const assetId = selectImg.assetId;
-
-    if (assetId) {
-      // 로컬 디비 저장
-      await images.create(assetId);
-      return assetId;
-    }
+    await images.create(assetId);
+    return assetId;
   } catch (e) {
     console.error("err", e);
     return null;
   }
 };
 
-const loadImage = async (assetId: string) => {
-  const assetInfo = await MediaLibrary.getAssetInfoAsync(assetId);
-
-  if (assetInfo) {
-    return assetInfo.uri;
-  } else {
-    // 로컬 디비에 저장되어있는 assetId 삭제
-    await images.delete({ where: { assetId } });
-    return null;
-  }
-};
-
-export { selectImage, saveImage, loadImage };
+export { selectImage, saveImage };
