@@ -8,7 +8,7 @@ interface ITypography {
   twotone?: never;
   className?: string;
   children: React.ReactNode;
-  numberOfLines?: number;            // 추가: 한 줄 제한
+  numberOfLines?: number; // 추가: 한 줄 제한
   ellipsizeMode?: "head" | "middle" | "tail" | "clip"; // 추가: 말줄임표 위치
 }
 
@@ -26,6 +26,7 @@ const typographyTheme = {
     Header2: "text-[24px] font-DunggeunmisoB",
     Header3: "text-[20px] font-DunggeunmisoB",
     Header4: "text-[20px] font-Dunggeunmiso",
+    Header5: "text-[16px] font-DunggeunmisoB",
     Title1: "text-[17px] font-Dunggeunmiso",
     Body1: "text-[16px] font-Dunggeunmiso",
     Body2: "text-[15px] font-Dunggeunmiso",
@@ -33,6 +34,7 @@ const typographyTheme = {
     Body4: "text-[14px] font-DunggeunmisoB",
     Footnote: "text-[13px] font-Dunggeunmiso",
     Caption: "text-[12px] font-Dunggeunmiso",
+    Tag: "text-[14px] font-DunggeunmisoB",
     Caption2: "text-[12px] font-DunggeunmisoB",
   },
   color: {
@@ -53,16 +55,7 @@ const twotoneColorMap = {
 };
 
 const Typography = (props: ITypography | ITwoToneTypography) => {
-  const {
-    variant = "Body1",
-    color = "secondary-dark",
-    twotone,
-    children,
-    className = "",
-
-    numberOfLines,           // 추가
-    ellipsizeMode,           // 추가
-  } = props;
+  const { variant = "Body1", color = "secondary-dark", twotone, children, className = "" } = props;
 
   const getTwotoneTypography = (twotone: keyof typeof twotoneColorMap) => {
     const _variant = typographyTheme.variant[variant];
@@ -95,7 +88,8 @@ const Typography = (props: ITypography | ITwoToneTypography) => {
       ) : (
         <Text
           className={`${typographyTheme.variant[variant]} ${
-            typographyTheme.color[color as keyof typeof typographyTheme.color] ?? typographyTheme.color["secondary-dark"]
+            typographyTheme.color[color as keyof typeof typographyTheme.color] ??
+            typographyTheme.color["secondary-dark"]
           } ${className}`}
           numberOfLines={1}
           ellipsizeMode="tail"
