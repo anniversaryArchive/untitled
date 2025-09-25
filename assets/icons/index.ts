@@ -11,6 +11,7 @@ import Back from "./back.svg";
 import ChevronRight from "./chevronRight.svg";
 import NewFolder from "./newFolder.svg";
 import Plus from "./plus.svg";
+import Image from "./image.svg";
 
 export {
   Folder,
@@ -26,4 +27,5 @@ export {
   NewFolder,
   FolderFill,
   Plus,
+  Image,
 };
