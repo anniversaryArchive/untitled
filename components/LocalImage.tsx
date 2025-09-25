@@ -1,31 +1,40 @@
 import React, { useState, useEffect } from "react";
 import { Image } from "expo-image";
 import * as MediaLibrary from "expo-media-library";
-import images from "@table/images";
+
+import NoImage from "./NoImage";
 
 interface ILocalImageProps {
-  assetId: string;
+  assetId?: string;
   width?: number;
   height?: number;
 }
 
-const blurhash =
-  "|rF?hV%2WCj[ayj[a|j[az_NaeWBj@ayfRayfQfQM{M|azj[azf6fQfQfQIpWXofj[ayj[j[fQayWCoeoeaya}j[ayfQa{oLj?j[WVj[ayayj[fQoff7azayj[ayj[j[ayofayayayj[fQj[ayayj[ayfjj[j[ayjuayj[";
-
 const LocalImage = (props: ILocalImageProps) => {
   const { assetId, width = 155, height = 155 } = props;
   const [imageUri, setImageUri] = useState<string>();
+  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     const loadImage = async () => {
       try {
+        if (!assetId) return setHasError(true);
+
         const assetInfo = await MediaLibrary.getAssetInfoAsync(assetId);
 
         if (assetInfo) {
           setImageUri(assetInfo.localUri);
+          setHasError(false);
         } else {
           // 로컬 디비에 저장되어있는 assetId 삭제
-          //   await images.deleteByAssetId(assetId);
+          // Alert.alert("이미지를 불러올 수 없습니다", "사진첩에서 이미지가 삭제된 것 같아요!", [
+          //   {
+          //     text: "확인",
+          //     onPress: async () => {
+          //       await images.deleteByAssetId(assetId);
+          //     },
+          //   },
+          // ]);
         }
       } catch (error) {
         console.error("미디어 라이브러리에서 에러 발생:", error);
@@ -36,7 +45,19 @@ const LocalImage = (props: ILocalImageProps) => {
     loadImage();
   }, [assetId]);
 
-  return <Image source={{ uri: imageUri }} style={{ width, height }} placeholder={{ blurhash }} />;
+  return (
+    <>
+      {hasError ? (
+        <NoImage width={width} height={height} />
+      ) : (
+        <Image
+          source={{ uri: imageUri }}
+          style={{ width, height }}
+          onError={() => setHasError(true)}
+        />
+      )}
+    </>
+  );
 };
 
 export default LocalImage;
