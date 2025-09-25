@@ -37,7 +37,7 @@ class TbImages {
 
       return !!res.changes;
     } catch (error) {
-      console.error("TbImagess create Error : ", error);
+      console.error("TbImages create Error : ", error);
       return false;
     }
   }
