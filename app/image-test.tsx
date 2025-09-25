@@ -13,7 +13,7 @@ export default function Index() {
     const imgAssetId = await saveImage();
 
     if (imgAssetId) {
-      setPrevImg(image);
+      image && setPrevImg(image);
       setImage(imgAssetId);
     }
   };
