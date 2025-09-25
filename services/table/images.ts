@@ -1,11 +1,10 @@
-import uuid from "react-native-uuid";
 import * as SQLite from "expo-sqlite";
 
 import CommonTabledbInstance from "@/utils/sqlite";
 
 import { TImage } from "@/types/image";
 
-class TbImage {
+class TbImages {
   #dbInstance: Promise<SQLite.SQLiteDatabase | null>;
 
   constructor() {
@@ -18,36 +17,29 @@ class TbImage {
       if (inst instanceof SQLite.SQLiteDatabase) {
         await inst.runAsync(`
            CREATE TABLE IF NOT EXISTS images (
-            id TEXT PRIMARY KEY NOT NULL,
-            path TEXT NOT NULL,
-            created_at TEXT NOT NULL
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            assetId TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP NOT NULL,
           );`);
       }
       return inst;
     } catch (error) {
-      console.error("TbImage Init Error : ", error);
+      console.error("TbImages Init Error : ", error);
       return null;
     }
   }
 
-  async create(path: string): Promise<TImage | null> {
+  async create(assetId: string): Promise<boolean> {
     try {
       const db = await this.#dbInstance;
-      if (!db) return null;
+      if (!db) return false;
 
-      const id = uuid.v4();
-      const now = new Date().toISOString();
-      await db.runAsync(
-        "INSERT INTO images (id, path, created_at) VALUES (?, ?, ?)",
-        id,
-        path,
-        now
-      );
+      const res = await db.runAsync("INSERT INTO images (path) VALUES (?)", assetId);
 
-      return { id, path, created_at: now };
+      return !!res.changes;
     } catch (error) {
-      console.error("TbImage create Error : ", error);
-      return null;
+      console.error("TbImages create Error : ", error);
+      return false;
     }
   }
 
@@ -58,7 +50,7 @@ class TbImage {
     try {
       return await db.getAllAsync<TImage>("SELECT * FROM images ORDER BY created_at DESC");
     } catch (error) {
-      console.error("TbImage getAll Error : ", error);
+      console.error("TbImages getAll Error : ", error);
       return [];
     }
   }
@@ -70,21 +62,8 @@ class TbImage {
     try {
       return await db.getFirstAsync<TImage>("SELECT * FROM images ORDER BY created_at DESC");
     } catch (error) {
-      console.error("TbImage getLastest Error : ", error);
+      console.error("TbImages getLastest Error : ", error);
       return null;
-    }
-  }
-
-  async update(id: string, newPath: string): Promise<boolean> {
-    const db = await this.#dbInstance;
-    if (!db) return false;
-
-    try {
-      const result = await db.runAsync("UPDATE images SET path = ? WHERE id = ?", newPath, id);
-      return result.changes > 0;
-    } catch (error) {
-      console.error(`TbImage update ${id} Error : ${error}`);
-      return false;
     }
   }
 
@@ -96,10 +75,23 @@ class TbImage {
       const result = await db.runAsync("DELETE FROM images WHERE id = ?", id);
       return result.changes > 0;
     } catch (error) {
-      console.error(`TbImage delete ${id} Error : ${error}`);
+      console.error(`TbImages delete ${id} Error : ${error}`);
+      return false;
+    }
+  }
+
+  async deleteByAssetId(assetId: string): Promise<boolean> {
+    const db = await this.#dbInstance;
+    if (!db) return false;
+
+    try {
+      const result = await db.runAsync("DELETE FROM images WHERE assetId = ?", assetId);
+      return result.changes > 0;
+    } catch (error) {
+      console.error(`TbImages deleteByAssetId ${assetId} Error : ${error}`);
       return false;
     }
   }
 }
 
-export default new TbImage();
+export default new TbImages();
