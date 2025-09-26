@@ -139,7 +139,7 @@ export default function Home() {
         <BasicSwiper data={[1, 2, 3]} />
 
         {/* 내 굿즈 소장률 */}
-        <View className="px-4 py-6">
+        <View className="px-4 py-14">
           <Typography variant="Header2" color="primary">
             내 굿즈 소장률
           </Typography>
@@ -158,6 +158,9 @@ export default function Home() {
           loop={true}
           onSlidePress={(item) => handleNavigateToDetail(item.id)}
         />
+
+        <View className="mt-10" />
+
         {/* 인기 가챠 */}
         <FeaturedSwiper
           title="지금 이게 인기에요!"
@@ -167,8 +170,9 @@ export default function Home() {
           loop={true}
           onSlidePress={(item) => handleNavigateToDetail(item.id)}
         />
+
         {/* 공지사항 */}
-        <View className="bg-primary-light py-7 px-4 mt-8">
+        <View className="bg-primary-light py-7 px-4 mt-16">
           <View className="flex justify-between flex-row mb-2">
             <Typography variant="Header2" color="secondary-dark">
               공지사항
