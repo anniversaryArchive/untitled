@@ -161,17 +161,23 @@ export const getPopularGoods = async (
 /**
  * gacha 테이블에서 name_kr과 일치하는 데이터 검색, offset 지원
  */
-export const searchGachaByNameKr = async (
+export const searchGachaAndAnimeByName = async (
   keyword: string,
   limit = 10,
   offset = 0
 ): Promise<{ items: IGoodsItem[]; totalCount: number }> => {
   try {
-    // 데이터 쿼리
+    // 가차명 또는 한글명 검색 OR
+    // 또는 애니메이션명으로 검색(조인)
     const { data, error } = await supabase
       .from("gacha")
-      .select("id, name_kr, name, image_link")
-      .ilike("name_kr", `%${keyword}%`)
+      .select(`
+        id, name_kr, name, image_link,
+        anime:anime_id (
+          id, name_kr
+        )
+      `)
+      .or(`name.ilike.%${keyword}%,name_kr.ilike.%${keyword}%,anime.name_kr.ilike.%${keyword}%`)
       .range(offset, offset + limit - 1);
 
     if (error) {
@@ -179,11 +185,11 @@ export const searchGachaByNameKr = async (
       return { items: [], totalCount: 0 };
     }
 
-    // 전체 개수 쿼리 (count)
+    // 전체 개수 쿼리
     const { count, error: countError } = await supabase
       .from("gacha")
-      .select("id", { count: 'exact', head: true })
-      .ilike("name_kr", `%${keyword}%`);
+      .select("id", { count: "exact", head: true })
+      .or(`name.ilike.%${keyword}%,name_kr.ilike.%${keyword}%,anime.name_kr.ilike.%${keyword}%`);
 
     if (countError) {
       console.error("Supabase gacha count error", countError);
@@ -191,16 +197,18 @@ export const searchGachaByNameKr = async (
     }
 
     return {
-      items: data?.map((item) => ({
-        id: item.id,
-        title: item.name_kr,
-        subtitle: item.name,
-        imageLink: item.image_link,
-      })) || [],
+      items:
+        data?.map((item) => ({
+          id: item.id,
+          title: item.name_kr,
+          subtitle: item.name,
+          imageLink: item.image_link,
+          animeName: item.anime?.name_kr ?? null,
+        })) || [],
       totalCount: count || 0,
     };
   } catch (e) {
-    console.error("Error searching gacha by name_kr", e);
+    console.error("Error searching gacha by name_kr and anime name", e);
     return { items: [], totalCount: 0 };
   }
 };

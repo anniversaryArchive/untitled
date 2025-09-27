@@ -11,8 +11,8 @@ import ChevronRight from "./chevronRight.svg";
 import NewFolder from "./newFolder.svg";
 import Plus from "./plus.svg";
 import ChevronDown from "./chevronDown.svg";
+import FolderFill from "./folder_fill.svg";
 
-export { Folder, Search, Star, Bell, User, Close, ChevronLeft, ChevronDown };
 export {
   Folder,
   Search,
@@ -22,6 +22,7 @@ export {
   Close,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Plus2,
   Back,
   NewFolder,

@@ -1,18 +1,17 @@
 import { useRef } from "react";
 import { Alert, Pressable, View } from "react-native";
-import { useNavigation } from "expo-router";
 
 import { colors } from "@utils/tailwind-colors";
 import Icon from "@components/Icon";
 import InputBox, { InputBoxHandle } from "./InputBox";
 
 interface ISearchBoxProps {
-  placeholder?: string;
-  className?: string;
+  placeholder?: string | undefined;
+  className?: string | undefined;
   color?: keyof typeof searchBoxTheme;
   onSubmit: (value: string) => void;
-  value?: string;
-  onChangeText?: (text: string) => void;
+  value?: string | undefined;
+  onChangeText?: (text: string | undefined) => void;
   [options: string]: any;
 }
 
@@ -32,28 +31,21 @@ const SearchBox = (props: ISearchBoxProps) => {
     onChangeText,
     ...options
   } = props;
-  const navigation = useNavigation();
-  const inputRef = useRef<InputBoxHandle>(null);
+  const inputRef = useRef<InputBoxHandle | null>(null);
 
-  const handleSubmit = (inputValue?: string) => {
+  const handleSubmit = (inputValue?: string | null) => {
     const searchTerm = inputValue ?? value ?? "";
 
     if (!searchTerm.trim()) {
-      return Alert.alert("공백은 입력할 수 없습니다.", undefined, [{ text: "확인" }]);
+      return Alert.alert("공백은 입력할 수 없습니다.", '', [{ text: "확인" }]);
     }
 
     onSubmit(searchTerm);
-    // 인풋 클리어는 외부에서 상태를 관리하므로 제거하거나 필요시 별도 처리
-    !value && inputRef.current?.clear();
   };
 
   return (
     <View className={`flex flex-row w-full items-center gap-3 ${className}`}>
       <Pressable
-        onPress={() => {
-          navigation.goBack();
-        }}
-        disabled={!navigation.canGoBack()}
       >
         <Icon
           name="chevronLeft"
@@ -66,25 +58,16 @@ const SearchBox = (props: ISearchBoxProps) => {
         <InputBox
           wiggleBorder
           ref={inputRef}
-          value={value}
-          onChangeText={onChangeText}
+          value={value ?? ""}
+          onChangeText={onChangeText!}
           onSubmit={handleSubmit}
-          placeholder={placeholder}
+          placeholder={placeholder ?? ""}
           className="text-[16px]"
-          color={color}
+          color={color as keyof typeof searchBoxTheme}
           {...options}
         />
       </View>
-
       <Pressable onPress={() => handleSubmit(value)}>
-        <Icon
-          name="search"
-          size={24}
-          fill={searchBoxTheme[color]}
-          stroke={searchBoxTheme[color]}
-        />
-
-      <Pressable onPress={() => handleSubmit()}>
         <Icon
           name="search"
           size={24}

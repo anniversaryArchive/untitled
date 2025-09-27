@@ -17,18 +17,15 @@ export default function Index() {
   const [recentGoods, setRecentGoods] = useState<IGoodsItem[]>([]);
   const [popularGoods, setPopularGoods] = useState<IGoodsItem[]>([]);
 
-  // 로그인 여부 관련 코드 삭제
-  // userId도 삭제
-
   const loadSearches = useCallback(async () => {
     // 항상 로컬 DB 사용
-    const searches = await searchHistory.getRecentSearches(false);
+    const searches = await searchHistory.getRecentSearches();
     setRecentSearches(searches);
   }, []);
 
   const loadRecentGoods = useCallback(async () => {
     // 항상 로컬 DB 사용
-    const goods = await searchHistory.getRecentGoods(false);
+    const goods = await searchHistory.getRecentGoods();
     setRecentGoods(goods);
   }, []);
 
@@ -39,7 +36,7 @@ export default function Index() {
 
   const handleSearch = async (value: string) => {
     // 로그인 여부 전달 제거, 항상 로컬 DB 사용
-    await searchHistory.addRecentSearch(value, false);
+    await searchHistory.addRecentSearch(value);
     await loadSearches();
 
     router.push({
@@ -49,18 +46,18 @@ export default function Index() {
   };
 
   const handleRemoveSearches = async (value: string) => {
-    await searchHistory.removeRecentSearch(value, false);
+    await searchHistory.removeRecentSearch(value);
     await loadSearches();
   };
 
   const handleClearRecentGoods = () => {
-    Alert.alert("최근 본 굿즈를 전체 삭제하시겠습니까?", undefined, [
+    Alert.alert("최근 본 굿즈를 전체 삭제하시겠습니까?", '', [
       { text: "취소", style: "cancel" },
       {
         text: "삭제",
         onPress: async () => {
           try {
-            await searchHistory.clearRecentGoods(false);
+            await searchHistory.clearRecentGoods();
             setRecentGoods([]);
           } catch (error) {
             console.error("Error clearing recent goods", error);
@@ -71,12 +68,12 @@ export default function Index() {
   };
 
   const handleClearRecentSearches = () => {
-    Alert.alert("최근 검색어를 전체 삭제하시겠습니까?", undefined, [
+    Alert.alert("최근 검색어를 전체 삭제하시겠습니까?", '', [
       { text: "취소", style: "cancel" },
       {
         text: "삭제",
         onPress: async () => {
-          await searchHistory.clearRecentSearches(false);
+          await searchHistory.clearRecentSearches();
           setRecentSearches([]);
         },
       },
