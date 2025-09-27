@@ -20,6 +20,12 @@ const iconMap: { [key: string]: React.FC<any> } = {
   close: Icons.Close,
   chevronLeft: Icons.ChevronLeft,
   chevronDown: Icons.ChevronDown,
+  plus2: Icons.Plus2,
+  back: Icons.Back,
+  chevronRight: Icons.ChevronRight,
+  newFolder: Icons.NewFolder,
+  folderFill: Icons.FolderFill,
+  plus: Icons.Plus,
 };
 
 export default function Icon(props: IIconProps) {

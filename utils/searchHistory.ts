@@ -18,11 +18,16 @@ export interface IGoodsItem {
  */
 export const addRecentSearch = async (searchItem: string) => {
   try {
+    // 1. 기존 검색어 목록 불러오기
     let searches = await getRecentSearches();
 
+    // 2. 중복된 검색어 제거 (기존에 있었다면 추가하지않고 맨 위로 올리기 위함)
     searches = searches.filter((item: string) => item !== searchItem);
+
+    // 3. 새로운 검색어를 배열 맨 앞에 추가
     searches.unshift(searchItem);
 
+    // 4. 최대 10개까지만 유지
     const newSearches = searches.slice(0, MAX_RECENT_SEARCHES);
     await AsyncStorage.setItem(SEARCH_STORAGE_KEY, JSON.stringify(newSearches));
   } catch (e) {

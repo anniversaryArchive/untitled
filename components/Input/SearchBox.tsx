@@ -1,4 +1,3 @@
-// SearchBox.tsx
 import { useRef } from "react";
 import { Alert, Pressable, View } from "react-native";
 import { useNavigation } from "expo-router";
@@ -45,6 +44,7 @@ const SearchBox = (props: ISearchBoxProps) => {
 
     onSubmit(searchTerm);
     // 인풋 클리어는 외부에서 상태를 관리하므로 제거하거나 필요시 별도 처리
+    !value && inputRef.current?.clear();
   };
 
   return (
@@ -77,6 +77,14 @@ const SearchBox = (props: ISearchBoxProps) => {
       </View>
 
       <Pressable onPress={() => handleSubmit(value)}>
+        <Icon
+          name="search"
+          size={24}
+          fill={searchBoxTheme[color]}
+          stroke={searchBoxTheme[color]}
+        />
+
+      <Pressable onPress={() => handleSubmit()}>
         <Icon
           name="search"
           size={24}

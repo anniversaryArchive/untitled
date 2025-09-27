@@ -26,6 +26,7 @@ const typographyTheme = {
     Header2: "text-[24px] font-DunggeunmisoB",
     Header3: "text-[20px] font-DunggeunmisoB",
     Header4: "text-[20px] font-Dunggeunmiso",
+    Header5: "text-[16px] font-DunggeunmisoB",
     Title1: "text-[17px] font-Dunggeunmiso",
     Body1: "text-[16px] font-Dunggeunmiso",
     Body2: "text-[15px] font-Dunggeunmiso",
@@ -33,6 +34,7 @@ const typographyTheme = {
     Body4: "text-[14px] font-DunggeunmisoB",
     Footnote: "text-[13px] font-Dunggeunmiso",
     Caption: "text-[12px] font-Dunggeunmiso",
+    Tag: "text-[14px] font-DunggeunmisoB",
     Caption2: "text-[12px] font-DunggeunmisoB",
   },
   color: {
@@ -53,23 +55,16 @@ const twotoneColorMap = {
 };
 
 const Typography = (props: ITypography | ITwoToneTypography) => {
-  const {
-    variant = "Body1",
-    color = "secondary-dark",
-    twotone,
-    children,
-    className = "",
-
-    numberOfLines,           // 추가
-    ellipsizeMode,           // 추가
-  } = props;
+  const { variant = "Body1", color = "secondary-dark", twotone, children, className = "" } = props;
 
   const getTwotoneTypography = (twotone: keyof typeof twotoneColorMap) => {
     const _variant = typographyTheme.variant[variant];
     const sizeRegex = /text-\[(\d+)px\]/;
     const sizeMatch = _variant.match(sizeRegex);
+
     const fontSize = parseInt(sizeMatch?.[1] ?? "0");
     const strokeWidth: number = variant === "Header1" ? 2 : 1.5;
+
     return (
       <Svg height={fontSize + strokeWidth} width="100%">
         <SvgText

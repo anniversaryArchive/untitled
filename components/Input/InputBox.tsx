@@ -1,5 +1,4 @@
-// InputBox.tsx
-import React, { forwardRef, useImperativeHandle, useRef, useState } from "react";
+import { forwardRef, useImperativeHandle, useRef } from "react";
 import { TextInput, TextInputProps } from "react-native";
 import { getColor } from "@utils/color";
 import { colors } from "@utils/tailwind-colors";
@@ -34,10 +33,10 @@ export const inputTheme = {
 };
 
 const BorderComponent = ({
-                           wiggleBorder,
-                           borderColor,
-                           children,
-                         }: {
+  wiggleBorder,
+  borderColor,
+  children,
+}: {
   wiggleBorder: boolean;
   borderColor: keyof typeof inputTheme.color;
   children: React.ReactNode;
@@ -51,59 +50,63 @@ const BorderComponent = ({
   );
 };
 
-const InputBox = forwardRef<InputBoxHandle, IInputBoxProps>(
-  (props: IInputBoxProps, ref) => {
-    const {
-      placeholder,
-      onSubmit,
-      className,
-      color = "secondary-dark",
-      size = "sm",
-      wiggleBorder = false,
-      readOnly,
-      ...options
-    } = props;
-    const inputRef = useRef<TextInput>(null);
-    const [text, setText] = useState("");
+const InputBox = forwardRef<InputBoxHandle, IInputBoxProps>((props, ref) => {
+  const {
+    placeholder,
+    onSubmit,
+    className,
+    color = "secondary-dark",
+    size = "sm",
+    wiggleBorder = false,
+    readOnly,
+    onChangeText,
+    ...options
+  } = props;
 
-    useImperativeHandle(ref, () => ({
-      getValue: () => {
-        return text;
-      },
-      clear: () => {
-        setText("");
-        inputRef.current?.clear();
-      },
-    }));
+  const inputRef = useRef<TextInput>(null);
+  const textRef = useRef(""); // 텍스트 값을 ref로 저장
 
-    const defaultProps = `p-3 rounded text-secondary-dark ${!wiggleBorder && "border"} ${inputTheme.color[color]} ${inputTheme.size[size]}`;
-    const readOnlyProps = `bg-gray-200`;
+  useImperativeHandle(ref, () => ({
+    getValue: () => textRef.current,
+    clear: () => {
+      textRef.current = "";
+      inputRef.current?.clear();
+    },
+  }));
 
-    return (
-      <BorderComponent wiggleBorder={wiggleBorder} borderColor={color}>
-        <TextInput
-          ref={inputRef}
-          value={text}
-          onChangeText={(newText) => {
-            setText(newText);
-            if (props.onChangeText) props.onChangeText(newText);
-          }}
-          onSubmitEditing={(e) => {
-            if (onSubmit) {
-              onSubmit(e.nativeEvent.text);
-            }
-          }}
-          submitBehavior={"blurAndSubmit"}
-          placeholder={placeholder || "검색어를 입력하세요."}
-          placeholderTextColor={colors.secondary["dark-80"]}
-          className={`${defaultProps} ${readOnly ? readOnlyProps : ""} ${className}`}
-          clearButtonMode="while-editing"
-          editable={!readOnly}
-          {...options}
-        />
-      </BorderComponent>
-    );
-  }
-);
+  const handleChangeText = (newText: string) => {
+    textRef.current = newText;
+    if (onChangeText) {
+      onChangeText(newText);
+    }
+  };
+
+  const defaultProps = `p-3 rounded text-secondary-dark ${
+    !wiggleBorder ? "border" : ""
+  } ${inputTheme.color[color]} ${inputTheme.size[size]}`;
+  const readOnlyProps = `bg-gray-200`;
+
+  return (
+    <BorderComponent wiggleBorder={wiggleBorder} borderColor={color}>
+      <TextInput
+        ref={inputRef}
+        defaultValue={""} // uncontrolled input 시작 값
+        onChangeText={handleChangeText}
+        onSubmitEditing={(e) => {
+          if (onSubmit) {
+            onSubmit(e.nativeEvent.text);
+          }
+        }}
+        submitBehavior={"blurAndSubmit"}
+        placeholder={placeholder || "검색어를 입력하세요."}
+        placeholderTextColor={colors.secondary["dark-80"]}
+        className={`${defaultProps} ${readOnly ? readOnlyProps : ""} ${className}`}
+        clearButtonMode="while-editing"
+        editable={!readOnly}
+        {...options}
+      />
+    </BorderComponent>
+  );
+});
 
 export default InputBox;
