@@ -1,5 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "@/utils/supabase";
+import type { IGachaItem } from "@/types/search";
+
 
 const MAX_RECENT_SEARCHES = 10;
 const MAX_RECENT_GOODS = 10;
@@ -158,17 +160,10 @@ export const getPopularGoods = async (
   }
 };
 
-// gacha + anime 조인 결과 아이템 타입 정의
-export interface IGachaItem {
-  id: number;
-  name_kr: string;
-  name: string;
-  image_link: string;
-  anime_kr_title: string | null;
-}
 
 /**
- * gacha 테이블에서 name_kr과 일치하는 데이터 검색 (offset + limit 지원)
+ * gacha 테이블에서 name_kr과 일치하는 데이터 검색 (offset + limit 지원),
+ * 각 아이템마다 전체 결과 수 total_count 포함
  */
 export const searchGachaAndAnimeByName = async (
   keyword: string,
@@ -176,7 +171,6 @@ export const searchGachaAndAnimeByName = async (
   offset = 0
 ): Promise<{ items: IGachaItem[]; totalCount: number }> => {
   try {
-    // 데이터 조회
     const { data, error } = await supabase.rpc("search_gacha_with_anime", {
       keyword,
       limit_count: limit,
@@ -190,22 +184,10 @@ export const searchGachaAndAnimeByName = async (
 
     const items = (data as IGachaItem[]) || [];
 
-    // 총 개수는 별도 RPC 함수나 전체 카운트 쿼리 필요
-    // 여기선 간단히 전체 개수를 구하는 예시 (비효율적일 수 있으니 별도 함수 권장)
-    const { count, error: countError } = await supabase
-      .from("gacha")
-      .select("id", { count: "exact", head: true })
-      .ilike("name_kr", `%${keyword}%`);
+    // total_count는 결과 배열의 첫 요소에서 읽음, 없으면 0 처리
+    const totalCount = items.length > 0 ? items[0].total_count || 0 : 0;
 
-    if (countError) {
-      console.error("Supabase count error:", countError);
-      return { items, totalCount: items.length };
-    }
-
-    return {
-      items,
-      totalCount: count || items.length,
-    };
+    return { items, totalCount };
   } catch (e) {
     console.error("Unexpected error in searchGachaAndAnimeByName:", e);
     return { items: [], totalCount: 0 };

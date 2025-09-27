@@ -1,14 +1,16 @@
 import { View, Image } from "react-native";
 import Typography from "./Typography";
 import WiggleBorder from "./WiggleBorder";
+import {Button} from "@components/index";
 
 interface GoodsThumbnailProps {
   title: string;
+  anime: string | null;
   subtitle: string;
   imgUrl?: string;
 }
 
-const GoodsThumbnail = ({ title, subtitle, imgUrl }: GoodsThumbnailProps) => {
+const GoodsThumbnail = ({ title, anime, subtitle, imgUrl }: GoodsThumbnailProps) => {
   return (
     <View className="flex gap-[10px] relative">
       <View className="w-[155px] h-[155px]">
@@ -23,12 +25,21 @@ const GoodsThumbnail = ({ title, subtitle, imgUrl }: GoodsThumbnailProps) => {
       </View>
       {/* 텍스트 영역 */}
       <View className="max-w-[150px] overflow-hidden flex gap-1">
-        <View className="flex flex-row items-center gap-2">
+        <View className="flex flex-row items-center gap-2 max-w-full">
+          <Button
+            layout="flex"
+            rounded
+            onPress={() => {}}
+            className="max-w-max px-2"
+          >
+            {anime}
+          </Button>
           <Typography
             variant="Body4"
             color="primary"
             numberOfLines={1}
             ellipsizeMode="tail"
+            className="flex-1 px-2"
           >
             {title}
           </Typography>
