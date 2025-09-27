@@ -7,25 +7,25 @@ import { Button } from "@/components";
 import { useLocalSearchParams } from "expo-router";
 import React from "react";
 
-// 상품 아이템 인터페이스
-interface IGoodsItem {
+// 상품 아이템 인터페이스 (Supabase RPC 반환에 맞춤)
+export interface IGachaItem {
   id: string;
   name_kr: string;
   name: string;
-  image_link: string; // 이미지 URL 필드 추가
-  animeName: string
+  image_link: string;
+  anime_kr_title: string | null;
 }
 
 // searchGachaAndAnimeByName의 반환 타입 정의
 interface SearchResult {
-  items: IGoodsItem[];
+  items: IGachaItem[];
   totalCount: number;
 }
 
 export default function SearchResults() {
   const { searchTerm } = useLocalSearchParams<{ searchTerm?: string }>();
   const [searchValue, setSearchValue] = useState(searchTerm ?? "");
-  const [data, setData] = useState<IGoodsItem[]>([]);
+  const [data, setData] = useState<IGachaItem[]>([]);
   const [offset, setOffset] = useState(0);
   const limit = 10;
   const [loadingMore, setLoadingMore] = useState(false);
@@ -34,54 +34,72 @@ export default function SearchResults() {
 
   const loadSearches = useCallback(async () => {
     const searches = await searchHistory.getRecentSearches();
-    // 필요 시 recent searches 상태에 저장 가능
+    // 필요 시 상태 저장 가능
   }, []);
 
   const loadMore = async () => {
     if (loadingMore || !hasMore) return;
     setLoadingMore(true);
-    const result = (await searchHistory.searchGachaAndAnimeByName(
-      String(searchValue),
-      limit,
-      offset
-    )) as SearchResult;
-    setLoadingMore(false);
-    const newItems = result.items || [];
-    if (newItems.length === 0 && offset > 0) {
-      Alert.alert("알림", "더 이상 데이터가 없습니다.");
-      setHasMore(false);
-      return;
-    }
-    setData((prev) => {
-      const prevIds = new Set(prev.map((item) => item.id));
-      const filteredNewItems = newItems.filter(
-        (item) => !prevIds.has(item.id)
-      );
-      return [...prev, ...filteredNewItems];
-    });
-    setOffset((prev) => prev + newItems.length);
-    setTotalCount(result.totalCount ?? 0);
 
-    const isEnd = result.totalCount != null && offset + newItems.length >= result.totalCount;
-    if (isEnd || newItems.length < limit) setHasMore(false);
+    try {
+      const result = await searchHistory.searchGachaAndAnimeByName(
+        String(searchValue),
+        limit,
+        offset
+      );
+
+      const newItems = result?.items ?? [];
+
+      if (newItems.length === 0 && offset > 0) {
+        Alert.alert("알림", "더 이상 데이터가 없습니다.");
+        setHasMore(false);
+        return;
+      }
+
+      setData((prev) => {
+        const prevIds = new Set(prev?.map((item) => item.id) ?? []);
+        const filteredNewItems = newItems.filter((item) => !prevIds.has(item.id));
+        return [...(prev ?? []), ...filteredNewItems];
+      });
+
+      setOffset((prev) => prev + newItems.length);
+      setTotalCount(result?.totalCount ?? 0);
+
+      const currentTotal = (data?.length ?? 0) + newItems.length;
+      const isEnd = result?.totalCount != null && currentTotal >= result.totalCount;
+      if (isEnd || newItems.length < limit) setHasMore(false);
+    } catch (e) {
+      console.error("Load more error:", e);
+    } finally {
+      setLoadingMore(false);
+    }
   };
 
   const handleSearch = async (value: string) => {
+    console.log("value : ", value);
     setSearchValue(value);
     setOffset(0);
 
-    const result = (await searchHistory.searchGachaAndAnimeByName(
-      value,
-      limit,
-      0
-    )) as SearchResult;
+    try {
+      const result = await searchHistory.searchGachaAndAnimeByName(value, limit, 0);
 
-    setData(result.items);
-    setOffset(result.items.length);
-    setTotalCount(result.totalCount);
-    setHasMore(result.totalCount > limit);
-    await searchHistory.addRecentSearch(value);
-    await loadSearches();
+      console.log("result : ", result);
+
+      const items = result?.items ?? [];
+      setData(items);
+      setOffset(items.length);
+      setTotalCount(result?.totalCount ?? 0);
+      setHasMore((result?.totalCount ?? 0) > limit);
+
+      await searchHistory.addRecentSearch(value);
+      await loadSearches();
+    } catch (e) {
+      console.error("Search error:", e);
+      setData([]);
+      setOffset(0);
+      setHasMore(false);
+      setTotalCount(0);
+    }
   };
 
   useEffect(() => {
@@ -90,16 +108,13 @@ export default function SearchResults() {
     }
   }, [searchTerm]);
 
-  // renderItem
-  const renderItem: ({item}: { item: any }) => JSX.Element = ({ item }) => {
-    return (
-      <GoodsThumbnail
-        title={item.title}
-        subtitle={item.subtitle}
-        imgUrl={item.imageLink}
-      />
-    );
-  };
+  const renderItem = ({ item }: { item: IGachaItem }) => (
+    <GoodsThumbnail
+      title={item.name_kr}
+      subtitle={item.name}
+      imgUrl={item.image_link}
+    />
+  );
 
   return (
     <View className="flex-1 bg-white">
@@ -112,7 +127,7 @@ export default function SearchResults() {
         />
       </View>
 
-      <FlatList<IGoodsItem>
+      <FlatList<IGachaItem>
         key={`numColumns-2`}
         numColumns={2}
         data={data}

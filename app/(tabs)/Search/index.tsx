@@ -13,18 +13,17 @@ interface IGoodsItem {
 
 export default function Index() {
   const router = useRouter();
+  const [searchValue, setSearchValue] = useState(""); // 검색어 상태 추가
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [recentGoods, setRecentGoods] = useState<IGoodsItem[]>([]);
   const [popularGoods, setPopularGoods] = useState<IGoodsItem[]>([]);
 
   const loadSearches = useCallback(async () => {
-    // 항상 로컬 DB 사용
     const searches = await searchHistory.getRecentSearches();
     setRecentSearches(searches);
   }, []);
 
   const loadRecentGoods = useCallback(async () => {
-    // 항상 로컬 DB 사용
     const goods = await searchHistory.getRecentGoods();
     setRecentGoods(goods);
   }, []);
@@ -35,7 +34,6 @@ export default function Index() {
   }, []);
 
   const handleSearch = async (value: string) => {
-    // 로그인 여부 전달 제거, 항상 로컬 DB 사용
     await searchHistory.addRecentSearch(value);
     await loadSearches();
 
@@ -89,8 +87,14 @@ export default function Index() {
   return (
     <View className="flex-1 bg-white">
       <View className="ml-2 mr-2">
-        <SearchBox className="h-16" onSubmit={handleSearch} />
+        <SearchBox
+          className="h-16"
+          value={searchValue}
+          onChangeText={setSearchValue}
+          onSubmit={handleSearch}
+        />
       </View>
+
       {/* 최근 검색어 */}
       <View className="mt-4 mb-4">
         <View className="flex flex-row justify-between items-center mb-2 ml-4 mr-4">
