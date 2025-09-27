@@ -174,8 +174,9 @@ export const searchGachaAndAnimeByName = async (
   keyword: string,
   limit = 10,
   offset = 0
-): Promise<IGachaItem[]> => {
+): Promise<{ items: IGachaItem[]; totalCount: number }> => {
   try {
+    // 데이터 조회
     const { data, error } = await supabase.rpc("search_gacha_with_anime", {
       keyword,
       limit_count: limit,
@@ -184,12 +185,29 @@ export const searchGachaAndAnimeByName = async (
 
     if (error) {
       console.error("Supabase RPC search error:", error);
-      return [];
+      return { items: [], totalCount: 0 };
     }
 
-    return data as IGachaItem[];
+    const items = (data as IGachaItem[]) || [];
+
+    // 총 개수는 별도 RPC 함수나 전체 카운트 쿼리 필요
+    // 여기선 간단히 전체 개수를 구하는 예시 (비효율적일 수 있으니 별도 함수 권장)
+    const { count, error: countError } = await supabase
+      .from("gacha")
+      .select("id", { count: "exact", head: true })
+      .ilike("name_kr", `%${keyword}%`);
+
+    if (countError) {
+      console.error("Supabase count error:", countError);
+      return { items, totalCount: items.length };
+    }
+
+    return {
+      items,
+      totalCount: count || items.length,
+    };
   } catch (e) {
     console.error("Unexpected error in searchGachaAndAnimeByName:", e);
-    return [];
+    return { items: [], totalCount: 0 };
   }
 };

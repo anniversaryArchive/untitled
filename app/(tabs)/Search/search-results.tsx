@@ -59,15 +59,17 @@ export default function SearchResults() {
       setData((prev) => {
         const prevIds = new Set(prev?.map((item) => item.id) ?? []);
         const filteredNewItems = newItems.filter((item) => !prevIds.has(item.id));
-        return [...(prev ?? []), ...filteredNewItems];
+        const updatedData = [...(prev ?? []), ...filteredNewItems];
+
+        const currentTotal = updatedData.length;
+        const isEnd = result?.totalCount != null && currentTotal >= result.totalCount;
+        if (isEnd || filteredNewItems.length < limit) setHasMore(false);
+
+        return updatedData;
       });
 
       setOffset((prev) => prev + newItems.length);
       setTotalCount(result?.totalCount ?? 0);
-
-      const currentTotal = (data?.length ?? 0) + newItems.length;
-      const isEnd = result?.totalCount != null && currentTotal >= result.totalCount;
-      if (isEnd || newItems.length < limit) setHasMore(false);
     } catch (e) {
       console.error("Load more error:", e);
     } finally {
@@ -131,7 +133,7 @@ export default function SearchResults() {
         key={`numColumns-2`}
         numColumns={2}
         data={data}
-        keyExtractor={(item, index) => item.id.toString() + "_" + index}
+        keyExtractor={(item) => item.id.toString()}
         columnWrapperStyle={{
           justifyContent: "space-between",
           paddingHorizontal: 16,
