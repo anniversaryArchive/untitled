@@ -18,11 +18,16 @@ export interface IGoodsItem {
  */
 export const addRecentSearch = async (searchItem: string) => {
   try {
+    // 1. 기존 검색어 목록 불러오기
     let searches = await getRecentSearches();
 
+    // 2. 중복된 검색어 제거 (기존에 있었다면 추가하지않고 맨 위로 올리기 위함)
     searches = searches.filter((item: string) => item !== searchItem);
+
+    // 3. 새로운 검색어를 배열 맨 앞에 추가
     searches.unshift(searchItem);
 
+    // 4. 최대 10개까지만 유지
     const newSearches = searches.slice(0, MAX_RECENT_SEARCHES);
     await AsyncStorage.setItem(SEARCH_STORAGE_KEY, JSON.stringify(newSearches));
   } catch (e) {
@@ -150,5 +155,59 @@ export const getPopularGoods = async (
   } catch (e) {
     console.error("Error loading popular goods", e);
     return [];
+  }
+};
+
+// gacha + anime 조인 결과 아이템 타입 정의
+export interface IGachaItem {
+  id: number;
+  name_kr: string;
+  name: string;
+  image_link: string;
+  anime_kr_title: string | null;
+}
+
+/**
+ * gacha 테이블에서 name_kr과 일치하는 데이터 검색 (offset + limit 지원)
+ */
+export const searchGachaAndAnimeByName = async (
+  keyword: string,
+  limit = 10,
+  offset = 0
+): Promise<{ items: IGachaItem[]; totalCount: number }> => {
+  try {
+    // 데이터 조회
+    const { data, error } = await supabase.rpc("search_gacha_with_anime", {
+      keyword,
+      limit_count: limit,
+      offset_count: offset,
+    });
+
+    if (error) {
+      console.error("Supabase RPC search error:", error);
+      return { items: [], totalCount: 0 };
+    }
+
+    const items = (data as IGachaItem[]) || [];
+
+    // 총 개수는 별도 RPC 함수나 전체 카운트 쿼리 필요
+    // 여기선 간단히 전체 개수를 구하는 예시 (비효율적일 수 있으니 별도 함수 권장)
+    const { count, error: countError } = await supabase
+      .from("gacha")
+      .select("id", { count: "exact", head: true })
+      .ilike("name_kr", `%${keyword}%`);
+
+    if (countError) {
+      console.error("Supabase count error:", countError);
+      return { items, totalCount: items.length };
+    }
+
+    return {
+      items,
+      totalCount: count || items.length,
+    };
+  } catch (e) {
+    console.error("Unexpected error in searchGachaAndAnimeByName:", e);
+    return { items: [], totalCount: 0 };
   }
 };
