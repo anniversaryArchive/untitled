@@ -40,8 +40,8 @@ export default function Icon(props: IIconProps) {
     <IconComponent
       width={size}
       height={size}
-      fill={fill === "none" ? fill : getColor(fill)}
-      stroke={stroke === "none" ? stroke : getColor(stroke)}
+      fill={getColor(fill)}
+      stroke={getColor(stroke)}
       strokeWidth={strokeWidth}
     />
   );
