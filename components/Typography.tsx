@@ -18,6 +18,7 @@ interface ITwoToneTypography {
   twotone?: keyof typeof twotoneColorMap;
   className?: never;
   children: React.ReactNode;
+  numberOfLines?: number;
 }
 
 const typographyTheme = {
@@ -55,7 +56,14 @@ const twotoneColorMap = {
 };
 
 const Typography = (props: ITypography | ITwoToneTypography) => {
-  const { variant = "Body1", color = "secondary-dark", twotone, children, className = "" } = props;
+  const {
+    variant = "Body1",
+    color = "secondary-dark",
+    twotone,
+    children,
+    className = "",
+    numberOfLines = 1,
+  } = props;
 
   const getTwotoneTypography = (twotone: keyof typeof twotoneColorMap) => {
     const _variant = typographyTheme.variant[variant];
@@ -91,7 +99,7 @@ const Typography = (props: ITypography | ITwoToneTypography) => {
             typographyTheme.color[color as keyof typeof typographyTheme.color] ??
             typographyTheme.color["secondary-dark"]
           } ${className}`}
-          numberOfLines={1}
+          numberOfLines={numberOfLines === 0 ? undefined : (numberOfLines ?? 1)}
           ellipsizeMode="tail"
           style={{ flexShrink: 1, overflow: "hidden" }}
         >

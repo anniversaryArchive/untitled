@@ -3,6 +3,7 @@ import { View, ScrollView, Pressable } from "react-native";
 import { router } from "expo-router";
 
 import { supabase } from "@/utils/supabase";
+import type { TNotice } from "@/types/notice";
 
 import {
   Button,
@@ -23,16 +24,10 @@ interface PreviewGacha {
   anime_id: number;
 }
 
-interface Notice {
-  id: number;
-  title: string;
-  created_at: string;
-}
-
 export default function Home() {
   const [newGachaList, setNewGachaList] = useState<PreviewGacha[]>([]);
   const [popularGachaList, setPopularGachaList] = useState<PreviewGacha[]>([]);
-  const [noticeList, setNoticeList] = useState<Notice[]>([]);
+  const [noticeList, setNoticeList] = useState<TNotice[]>([]);
   const [possessionRate, setPossessionRate] = useState<number>(0);
 
   useEffect(() => {
@@ -122,6 +117,10 @@ export default function Home() {
     router.push("/(tabs)/Search");
   };
 
+  const goToNoticeDetail = (id: number) => {
+    router.push(`/notice/${id}`);
+  };
+
   return (
     <View className="flex-1">
       <View className="w-full bg-white flex justify-between flex-row py-2 px-4">
@@ -187,23 +186,20 @@ export default function Home() {
 
           <View className="flex flex-col gap-3">
             {noticeList.map((notice) => (
-              <WiggleBorder
-                key={`notice-${notice.id}`}
-                backgroundColor="#FFF"
-                borderZIndex={2}
-                height={60}
-              >
-                <View className="p-3 mr-auto">
-                  <View className="mb-1">
-                    <Typography variant="Header5" color="primary">
-                      {notice.title}
+              <Pressable key={`notice-${notice.id}`} onPress={() => goToNoticeDetail(notice.id)}>
+                <WiggleBorder backgroundColor="#FFF" borderZIndex={2} height={60}>
+                  <View className="p-3 mr-auto">
+                    <View className="mb-1">
+                      <Typography variant="Header5" color="primary">
+                        {notice.title}
+                      </Typography>
+                    </View>
+                    <Typography variant="Caption" className="text-gray-04">
+                      {formatYmdHm(notice.created_at)}
                     </Typography>
                   </View>
-                  <Typography variant="Caption" className="text-gray-04">
-                    {formatYmdHm(notice.created_at)}
-                  </Typography>
-                </View>
-              </WiggleBorder>
+                </WiggleBorder>
+              </Pressable>
             ))}
           </View>
         </View>
