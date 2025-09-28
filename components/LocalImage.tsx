@@ -13,18 +13,16 @@ interface ILocalImageProps {
 const LocalImage = (props: ILocalImageProps) => {
   const { assetId, width = 155, height = 155 } = props;
   const [imageUri, setImageUri] = useState<string>();
-  const [hasError, setHasError] = useState(false);
 
   useEffect(() => {
     const loadImage = async () => {
       try {
-        if (!assetId) return setHasError(true);
+        if (!assetId) return;
 
         const assetInfo = await MediaLibrary.getAssetInfoAsync(assetId);
 
         if (assetInfo) {
           setImageUri(assetInfo.localUri);
-          setHasError(false);
         } else {
           // 로컬 디비에 저장되어있는 assetId 삭제
           // Alert.alert("이미지를 불러올 수 없습니다", "사진첩에서 이미지가 삭제된 것 같아요!", [
@@ -47,14 +45,10 @@ const LocalImage = (props: ILocalImageProps) => {
 
   return (
     <>
-      {hasError ? (
-        <NoImage width={width} height={height} />
+      {imageUri ? (
+        <Image source={{ uri: imageUri }} style={{ width, height }} />
       ) : (
-        <Image
-          source={{ uri: imageUri }}
-          style={{ width, height }}
-          onError={() => setHasError(true)}
-        />
+        <NoImage width={width} height={height} />
       )}
     </>
   );
