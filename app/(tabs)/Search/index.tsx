@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { View, Alert, ScrollView } from "react-native";
 import { Button, Typography, SearchBox, Chip } from "@components/index";
 import * as searchHistory from "@utils/searchHistory";
+import * as supaBase from "@utils/supabase";
 import SimpleSwiper from "@components/SimpleSwiper";
 import { useRouter } from "expo-router";
 
@@ -29,7 +30,7 @@ export default function Index() {
   }, []);
 
   const loadPopularGoods = useCallback(async () => {
-    const goods = await searchHistory.getPopularGoods();
+    const goods = await supaBase.getPopularGoods();
     setPopularGoods(goods);
   }, []);
 

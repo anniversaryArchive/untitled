@@ -115,51 +115,6 @@ export const clearRecentGoods = async () => {
   }
 };
 
-/**
- * 인기 굿즈 불러오기
- */
-export const getPopularGoods = async (
-  limit: number = 10
-): Promise<IGoodsItem[]> => {
-  try {
-    const { data, error } = await supabase
-      .from("popular_goods")
-      .select(`
-        *,
-        gacha (
-          id,
-          name,
-          name_kr,
-          image_link,
-          anime_id,
-          price
-        )
-      `)
-      .order("viewed_at", { ascending: false })
-      .limit(limit);
-
-    if (error) {
-      console.error("Supabase popular goods load error", error);
-      return [];
-    }
-
-    return (
-      data?.map((item) => ({
-        id: item.gacha.id,
-        title: item.gacha.name_kr,
-        subtitle: item.gacha.name,
-        imageLink: item.gacha.image_link,
-        animeId: item.gacha.anime_id,
-        price: item.gacha.price,
-        viewedAt: item.viewed_at,
-      })) || []
-    );
-  } catch (e) {
-    console.error("Error loading popular goods", e);
-    return [];
-  }
-};
-
 
 /**
  * gacha 테이블에서 name_kr과 일치하는 데이터 검색 (offset + limit 지원),
