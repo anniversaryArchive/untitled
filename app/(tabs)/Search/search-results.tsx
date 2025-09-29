@@ -9,7 +9,7 @@ import type { IGachaItem } from "@/types/search";
 
 export default function SearchResults() {
   const { searchTerm } = useLocalSearchParams<{ searchTerm?: string }>();
-  const [searchValue, setSearchValue] = useState(searchTerm ?? "");
+  const [searchValue, setSearchValue] = useState<string>(searchTerm as string ?? "");
   const [data, setData] = useState<IGachaItem[]>([]);
   const [offset, setOffset] = useState(0);
   const limit = 10;
@@ -31,7 +31,7 @@ export default function SearchResults() {
 
     try {
       const result = await searchHistory.searchGachaAndAnimeByName(
-        String(searchValue),
+        searchValue,
         limit,
         offset
       );
@@ -118,7 +118,7 @@ export default function SearchResults() {
         key={`numColumns-${numColumns}`}
         numColumns={numColumns}
         data={data}
-        keyExtractor={(item) => item.id.toString()}
+        keyExtractor={(item, index) => `${item.id}_${index}`}
         columnWrapperStyle={
           numColumns > 1
             ? {

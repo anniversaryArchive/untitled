@@ -18,6 +18,7 @@ interface ITwoToneTypography {
   twotone?: keyof typeof twotoneColorMap;
   className?: never;
   children: React.ReactNode;
+  numberOfLines?: number;            // 추가: 한 줄 제한
 }
 
 const typographyTheme = {
