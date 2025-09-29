@@ -9,8 +9,15 @@ export interface IGachaItem {
   total_count: number;  // 추가
 }
 
-// searchGachaAndAnimeByName의 반환 타입 정의
 export interface SearchResult {
   items: IGachaItem[];
   totalCount: number;
+}
+
+export interface IGoodsItem {
+  id: string;
+  title: string;
+  subtitle: string;
+  anime?: string | null;
+  imgUrl?: string;
 }

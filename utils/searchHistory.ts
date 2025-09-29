@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "@/utils/supabase";
-import type { IGachaItem } from "@/types/search";
+import type {IGachaItem, IGoodsItem} from '@/types/search';
 
 
 const MAX_RECENT_SEARCHES = 10;
@@ -8,12 +8,6 @@ const MAX_RECENT_GOODS = 10;
 
 const SEARCH_STORAGE_KEY = "@recent_searches";
 const GOODS_STORAGE_KEY = "@recent_goods";
-
-export interface IGoodsItem {
-  id: string;
-  title: string;
-  subtitle: string;
-}
 
 /**
  * 최근 검색어 저장
