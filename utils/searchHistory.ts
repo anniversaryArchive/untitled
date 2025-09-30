@@ -88,7 +88,7 @@ export const addRecentGood = async (item: IGoodsItem) => {
 /**
  * 최근 본 굿즈 불러오기
  */
-export const getRecentGoods = async (): Promise<IGoodsItem[]> => {
+export const getRecentGoods = async (): Promise<IGachaItem[]> => {
   try {
     const goodsJSON = await AsyncStorage.getItem(GOODS_STORAGE_KEY);
     return goodsJSON ? JSON.parse(goodsJSON) : [];

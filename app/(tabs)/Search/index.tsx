@@ -5,19 +5,14 @@ import * as searchHistory from "@utils/searchHistory";
 import * as supaBase from "@utils/supabase";
 import SimpleSwiper from "@components/SimpleSwiper";
 import { useRouter } from "expo-router";
-
-interface IGoodsItem {
-  id: string;
-  title: string;
-  subtitle: string;
-}
+import {IGachaItem} from '@/types/search';
 
 export default function Index() {
   const router = useRouter();
   const [searchValue, setSearchValue] = useState(""); // 검색어 상태 추가
   const [recentSearches, setRecentSearches] = useState<string[]>([]);
-  const [recentGoods, setRecentGoods] = useState<IGoodsItem[]>([]);
-  const [popularGoods, setPopularGoods] = useState<IGoodsItem[]>([]);
+  const [recentGoods, setRecentGoods] = useState<IGachaItem[]>([]);
+  const [popularGoods, setPopularGoods] = useState<IGachaItem[]>([]);
 
   const loadSearches = useCallback(async () => {
     const searches = await searchHistory.getRecentSearches();

@@ -1,8 +1,8 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { createClient, processLock } from '@supabase/supabase-js';
-import { AppState, Platform } from 'react-native';
+import {createClient, processLock} from '@supabase/supabase-js';
+import {AppState, Platform} from 'react-native';
 import 'react-native-url-polyfill/auto';
-import {IGoodsItem} from '@utils/searchHistory';
+import {IGachaItem} from '@/types/search';
 
 export const supabase = createClient(
   process.env.EXPO_PUBLIC_SUPABASE_URL!,
@@ -38,7 +38,7 @@ if (Platform.OS !== 'web') {
  */
 export const getPopularGoods = async (
   limit: number = 10
-): Promise<IGoodsItem[]> => {
+): Promise<(IGachaItem & { anime_kr_title?: string })[]> => {
   try {
     const { data, error } = await supabase
       .from("popular_goods")
@@ -50,7 +50,10 @@ export const getPopularGoods = async (
           name_kr,
           image_link,
           anime_id,
-          price
+          price,
+          anime:anime_id (
+            kr_title
+          )
         )
       `)
       .order("viewed_at", { ascending: false })
@@ -61,17 +64,12 @@ export const getPopularGoods = async (
       return [];
     }
 
-    return (
-      data?.map((item) => ({
-        id: item.gacha.id,
-        title: item.gacha.name_kr,
-        subtitle: item.gacha.name,
-        imageLink: item.gacha.image_link,
-        animeId: item.gacha.anime_id,
-        price: item.gacha.price,
-        viewedAt: item.viewed_at,
-      })) || []
-    );
+    // nested 구조를 평탄화하여 anime_kr_title 필드로 변환
+    return (data ?? []).map(item => ({
+      ...item.gacha,
+      anime_kr_title: item.gacha?.anime?.kr_title ?? "",
+    }));
+
   } catch (e) {
     console.error("Error loading popular goods", e);
     return [];
