@@ -97,9 +97,9 @@ export default function SearchResults() {
 
   const renderItem = ({ item }: { item: IGachaItem }) => (
     <GoodsThumbnail
-      title={item.name_kr}
-      anime={item.anime_kr_title}
-      imgUrl={item.image_link}
+      name_kr={item.name_kr}
+      anime_kr_title={item.anime_kr_title}
+      image_link={item.image_link}
     />
   );
 

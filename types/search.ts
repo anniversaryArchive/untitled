@@ -4,8 +4,8 @@ export interface IGachaItem {
   name_kr: string;
   name: string;
   image_link: string;
-  anime_id: number | null;
-  anime_kr_title: string | null;
+  anime_id?: number | null;
+  anime_kr_title?: string | null;
   total_count: number;  // 추가
 }
 
