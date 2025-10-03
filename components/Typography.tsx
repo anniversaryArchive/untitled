@@ -8,7 +8,7 @@ interface ITypography {
   twotone?: never;
   className?: string;
   children: React.ReactNode;
-  numberOfLines?: number; // 추가: 한 줄 제한
+  numberOfLines?: number;            // 추가: 한 줄 제한
   ellipsizeMode?: "head" | "middle" | "tail" | "clip"; // 추가: 말줄임표 위치
 }
 
@@ -18,6 +18,7 @@ interface ITwoToneTypography {
   twotone?: keyof typeof twotoneColorMap;
   className?: never;
   children: React.ReactNode;
+  numberOfLines?: number;            // 추가: 한 줄 제한
 }
 
 const typographyTheme = {
@@ -61,8 +62,10 @@ const Typography = (props: ITypography | ITwoToneTypography) => {
     const _variant = typographyTheme.variant[variant];
     const sizeRegex = /text-\[(\d+)px\]/;
     const sizeMatch = _variant.match(sizeRegex);
+
     const fontSize = parseInt(sizeMatch?.[1] ?? "0");
     const strokeWidth: number = variant === "Header1" ? 2 : 1.5;
+
     return (
       <Svg height={fontSize + strokeWidth} width="100%">
         <SvgText
@@ -88,8 +91,7 @@ const Typography = (props: ITypography | ITwoToneTypography) => {
       ) : (
         <Text
           className={`${typographyTheme.variant[variant]} ${
-            typographyTheme.color[color as keyof typeof typographyTheme.color] ??
-            typographyTheme.color["secondary-dark"]
+            typographyTheme.color[color as keyof typeof typographyTheme.color] ?? typographyTheme.color["secondary-dark"]
           } ${className}`}
           numberOfLines={1}
           ellipsizeMode="tail"

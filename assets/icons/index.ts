@@ -1,5 +1,4 @@
 import Folder from "./folder.svg";
-import FolderFill from "./folder_fill.svg";
 import Search from "./search.svg";
 import Star from "./stars.svg";
 import Bell from "./notifications.svg";
@@ -11,6 +10,8 @@ import Back from "./back.svg";
 import ChevronRight from "./chevronRight.svg";
 import NewFolder from "./newFolder.svg";
 import Plus from "./plus.svg";
+import ChevronDown from "./chevronDown.svg";
+import FolderFill from "./folder_fill.svg";
 
 export {
   Folder,
@@ -21,6 +22,7 @@ export {
   Close,
   ChevronLeft,
   ChevronRight,
+  ChevronDown,
   Plus2,
   Back,
   NewFolder,
